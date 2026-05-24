@@ -5,12 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Музыкальный проект — 68</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- Подключаем библиотеку для создания fingerprint устройства -->
     <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@4/dist/fp.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        /* Фон и общие стили (как раньше) */
         .video-background {
             position: fixed;
             top: 0;
@@ -100,10 +98,11 @@
         .user-info button {
             background: #3b82f6;
             border: none;
-            padding: 0.2rem 0.8rem;
-            border-radius: 1rem;
+            padding: 0.3rem 1rem;
+            border-radius: 1.5rem;
             color: white;
             cursor: pointer;
+            font-size: 0.8rem;
         }
         .main-content {
             max-width: 1000px;
@@ -117,9 +116,9 @@
             margin-bottom: 2rem;
             border: 1px solid rgba(255,255,255,0.2);
         }
-        .admin-panel h2 { color: white; margin-bottom: 1rem; }
+        .admin-panel h2 { color: white; margin-bottom: 1rem; font-size: 1.2rem; }
         .admin-panel input {
-            padding: 0.6rem 1rem;
+            padding: 0.5rem 1rem;
             border: none;
             border-radius: 2rem;
             background: rgba(255,255,255,0.9);
@@ -130,7 +129,7 @@
             background: #3b82f6;
             color: white;
             border: none;
-            padding: 0.6rem 1.3rem;
+            padding: 0.5rem 1.2rem;
             border-radius: 2rem;
             font-weight: bold;
             cursor: pointer;
@@ -336,6 +335,7 @@
             h1 { font-size: 1.2rem; text-align: center; }
             .admin-panel input { width: 100%; margin: 0.5rem 0; }
             .admin-panel button { width: 100%; }
+            .user-info { justify-content: center; }
         }
     </style>
 </head>
@@ -385,7 +385,7 @@
     <a href="https://t.me/rn_68a_muz" target="_blank" class="social-btn tg-btn">✈️ Telegram</a>
 </div>
 
-<!-- Модальные окна -->
+<!-- Модальное окно -->
 <div id="authModal" class="modal">
     <div class="modal-content">
         <h2 id="modalTitle">Вход</h2>
@@ -404,13 +404,11 @@
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmYXFxcmZreHhnZnN4bmRteWl0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1MTMxMDQsImV4cCI6MjA5NTA4OTEwNH0.72YBkhIuYy_2agG8gbXxOpC4JpG__rWQvbJpK4WMugs'
     );
     
-    // ========== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ==========
     let currentUser = null;
     let isAdmin = false;
     let deviceFingerprint = null;
-    let currentAuthMode = 'login'; // 'login' or 'register'
+    let currentAuthMode = 'login';
 
-    // ========== ПОЛУЧЕНИЕ FINGERPRINT УСТРОЙСТВА ==========
     async function getDeviceFingerprint() {
         if (deviceFingerprint) return deviceFingerprint;
         try {
@@ -419,7 +417,6 @@
             deviceFingerprint = result.visitorId;
             return deviceFingerprint;
         } catch(e) {
-            console.warn('Fingerprint не загружен, используем localStorage fallback');
             let fp = localStorage.getItem('fallback_fp');
             if (!fp) {
                 fp = Math.random().toString(36).substr(2, 16);
@@ -430,7 +427,6 @@
         }
     }
 
-    // ========== УПРАВЛЕНИЕ АВТОРИЗАЦИЕЙ ==========
     async function checkAuth() {
         const { data: { user } } = await supabaseClient.auth.getUser();
         currentUser = user;
@@ -443,7 +439,6 @@
             isAdmin = profile?.role === 'admin';
             document.getElementById('userEmail').innerText = profile?.email || user.email;
             document.getElementById('authBtn').innerText = 'Выйти';
-            // Показываем админ-панель если админ
             const adminPanel = document.getElementById('adminPanel');
             if (adminPanel) adminPanel.style.display = isAdmin ? 'block' : 'none';
         } else {
@@ -476,7 +471,6 @@
         checkAuth();
     }
 
-    // ========== МОДАЛЬНЫЕ ОКНА ==========
     const modal = document.getElementById('authModal');
     function openModal() { modal.style.display = 'flex'; }
     function closeModal() { modal.style.display = 'none'; }
@@ -519,11 +513,10 @@
             if (error.message.includes('unique')) alert('Вы уже лайкали этот трек');
             else alert('Ошибка: ' + error.message);
         } else {
-            loadTracks(); // обновляем лайки
+            loadTracks();
         }
     }
 
-    // ========== КОММЕНТАРИИ (только для авторизованных) ==========
     async function addComment(text) {
         if (!currentUser) return alert('Войдите в аккаунт, чтобы комментировать');
         if (!text.trim()) return alert('Напишите что-нибудь');
@@ -541,7 +534,6 @@
         }
     }
 
-    // ========== ТРЕКИ ==========
     async function loadTracks() {
         const container = document.getElementById('trackList');
         container.innerHTML = '<div class="empty-message">⏳ Загрузка...</div>';
@@ -552,9 +544,8 @@
             return;
         }
         let html = '';
+        const fingerprint = await getDeviceFingerprint();
         for (const track of data) {
-            // Проверяем, лайкал ли пользователь/устройство
-            const fingerprint = await getDeviceFingerprint();
             let liked = false;
             if (currentUser) {
                 const { data: likeData } = await supabaseClient.from('likes').select('id').eq('track_id', track.id).eq('user_id', currentUser.id).maybeSingle();
@@ -611,7 +602,6 @@
         }
     }
 
-    // ========== ЗАГРУЗКА КОММЕНТАРИЕВ ==========
     async function loadComments() {
         const container = document.getElementById('commentsList');
         const { data, error } = await supabaseClient.from('comments').select('*, profiles(email)').order('created_at', { ascending: false });
