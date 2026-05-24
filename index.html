@@ -6,13 +6,8 @@
     <title>Музыкальный проект — 68</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        /* === ФОНОВОЕ ВИДЕО === */
         .video-background {
             position: fixed;
             top: 0;
@@ -40,7 +35,6 @@
             padding: 20px;
         }
 
-        /* === ЗАГОЛОВОК (СТИКИ) === */
         .sticky-header {
             position: sticky;
             top: 20px;
@@ -93,13 +87,11 @@
             display: inline-block;
         }
 
-        /* === ОСНОВНАЯ ПЛАШКА === */
         .main-content {
             max-width: 1000px;
             margin: 0 auto;
         }
 
-        /* === АДМИН-ПАНЕЛЬ === */
         .admin-panel {
             background: rgba(0, 0, 0, 0.75);
             backdrop-filter: blur(8px);
@@ -128,7 +120,6 @@
             cursor: pointer;
         }
 
-        /* === ПЛЕЕР === */
         .player-card {
             background: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(4px);
@@ -255,7 +246,6 @@
         }
         .char-counter.warning { color: #ef4444; }
 
-        /* === ПЛАВАЮЩИЕ КНОПКИ === */
         .social-buttons {
             position: fixed;
             bottom: 2rem;
@@ -312,7 +302,7 @@
 </head>
 <body>
 
-<!-- ФОН: ВИДЕО ИЗ РЕПОЗИТОРИЯ back -->
+<!-- ФОН (твоё видео) -->
 <video class="video-background" autoplay loop muted playsinline>
     <source src="https://github.com/geratiina/back/raw/main/background.mp4" type="video/mp4">
 </video>
@@ -332,7 +322,6 @@
 </div>
 
 <div class="main-content">
-    <!-- АДМИН-ПАНЕЛЬ -->
     <div id="adminPanel" class="admin-panel">
         <h2>➕ Добавить трек</h2>
         <input type="text" id="trackTitle" placeholder="Название трека">
@@ -341,10 +330,8 @@
         <div id="uploadStatus" style="color:#a5f3fc; margin-top:0.5rem;"></div>
     </div>
 
-    <!-- СПИСОК ТРЕКОВ -->
     <div id="trackList"></div>
 
-    <!-- КОММЕНТАРИИ -->
     <div class="comments-section">
         <h2>💬 Обсуждение</h2>
         <div id="commentsList"></div>
@@ -354,21 +341,19 @@
     </div>
 </div>
 
-<!-- СОЦИАЛЬНЫЕ СЕТИ -->
 <div class="social-buttons">
     <a href="https://vk.com/mzproect_68" target="_blank" class="social-btn vk-btn">📱 ВКонтакте</a>
     <a href="https://t.me/rn_68a_muz" target="_blank" class="social-btn tg-btn">✈️ Telegram</a>
 </div>
 
-<!-- АДМИН-КНОПКИ -->
 <button id="callAdminBtn" class="call-admin-btn">🔑 Админ-панель</button>
 <button id="adminLogoutBtn" class="admin-logout-btn">🚪 Выйти</button>
 
 <script>
-    // ========== ПОДКЛЮЧЕНИЕ К SUPABASE ==========
-    const SUPABASE_URL = 'https://efaqqrfkxxgfsxndmyit.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmYXFxcmZreHhnZnN4bmRteWl0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1MTMxMDQsImV4cCI6MjA5NTA4OTEwNH0.72YBkhIuYy_2agG8gbXxOpC4JpG__rWQvbJpK4WMugs';
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    // ========== ПОДКЛЮЧЕНИЕ К SUPABASE (ТОЛЬКО ОДИН РАЗ) ==========
+    const supabaseUrl = 'https://efaqqrfkxxgfsxndmyit.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmYXFxcmZreHhnZnN4bmRteWl0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1MTMxMDQsImV4cCI6MjA5NTA4OTEwNH0.72YBkhIuYy_2agG8gbXxOpC4JpG__rWQvbJpK4WMugs';
+    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
     console.log('✅ Supabase подключён');
 
     // ========== АДМИН-ПАНЕЛЬ ==========
@@ -506,6 +491,20 @@
         document.getElementById('charCounter').innerText = '0 / 250';
         alert('✅ Комментарий добавлен');
         loadComments();
+    }
+
+    async function addTrack(title, url) {
+        if (!isAdmin) return alert('⛔ Только админ');
+        if (!title.trim() || !url.trim()) return alert('Заполните все поля');
+        const { error } = await supabase.from('tracks').insert([{ title: title.trim(), file_url: url.trim(), likes: 0 }]);
+        if (error) {
+            alert('Ошибка: ' + error.message);
+        } else {
+            alert('✅ Трек добавлен');
+            document.getElementById('trackTitle').value = '';
+            document.getElementById('trackUrl').value = '';
+            loadTracks();
+        }
     }
 
     async function updateStats() {
