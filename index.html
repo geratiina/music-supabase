@@ -6,9 +6,13 @@
     <title>Музыкальный проект — 68</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        /* Фоновое видео */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* === ФОНОВОЕ ВИДЕО === */
         .video-background {
             position: fixed;
             top: 0;
@@ -17,8 +21,8 @@
             height: 100%;
             object-fit: cover;
             z-index: -2;
-            filter: blur(6px);
-            transform: scale(1.02);
+            filter: blur(5px);
+            transform: scale(1.01);
         }
         .overlay {
             position: fixed;
@@ -26,16 +30,17 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.5);
             z-index: -1;
         }
-        
+
         body {
             font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
             min-height: 100vh;
             padding: 20px;
         }
-        
+
+        /* === ЗАГОЛОВОК (СТИКИ) === */
         .sticky-header {
             position: sticky;
             top: 20px;
@@ -44,15 +49,14 @@
             margin: 0 auto 1.5rem auto;
         }
         .glass-header {
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.65);
             backdrop-filter: blur(12px);
             border-radius: 2rem;
             padding: 1rem 2rem;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            text-align: center;
             border: 1px solid rgba(255, 255, 255, 0.3);
         }
         h1 {
-            text-align: center;
             font-size: 1.8rem;
             font-weight: 800;
             background: linear-gradient(135deg, #ffffff, #e0e7ff);
@@ -60,45 +64,40 @@
             background-clip: text;
             color: transparent;
             margin-bottom: 0.5rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
         .stats {
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(4px);
-            padding: 0.5rem 1rem;
+            background: rgba(0,0,0,0.5);
+            padding: 0.3rem 1rem;
             border-radius: 2rem;
             font-size: 0.85rem;
-            text-align: center;
             color: white;
-            text-shadow: 1px 1px 1px black;
+            display: inline-block;
         }
-        
+
+        /* === ОСНОВНАЯ ПЛАШКА === */
         .main-content {
             max-width: 1000px;
             margin: 0 auto;
         }
+
+        /* === АДМИН-ПАНЕЛЬ === */
         .admin-panel {
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.75);
             backdrop-filter: blur(8px);
             border-radius: 1.5rem;
             padding: 1.5rem;
             margin-bottom: 2rem;
-            border: 1px solid rgba(255, 255, 255, 0.3);
             display: none;
+            border: 1px solid rgba(255,255,255,0.2);
         }
-        .admin-panel h2 {
-            color: white;
-            margin-bottom: 1rem;
-            font-size: 1.3rem;
-            text-shadow: 1px 1px 2px black;
-        }
+        .admin-panel h2 { color: white; margin-bottom: 1rem; }
         .admin-panel input {
             padding: 0.6rem 1rem;
-            margin: 0.5rem 0.5rem 0.5rem 0;
             border: none;
             border-radius: 2rem;
             background: rgba(255,255,255,0.9);
             width: calc(50% - 0.8rem);
+            margin: 0.5rem 0.5rem 0.5rem 0;
         }
         .admin-panel button {
             background: #3b82f6;
@@ -108,27 +107,24 @@
             border-radius: 2rem;
             font-weight: bold;
             cursor: pointer;
-            transition: 0.2s;
         }
+
+        /* === ПЛЕЕР === */
         .player-card {
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(4px);
             border-radius: 1.5rem;
             padding: 1.2rem 1.5rem;
             margin-bottom: 1rem;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: transform 0.2s;
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: 0.2s;
         }
-        .player-card:hover {
-            transform: translateY(-2px);
-            background: rgba(0, 0, 0, 0.7);
-        }
+        .player-card:hover { background: rgba(0, 0, 0, 0.8); transform: translateY(-2px); }
         .track-title {
             font-size: 1.2rem;
             font-weight: 600;
             color: white;
             margin-bottom: 0.8rem;
-            text-shadow: 1px 1px 2px black;
         }
         .progress-area { margin: 0.8rem 0; }
         .progress-bar-container {
@@ -147,61 +143,62 @@
             display: flex;
             justify-content: space-between;
             font-size: 0.7rem;
-            color: #f1f5f9;
+            color: #cbd5e1;
             margin-top: 0.4rem;
         }
         .controls-area {
             display: flex;
-            align-items: center;
             justify-content: space-between;
+            align-items: center;
             flex-wrap: wrap;
             gap: 1rem;
             margin-top: 0.8rem;
         }
-        .play-controls { display: flex; align-items: center; gap: 0.8rem; }
+        .play-controls { display: flex; gap: 0.8rem; align-items: center; }
         .play-btn {
             background: linear-gradient(135deg, #3b82f6, #2563eb);
-            border: none;
             width: 44px;
             height: 44px;
             border-radius: 50%;
+            border: none;
             color: white;
             font-size: 1.2rem;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
         .volume-control {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
             background: rgba(0,0,0,0.5);
             padding: 0.3rem 0.8rem;
             border-radius: 2rem;
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
         }
         .volume-slider { width: 80px; cursor: pointer; }
         .like-btn {
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0,0,0,0.5);
             border: 1px solid rgba(239,68,68,0.6);
             color: white;
             padding: 0.4rem 1rem;
             border-radius: 2rem;
             cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
         }
         .like-btn.liked { background: #ef4444; color: white; }
+        .delete-track-btn {
+            background: #ef4444;
+            border: none;
+            color: white;
+            padding: 0.4rem 0.9rem;
+            border-radius: 2rem;
+            cursor: pointer;
+        }
         .comments-section { margin-top: 2rem; }
         .comments-section h2 {
             font-size: 1.6rem;
             color: white;
-            text-shadow: 2px 2px 3px black;
+            margin-bottom: 1rem;
         }
         .comment {
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.6);
             border-radius: 1.2rem;
             padding: 0.8rem 1rem;
             margin-bottom: 0.7rem;
@@ -210,14 +207,15 @@
         }
         .comment-author { font-weight: bold; color: #e0e7ff; }
         .comment-date { font-size: 0.7rem; color: #cbd5e1; margin-left: 0.7rem; }
-        .comment-text { margin-top: 0.3rem; color: white; }
+        .comment-text { color: white; margin-top: 0.3rem; }
         textarea {
             width: 100%;
             border-radius: 1.5rem;
             border: none;
             padding: 0.8rem;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0,0,0,0.7);
             color: white;
+            margin: 0.5rem 0;
         }
         .send-btn {
             background: linear-gradient(135deg, #2b2b4f, #1e1a3a);
@@ -227,6 +225,14 @@
             border-radius: 2rem;
             cursor: pointer;
         }
+        .char-counter {
+            text-align: right;
+            font-size: 0.75rem;
+            color: #cbd5e1;
+        }
+        .char-counter.warning { color: #ef4444; }
+
+        /* === ПЛАВАЮЩИЕ КНОПКИ === */
         .social-buttons {
             position: fixed;
             bottom: 2rem;
@@ -243,46 +249,47 @@
             color: white;
             text-align: center;
         }
-        .vk-btn { background: rgba(45, 62, 90, 0.85); }
-        .tg-btn { background: rgba(0, 136, 204, 0.85); }
+        .vk-btn { background: rgba(45, 62, 90, 0.9); }
+        .tg-btn { background: rgba(0, 136, 204, 0.9); }
         .call-admin-btn {
             position: fixed;
             bottom: 2rem;
             left: 2rem;
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0,0,0,0.6);
             color: white;
             padding: 0.5rem 1.2rem;
             border-radius: 2rem;
             cursor: pointer;
+            border: none;
         }
         .admin-logout-btn {
             position: fixed;
             bottom: 5rem;
             left: 2rem;
-            background: rgba(239, 68, 68, 0.7);
+            background: rgba(239,68,68,0.8);
             color: white;
             padding: 0.4rem 1rem;
             border-radius: 2rem;
             cursor: pointer;
             display: none;
+            border: none;
         }
         .empty-message { text-align: center; padding: 2rem; color: white; }
-        .char-counter { font-size: 0.75rem; text-align: right; color: #e2e8f0; }
-        .char-counter.warning { color: #ef4444; }
         @media (max-width: 768px) {
-            .admin-panel input { width: 100% !important; margin: 0.5rem 0; }
+            .admin-panel input { width: 100%; margin: 0.5rem 0; }
             .admin-panel button { width: 100%; }
-            h1 { font-size: 1.3rem; }
         }
     </style>
 </head>
 <body>
 
+<!-- ФОН: Твоё видео из репозитория back -->
 <video class="video-background" autoplay loop muted playsinline>
-    <source src="https://github.com/geratiina/music-supabase/raw/main/my-bg-video.mp4" type="video/mp4">
+    <source src="https://github.com/geratiina/back/raw/main/VID_20260522_223558_567.mp4" type="video/mp4">
 </video>
 <div class="overlay"></div>
 
+<!-- ШАПКА -->
 <div class="sticky-header">
     <div class="glass-header">
         <h1>🎵 МУЗЫКАЛЬНЫЙ ПРОЕКТ — 68</h1>
@@ -291,14 +298,19 @@
 </div>
 
 <div class="main-content">
+    <!-- АДМИН-ПАНЕЛЬ -->
     <div id="adminPanel" class="admin-panel">
-        <h2>➕ Добавить трек (прямая MP3-ссылка)</h2>
+        <h2>➕ Добавить трек</h2>
         <input type="text" id="trackTitle" placeholder="Название трека">
         <input type="text" id="trackUrl" placeholder="https://audio.jukehost.co.uk/...">
         <button id="addTrackBtn">Добавить</button>
         <div id="uploadStatus" style="color:#a5f3fc; margin-top:0.5rem;"></div>
     </div>
+
+    <!-- СПИСОК ТРЕКОВ -->
     <div id="trackList"></div>
+
+    <!-- КОММЕНТАРИИ -->
     <div class="comments-section">
         <h2>💬 Обсуждение</h2>
         <div id="commentsList"></div>
@@ -308,20 +320,22 @@
     </div>
 </div>
 
+<!-- СОЦИАЛЬНЫЕ СЕТИ -->
 <div class="social-buttons">
     <a href="https://vk.com/mzproect_68" target="_blank" class="social-btn vk-btn">📱 ВКонтакте</a>
     <a href="https://t.me/rn_68a_muz" target="_blank" class="social-btn tg-btn">✈️ Telegram</a>
 </div>
 
+<!-- АДМИН-КНОПКИ -->
 <button id="callAdminBtn" class="call-admin-btn">🔑 Админ-панель</button>
 <button id="adminLogoutBtn" class="admin-logout-btn">🚪 Выйти</button>
 
 <script>
-    // ========== ПОДКЛЮЧЕНИЕ К SUPABASE (ТОЛЬКО ОДИН РАЗ) ==========
+    // ========== SUPABASE (твои данные) ==========
     const SUPABASE_URL = 'https://efaqqrfkxxgfsxndmyit.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmYXFxcmZreHhnZnN4bmRteWl0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1MTMxMDQsImV4cCI6MjA5NTA4OTEwNH0.72YBkhIuYy_2agG8gbXxOpC4JpG__rWQvbJpK4WMugs';
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    
+
     // ========== АДМИН-ПАНЕЛЬ ==========
     let isAdmin = localStorage.getItem('music68_admin') === 'true';
     const adminPanel = document.getElementById('adminPanel');
@@ -329,48 +343,29 @@
     const adminLogoutBtn = document.getElementById('adminLogoutBtn');
 
     function showAdminMode() {
-        console.log('Включаем админ-режим');
         isAdmin = true;
         localStorage.setItem('music68_admin', 'true');
         if (adminPanel) adminPanel.style.display = 'block';
         if (callAdminBtn) callAdminBtn.style.display = 'none';
         if (adminLogoutBtn) adminLogoutBtn.style.display = 'block';
         document.body.classList.add('admin-visible');
-        loadTracks();
-        loadComments();
+        loadTracks(); loadComments();
     }
-
     function hideAdminMode() {
-        console.log('Выключаем админ-режим');
         isAdmin = false;
         localStorage.setItem('music68_admin', 'false');
         if (adminPanel) adminPanel.style.display = 'none';
         if (callAdminBtn) callAdminBtn.style.display = 'block';
         if (adminLogoutBtn) adminLogoutBtn.style.display = 'none';
         document.body.classList.remove('admin-visible');
-        loadTracks();
-        loadComments();
+        loadTracks(); loadComments();
     }
-
-    if (callAdminBtn) {
-        callAdminBtn.onclick = () => {
-            console.log('Кнопка нажата');
-            const pwd = prompt('🔒 Введите пароль:');
-            if (pwd === '68admin') {
-                showAdminMode();
-                alert('✅ Добро пожаловать в админ-панель!');
-            } else if (pwd) {
-                alert('❌ Неверный пароль');
-            }
-        };
-    }
-
-    if (adminLogoutBtn) {
-        adminLogoutBtn.onclick = () => {
-            if (confirm('Выйти?')) hideAdminMode();
-        };
-    }
-
+    if (callAdminBtn) callAdminBtn.onclick = () => {
+        const pwd = prompt('🔒 Введите пароль:');
+        if (pwd === '68admin') showAdminMode();
+        else if (pwd) alert('❌ Неверный пароль');
+    };
+    if (adminLogoutBtn) adminLogoutBtn.onclick = () => { if (confirm('Выйти?')) hideAdminMode(); };
     if (isAdmin) showAdminMode();
 
     // ========== ОСНОВНЫЕ ФУНКЦИИ ==========
@@ -380,74 +375,65 @@
         const { data, error } = await supabase.from('tracks').select('*').order('created_at', { ascending: false });
         if (error || !data?.length) {
             container.innerHTML = '<div class="empty-message">🎧 Пока нет треков</div>';
-            updateStats();
-            return;
+            updateStats(); return;
         }
         let html = '';
         for (const track of data) {
-            html += `
-                <div class="player-card">
-                    <div class="track-title">${escapeHtml(track.title)}</div>
-                    <div class="progress-area">
-                        <div class="progress-bar-container"><div class="progress-fill"></div></div>
-                        <div class="time-info"><span class="current-time">00:00</span><span class="duration">00:00</span></div>
-                    </div>
-                    <div class="controls-area">
-                        <div class="play-controls">
-                            <button class="play-btn">▶</button>
-                            <div class="volume-control"><span class="volume-icon">🔊</span><input type="range" class="volume-slider" min="0" max="100" value="70"></div>
-                        </div>
-                        <div style="display:flex; gap:0.5rem;">
-                            <button class="like-btn" data-id="${track.id}" data-likes="${track.likes || 0}">👍 ${track.likes || 0}</button>
-                            ${isAdmin ? `<button class="delete-track-btn" onclick="deleteTrack(${track.id})" style="background:#ef4444; border:none; color:white; padding:0.4rem 0.9rem; border-radius:2rem; cursor:pointer;">🗑️ Удалить</button>` : ''}
-                        </div>
-                    </div>
-                    <audio style="display:none;"><source src="${track.file_url}" type="audio/mpeg"></audio>
+            html += `<div class="player-card">
+                <div class="track-title">${escapeHtml(track.title)}</div>
+                <div class="progress-area">
+                    <div class="progress-bar-container"><div class="progress-fill"></div></div>
+                    <div class="time-info"><span class="current-time">00:00</span><span class="duration">00:00</span></div>
                 </div>
-            `;
+                <div class="controls-area">
+                    <div class="play-controls">
+                        <button class="play-btn">▶</button>
+                        <div class="volume-control"><span>🔊</span><input type="range" class="volume-slider" min="0" max="100" value="70"></div>
+                    </div>
+                    <div style="display:flex; gap:0.5rem;">
+                        <button class="like-btn" data-id="${track.id}" data-likes="${track.likes || 0}">👍 ${track.likes || 0}</button>
+                        ${isAdmin ? `<button class="delete-track-btn" onclick="deleteTrack(${track.id})">🗑️ Удалить</button>` : ''}
+                    </div>
+                </div>
+                <audio style="display:none;"><source src="${track.file_url}" type="audio/mpeg"></audio>
+            </div>`;
         }
         container.innerHTML = html;
-        document.querySelectorAll('.player-card').forEach((card, idx) => initPlayer(card, idx));
+        document.querySelectorAll('.player-card').forEach((card, i) => initPlayer(card, i));
         document.querySelectorAll('.like-btn').forEach(btn => { btn.onclick = () => likeTrack(btn); });
         updateStats();
     }
-    
+
     async function likeTrack(btn) {
-        const id = btn.dataset.id;
-        let likes = parseInt(btn.dataset.likes);
-        const isLiked = btn.classList.contains('liked');
-        if (isLiked) { likes--; btn.classList.remove('liked'); }
-        else { likes++; btn.classList.add('liked'); }
-        await supabase.from('tracks').update({ likes }).eq('id', id);
-        btn.dataset.likes = likes;
-        btn.innerHTML = `👍 ${likes}`;
+        const id = btn.dataset.id, likes = parseInt(btn.dataset.likes), isLiked = btn.classList.contains('liked');
+        const newLikes = isLiked ? likes-1 : likes+1;
+        await supabase.from('tracks').update({ likes: newLikes }).eq('id', id);
         loadTracks();
     }
-    
+
     async function addTrack(title, url) {
-        if (!isAdmin) return alert('⛔ Только админ');
-        if (!title.trim()) return alert('Введите название');
-        if (!url.trim()) return alert('Введите ссылку');
+        if (!isAdmin) return alert('Только админ');
+        if (!title.trim() || !url.trim()) return alert('Заполните поля');
         const { error } = await supabase.from('tracks').insert([{ title: title.trim(), file_url: url.trim(), likes: 0 }]);
         if (error) alert('Ошибка: ' + error.message);
         else { alert('✅ Трек добавлен'); document.getElementById('trackTitle').value = ''; document.getElementById('trackUrl').value = ''; loadTracks(); }
     }
-    
+
     window.deleteTrack = async (id) => { if(confirm('Удалить трек?')) { await supabase.from('tracks').delete().eq('id', id); loadTracks(); } };
-    
+
     async function loadComments() {
         const container = document.getElementById('commentsList');
         const { data, error } = await supabase.from('comments').select('*').order('created_at', { ascending: false });
         if (error || !data?.length) { container.innerHTML = '<div class="empty-message">💭 Будь первым!</div>'; return; }
         let html = '';
         for (const c of data) {
-            html += `<div class="comment"><div><span class="comment-author">💬 ${escapeHtml(c.author)}</span> <span class="comment-date">${new Date(c.created_at).toLocaleString()}</span><div class="comment-text">${escapeHtml(c.text)}</div></div>${isAdmin ? `<button onclick="deleteComment(${c.id})" style="background:#ef4444; border:none; color:white; border-radius:2rem; padding:0.2rem 0.7rem; cursor:pointer;">🗑️</button>` : ''}</div>`;
+            html += `<div class="comment"><div><span class="comment-author">💬 ${escapeHtml(c.author)}</span> <span class="comment-date">${new Date(c.created_at).toLocaleString()}</span><div class="comment-text">${escapeHtml(c.text)}</div></div>${isAdmin ? `<button onclick="deleteComment(${c.id})" style="background:#ef4444; border:none; color:white; border-radius:2rem; padding:0 0.7rem; cursor:pointer;">🗑️</button>` : ''}</div>`;
         }
         container.innerHTML = html;
     }
-    
+
     window.deleteComment = async (id) => { if(confirm('Удалить комментарий?')) { await supabase.from('comments').delete().eq('id', id); loadComments(); } };
-    
+
     async function addComment(text) {
         if (!text.trim()) return alert('Напишите что-то');
         if (text.length > 250) return alert('Максимум 250 символов');
@@ -457,13 +443,13 @@
         alert('✅ Комментарий добавлен');
         loadComments();
     }
-    
+
     async function updateStats() {
         const { count: tracksCount } = await supabase.from('tracks').select('*', { count: 'exact', head: true });
         const { count: commentsCount } = await supabase.from('comments').select('*', { count: 'exact', head: true });
         document.getElementById('statsPanel').innerHTML = `📊 ${tracksCount || 0} треков · 💬 ${commentsCount || 0} комментариев`;
     }
-    
+
     function initPlayer(card) {
         const audio = card.querySelector('audio');
         const playBtn = card.querySelector('.play-btn');
@@ -489,15 +475,14 @@
         volumeSlider.addEventListener('input', (e) => audio.volume = e.target.value / 100);
         audio.volume = 0.7;
     }
-    
-    function formatTime(sec) { if(isNaN(sec)) return '00:00'; const m = Math.floor(sec/60); const s = Math.floor(sec%60); return `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`; }
+
+    function formatTime(sec) { if(isNaN(sec)) return '00:00'; const m = Math.floor(sec/60), s = Math.floor(sec%60); return `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`; }
     function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m])); }
-    
+
     document.getElementById('addTrackBtn').onclick = () => addTrack(document.getElementById('trackTitle').value, document.getElementById('trackUrl').value);
     document.getElementById('sendCommentBtn').onclick = () => addComment(document.getElementById('commentInput').value);
     document.getElementById('commentInput').addEventListener('keydown', (e) => { if(e.ctrlKey && e.key === 'Enter') addComment(e.target.value); });
     document.getElementById('commentInput').addEventListener('input', function() { const len = this.value.length; const counter = document.getElementById('charCounter'); counter.innerText = `${len} / 250`; if(len>250) counter.classList.add('warning'); else counter.classList.remove('warning'); });
-    
     loadTracks();
     loadComments();
 </script>
