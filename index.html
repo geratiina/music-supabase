@@ -7,7 +7,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
         .video-background {
             position: fixed;
             top: 0;
@@ -28,13 +27,11 @@
             background: rgba(0, 0, 0, 0.5);
             z-index: -1;
         }
-
         body {
             font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
             min-height: 100vh;
             padding: 20px;
         }
-
         .sticky-header {
             position: sticky;
             top: 20px;
@@ -86,12 +83,10 @@
             color: white;
             display: inline-block;
         }
-
         .main-content {
             max-width: 1000px;
             margin: 0 auto;
         }
-
         .admin-panel {
             background: rgba(0, 0, 0, 0.75);
             backdrop-filter: blur(8px);
@@ -119,7 +114,6 @@
             font-weight: bold;
             cursor: pointer;
         }
-
         .player-card {
             background: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(4px);
@@ -245,7 +239,6 @@
             color: #cbd5e1;
         }
         .char-counter.warning { color: #ef4444; }
-
         .social-buttons {
             position: fixed;
             bottom: 2rem;
@@ -327,9 +320,7 @@
         <button id="addTrackBtn">Добавить</button>
         <div id="uploadStatus" style="color:#a5f3fc; margin-top:0.5rem;"></div>
     </div>
-
     <div id="trackList"></div>
-
     <div class="comments-section">
         <h2>💬 Обсуждение</h2>
         <div id="commentsList"></div>
@@ -348,11 +339,12 @@
 <button id="adminLogoutBtn" class="admin-logout-btn">🚪 Выйти</button>
 
 <script>
-    // ========== SUPABASE (только один раз) ==========
-    const _supabaseUrl = 'https://efaqqrfkxxgfsxndmyit.supabase.co';
-    const _supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmYXFxcmZreHhnZnN4bmRteWl0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1MTMxMDQsImV4cCI6MjA5NTA4OTEwNH0.72YBkhIuYy_2agG8gbXxOpC4JpG__rWQvbJpK4WMugs';
-    const sb = window.supabase.createClient(_supabaseUrl, _supabaseKey);
-    console.log('✅ Supabase готов');
+    // Подключаем Supabase (переменная ТОЛЬКО ОДНА - supabaseClient)
+    const supabaseClient = window.supabase.createClient(
+        'https://efaqqrfkxxgfsxndmyit.supabase.co',
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmYXFxcmZreHhnZnN4bmRteWl0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1MTMxMDQsImV4cCI6MjA5NTA4OTEwNH0.72YBkhIuYy_2agG8gbXxOpC4JpG__rWQvbJpK4WMugs'
+    );
+    console.log('✅ Supabase подключён');
 
     let isAdmin = localStorage.getItem('music68_admin') === 'true';
     const adminPanel = document.getElementById('adminPanel');
@@ -402,7 +394,7 @@
     async function loadTracks() {
         const container = document.getElementById('trackList');
         container.innerHTML = '<div class="empty-message">⏳ Загрузка...</div>';
-        const { data, error } = await sb.from('tracks').select('*').order('created_at', { ascending: false });
+        const { data, error } = await supabaseClient.from('tracks').select('*').order('created_at', { ascending: false });
         if (error || !data?.length) {
             container.innerHTML = '<div class="empty-message">🎧 Пока нет треков</div>';
             updateStats(); 
@@ -440,20 +432,20 @@
         const likes = parseInt(btn.dataset.likes);
         const isLiked = btn.classList.contains('liked');
         const newLikes = isLiked ? likes - 1 : likes + 1;
-        await sb.from('tracks').update({ likes: newLikes }).eq('id', id);
+        await supabaseClient.from('tracks').update({ likes: newLikes }).eq('id', id);
         loadTracks();
     }
 
     window.deleteTrack = async (id) => { 
         if (confirm('Удалить трек?')) { 
-            await sb.from('tracks').delete().eq('id', id); 
+            await supabaseClient.from('tracks').delete().eq('id', id); 
             loadTracks(); 
         } 
     };
 
     async function loadComments() {
         const container = document.getElementById('commentsList');
-        const { data, error } = await sb.from('comments').select('*').order('created_at', { ascending: false });
+        const { data, error } = await supabaseClient.from('comments').select('*').order('created_at', { ascending: false });
         if (error || !data?.length) { 
             container.innerHTML = '<div class="empty-message">💭 Будь первым!</div>'; 
             return; 
@@ -474,7 +466,7 @@
 
     window.deleteComment = async (id) => { 
         if (confirm('Удалить комментарий?')) { 
-            await sb.from('comments').delete().eq('id', id); 
+            await supabaseClient.from('comments').delete().eq('id', id); 
             loadComments(); 
         } 
     };
@@ -482,7 +474,7 @@
     async function addComment(text) {
         if (!text.trim()) return alert('Напишите что-нибудь');
         if (text.length > 250) return alert('Максимум 250 символов');
-        await sb.from('comments').insert([{ text: text.trim(), author: 'Слушатель' }]);
+        await supabaseClient.from('comments').insert([{ text: text.trim(), author: 'Слушатель' }]);
         document.getElementById('commentInput').value = '';
         document.getElementById('charCounter').innerText = '0 / 250';
         alert('✅ Комментарий добавлен');
@@ -492,7 +484,7 @@
     async function addTrack(title, url) {
         if (!isAdmin) return alert('⛔ Только админ');
         if (!title.trim() || !url.trim()) return alert('Заполните все поля');
-        const { error } = await sb.from('tracks').insert([{ title: title.trim(), file_url: url.trim(), likes: 0 }]);
+        const { error } = await supabaseClient.from('tracks').insert([{ title: title.trim(), file_url: url.trim(), likes: 0 }]);
         if (error) {
             alert('Ошибка: ' + error.message);
         } else {
@@ -504,8 +496,8 @@
     }
 
     async function updateStats() {
-        const { count: tracksCount } = await sb.from('tracks').select('*', { count: 'exact', head: true });
-        const { count: commentsCount } = await sb.from('comments').select('*', { count: 'exact', head: true });
+        const { count: tracksCount } = await supabaseClient.from('tracks').select('*', { count: 'exact', head: true });
+        const { count: commentsCount } = await supabaseClient.from('comments').select('*', { count: 'exact', head: true });
         document.getElementById('statsPanel').innerHTML = `📊 ${tracksCount || 0} треков · 💬 ${commentsCount || 0} комментариев`;
     }
 
