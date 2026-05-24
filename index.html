@@ -5,8 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Музыкальный проект — 68</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Подключаем библиотеку для создания fingerprint устройства -->
+    <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@4/dist/fp.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        /* Фон и общие стили (как раньше) */
         .video-background {
             position: fixed;
             top: 0;
@@ -83,6 +87,24 @@
             color: white;
             display: inline-block;
         }
+        .user-info {
+            background: rgba(0,0,0,0.5);
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.8rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .user-info button {
+            background: #3b82f6;
+            border: none;
+            padding: 0.2rem 0.8rem;
+            border-radius: 1rem;
+            color: white;
+            cursor: pointer;
+        }
         .main-content {
             max-width: 1000px;
             margin: 0 auto;
@@ -93,7 +115,6 @@
             border-radius: 1.5rem;
             padding: 1.5rem;
             margin-bottom: 2rem;
-            display: none;
             border: 1px solid rgba(255,255,255,0.2);
         }
         .admin-panel h2 { color: white; margin-bottom: 1rem; }
@@ -258,32 +279,57 @@
         }
         .vk-btn { background: rgba(45, 62, 90, 0.9); }
         .tg-btn { background: rgba(0, 136, 204, 0.9); }
-        .call-admin-btn {
-            position: fixed;
-            bottom: 2rem;
-            left: 2rem;
-            background: rgba(0,0,0,0.6);
-            color: white;
-            padding: 0.4rem 1rem;
-            border-radius: 2rem;
-            cursor: pointer;
-            border: none;
-            font-size: 0.85rem;
-        }
-        .admin-logout-btn {
-            position: fixed;
-            bottom: 5rem;
-            left: 2rem;
-            background: rgba(239,68,68,0.8);
-            color: white;
-            padding: 0.3rem 0.9rem;
-            border-radius: 2rem;
-            cursor: pointer;
-            display: none;
-            border: none;
-            font-size: 0.75rem;
-        }
         .empty-message { text-align: center; padding: 2rem; color: white; }
+
+        /* Модальные окна */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 2rem;
+            width: 90%;
+            max-width: 400px;
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        .modal-content input {
+            width: 100%;
+            padding: 0.6rem;
+            margin: 0.5rem 0;
+            border-radius: 1rem;
+            border: none;
+        }
+        .modal-content button {
+            width: 100%;
+            padding: 0.6rem;
+            margin: 0.5rem 0;
+            background: #3b82f6;
+            border: none;
+            border-radius: 2rem;
+            color: white;
+            cursor: pointer;
+        }
+        .modal-content .close {
+            background: #ef4444;
+        }
+        .switch-form {
+            text-align: center;
+            margin-top: 1rem;
+            cursor: pointer;
+            color: #3b82f6;
+        }
         @media (max-width: 768px) {
             .glass-header { flex-direction: column; align-items: stretch; text-align: center; }
             .header-left { justify-content: center; }
@@ -309,11 +355,15 @@
                 <div class="stats" id="statsPanel">📊 загрузка...</div>
             </div>
         </div>
+        <div class="user-info" id="userInfo">
+            <span id="userEmail">Гость</span>
+            <button id="authBtn">Войти</button>
+        </div>
     </div>
 </div>
 
 <div class="main-content">
-    <div id="adminPanel" class="admin-panel">
+    <div id="adminPanel" class="admin-panel" style="display: none;">
         <h2>➕ Добавить трек</h2>
         <input type="text" id="trackTitle" placeholder="Название трека">
         <input type="text" id="trackUrl" placeholder="https://audio.jukehost.co.uk/...">
@@ -335,62 +385,163 @@
     <a href="https://t.me/rn_68a_muz" target="_blank" class="social-btn tg-btn">✈️ Telegram</a>
 </div>
 
-<button id="callAdminBtn" class="call-admin-btn">🔑 Админ-панель</button>
-<button id="adminLogoutBtn" class="admin-logout-btn">🚪 Выйти</button>
+<!-- Модальные окна -->
+<div id="authModal" class="modal">
+    <div class="modal-content">
+        <h2 id="modalTitle">Вход</h2>
+        <input type="email" id="authEmail" placeholder="Email">
+        <input type="password" id="authPassword" placeholder="Пароль">
+        <button id="submitAuthBtn">Войти</button>
+        <button class="close" onclick="closeModal()">Закрыть</button>
+        <div class="switch-form" onclick="toggleAuthForm()">Нет аккаунта? Зарегистрироваться</div>
+    </div>
+</div>
 
 <script>
-    // Подключаем Supabase (переменная ТОЛЬКО ОДНА - supabaseClient)
+    // ========== SUPABASE ==========
     const supabaseClient = window.supabase.createClient(
         'https://efaqqrfkxxgfsxndmyit.supabase.co',
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmYXFxcmZreHhnZnN4bmRteWl0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1MTMxMDQsImV4cCI6MjA5NTA4OTEwNH0.72YBkhIuYy_2agG8gbXxOpC4JpG__rWQvbJpK4WMugs'
     );
-    console.log('✅ Supabase подключён');
+    
+    // ========== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ==========
+    let currentUser = null;
+    let isAdmin = false;
+    let deviceFingerprint = null;
+    let currentAuthMode = 'login'; // 'login' or 'register'
 
-    let isAdmin = localStorage.getItem('music68_admin') === 'true';
-    const adminPanel = document.getElementById('adminPanel');
-    const callAdminBtn = document.getElementById('callAdminBtn');
-    const adminLogoutBtn = document.getElementById('adminLogoutBtn');
-
-    function showAdminMode() {
-        isAdmin = true;
-        localStorage.setItem('music68_admin', 'true');
-        if (adminPanel) adminPanel.style.display = 'block';
-        if (callAdminBtn) callAdminBtn.style.display = 'none';
-        if (adminLogoutBtn) adminLogoutBtn.style.display = 'block';
-        loadTracks(); 
-        loadComments();
-    }
-
-    function hideAdminMode() {
-        isAdmin = false;
-        localStorage.setItem('music68_admin', 'false');
-        if (adminPanel) adminPanel.style.display = 'none';
-        if (callAdminBtn) callAdminBtn.style.display = 'block';
-        if (adminLogoutBtn) adminLogoutBtn.style.display = 'none';
-        loadTracks(); 
-        loadComments();
-    }
-
-    if (callAdminBtn) {
-        callAdminBtn.onclick = () => {
-            const pwd = prompt('🔒 Введите пароль:');
-            if (pwd === '68admin') {
-                showAdminMode();
-                alert('✅ Добро пожаловать в админ-панель!');
-            } else if (pwd) {
-                alert('❌ Неверный пароль');
+    // ========== ПОЛУЧЕНИЕ FINGERPRINT УСТРОЙСТВА ==========
+    async function getDeviceFingerprint() {
+        if (deviceFingerprint) return deviceFingerprint;
+        try {
+            const fp = await FingerprintJS.load();
+            const result = await fp.get();
+            deviceFingerprint = result.visitorId;
+            return deviceFingerprint;
+        } catch(e) {
+            console.warn('Fingerprint не загружен, используем localStorage fallback');
+            let fp = localStorage.getItem('fallback_fp');
+            if (!fp) {
+                fp = Math.random().toString(36).substr(2, 16);
+                localStorage.setItem('fallback_fp', fp);
             }
-        };
+            deviceFingerprint = fp;
+            return deviceFingerprint;
+        }
     }
 
-    if (adminLogoutBtn) {
-        adminLogoutBtn.onclick = () => { 
-            if (confirm('Выйти из админ-режима?')) hideAdminMode(); 
-        };
+    // ========== УПРАВЛЕНИЕ АВТОРИЗАЦИЕЙ ==========
+    async function checkAuth() {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        currentUser = user;
+        if (user) {
+            const { data: profile } = await supabaseClient
+                .from('profiles')
+                .select('role, email')
+                .eq('id', user.id)
+                .single();
+            isAdmin = profile?.role === 'admin';
+            document.getElementById('userEmail').innerText = profile?.email || user.email;
+            document.getElementById('authBtn').innerText = 'Выйти';
+            // Показываем админ-панель если админ
+            const adminPanel = document.getElementById('adminPanel');
+            if (adminPanel) adminPanel.style.display = isAdmin ? 'block' : 'none';
+        } else {
+            isAdmin = false;
+            document.getElementById('userEmail').innerText = 'Гость';
+            document.getElementById('authBtn').innerText = 'Войти';
+            const adminPanel = document.getElementById('adminPanel');
+            if (adminPanel) adminPanel.style.display = 'none';
+        }
+        loadTracks();
+        loadComments();
     }
 
-    if (isAdmin) showAdminMode();
+    async function login(email, password) {
+        const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+        if (error) return alert('Ошибка входа: ' + error.message);
+        closeModal();
+        checkAuth();
+    }
 
+    async function register(email, password) {
+        const { error } = await supabaseClient.auth.signUp({ email, password });
+        if (error) return alert('Ошибка регистрации: ' + error.message);
+        alert('Регистрация успешна! Теперь войдите.');
+        toggleAuthForm();
+    }
+
+    function logout() {
+        supabaseClient.auth.signOut();
+        checkAuth();
+    }
+
+    // ========== МОДАЛЬНЫЕ ОКНА ==========
+    const modal = document.getElementById('authModal');
+    function openModal() { modal.style.display = 'flex'; }
+    function closeModal() { modal.style.display = 'none'; }
+    function toggleAuthForm() {
+        if (currentAuthMode === 'login') {
+            currentAuthMode = 'register';
+            document.getElementById('modalTitle').innerText = 'Регистрация';
+            document.getElementById('submitAuthBtn').innerText = 'Зарегистрироваться';
+            document.querySelector('.switch-form').innerText = 'Уже есть аккаунт? Войти';
+        } else {
+            currentAuthMode = 'login';
+            document.getElementById('modalTitle').innerText = 'Вход';
+            document.getElementById('submitAuthBtn').innerText = 'Войти';
+            document.querySelector('.switch-form').innerText = 'Нет аккаунта? Зарегистрироваться';
+        }
+    }
+
+    document.getElementById('authBtn').onclick = () => {
+        if (currentUser) logout();
+        else openModal();
+    };
+    document.getElementById('submitAuthBtn').onclick = () => {
+        const email = document.getElementById('authEmail').value;
+        const pass = document.getElementById('authPassword').value;
+        if (!email || !pass) return alert('Заполните поля');
+        if (currentAuthMode === 'login') login(email, pass);
+        else register(email, pass);
+    };
+
+    // ========== ЛАЙКИ ==========
+    async function likeTrack(trackId) {
+        const fingerprint = await getDeviceFingerprint();
+        const userId = currentUser?.id || null;
+        const { error } = await supabaseClient.from('likes').insert({
+            track_id: trackId,
+            user_id: userId,
+            device_fingerprint: userId ? null : fingerprint
+        });
+        if (error) {
+            if (error.message.includes('unique')) alert('Вы уже лайкали этот трек');
+            else alert('Ошибка: ' + error.message);
+        } else {
+            loadTracks(); // обновляем лайки
+        }
+    }
+
+    // ========== КОММЕНТАРИИ (только для авторизованных) ==========
+    async function addComment(text) {
+        if (!currentUser) return alert('Войдите в аккаунт, чтобы комментировать');
+        if (!text.trim()) return alert('Напишите что-нибудь');
+        if (text.length > 250) return alert('Максимум 250 символов');
+        const { error } = await supabaseClient.from('comments').insert({
+            text: text.trim(),
+            user_id: currentUser.id
+        });
+        if (error) alert('Ошибка: ' + error.message);
+        else {
+            document.getElementById('commentInput').value = '';
+            document.getElementById('charCounter').innerText = '0 / 250';
+            alert('✅ Комментарий добавлен');
+            loadComments();
+        }
+    }
+
+    // ========== ТРЕКИ ==========
     async function loadTracks() {
         const container = document.getElementById('trackList');
         container.innerHTML = '<div class="empty-message">⏳ Загрузка...</div>';
@@ -402,7 +553,17 @@
         }
         let html = '';
         for (const track of data) {
-            html += `<div class="player-card">
+            // Проверяем, лайкал ли пользователь/устройство
+            const fingerprint = await getDeviceFingerprint();
+            let liked = false;
+            if (currentUser) {
+                const { data: likeData } = await supabaseClient.from('likes').select('id').eq('track_id', track.id).eq('user_id', currentUser.id).maybeSingle();
+                liked = !!likeData;
+            } else {
+                const { data: likeData } = await supabaseClient.from('likes').select('id').eq('track_id', track.id).eq('device_fingerprint', fingerprint).maybeSingle();
+                liked = !!likeData;
+            }
+            html += `<div class="player-card" data-track-id="${track.id}">
                 <div class="track-title">${escapeHtml(track.title)}</div>
                 <div class="progress-area">
                     <div class="progress-bar-container"><div class="progress-fill"></div></div>
@@ -414,7 +575,7 @@
                         <div class="volume-control"><span>🔊</span><input type="range" class="volume-slider" min="0" max="100" value="70"></div>
                     </div>
                     <div style="display:flex; gap:0.5rem;">
-                        <button class="like-btn" data-id="${track.id}" data-likes="${track.likes || 0}">👍 ${track.likes || 0}</button>
+                        <button class="like-btn ${liked ? 'liked' : ''}" data-id="${track.id}" data-likes="${track.likes || 0}">👍 ${track.likes || 0}</button>
                         ${isAdmin ? `<button class="delete-track-btn" onclick="deleteTrack(${track.id})">🗑️ Удалить</button>` : ''}
                     </div>
                 </div>
@@ -423,38 +584,47 @@
         }
         container.innerHTML = html;
         document.querySelectorAll('.player-card').forEach(card => initPlayer(card));
-        document.querySelectorAll('.like-btn').forEach(btn => { btn.onclick = () => likeTrack(btn); });
+        document.querySelectorAll('.like-btn').forEach(btn => {
+            btn.onclick = () => likeTrack(parseInt(btn.dataset.id));
+        });
         updateStats();
     }
 
-    async function likeTrack(btn) {
-        const id = btn.dataset.id;
-        const likes = parseInt(btn.dataset.likes);
-        const isLiked = btn.classList.contains('liked');
-        const newLikes = isLiked ? likes - 1 : likes + 1;
-        await supabaseClient.from('tracks').update({ likes: newLikes }).eq('id', id);
-        loadTracks();
+    async function deleteTrack(id) {
+        if (!isAdmin) return;
+        if (confirm('Удалить трек?')) {
+            await supabaseClient.from('tracks').delete().eq('id', id);
+            loadTracks();
+        }
     }
 
-    window.deleteTrack = async (id) => { 
-        if (confirm('Удалить трек?')) { 
-            await supabaseClient.from('tracks').delete().eq('id', id); 
-            loadTracks(); 
-        } 
-    };
+    async function addTrack(title, url) {
+        if (!isAdmin) return alert('⛔ Только админ');
+        if (!title.trim() || !url.trim()) return alert('Заполните все поля');
+        const { error } = await supabaseClient.from('tracks').insert([{ title: title.trim(), file_url: url.trim(), likes: 0 }]);
+        if (error) alert('Ошибка: ' + error.message);
+        else {
+            alert('✅ Трек добавлен');
+            document.getElementById('trackTitle').value = '';
+            document.getElementById('trackUrl').value = '';
+            loadTracks();
+        }
+    }
 
+    // ========== ЗАГРУЗКА КОММЕНТАРИЕВ ==========
     async function loadComments() {
         const container = document.getElementById('commentsList');
-        const { data, error } = await supabaseClient.from('comments').select('*').order('created_at', { ascending: false });
+        const { data, error } = await supabaseClient.from('comments').select('*, profiles(email)').order('created_at', { ascending: false });
         if (error || !data?.length) { 
             container.innerHTML = '<div class="empty-message">💭 Будь первым!</div>'; 
             return; 
         }
         let html = '';
         for (const c of data) {
+            const author = c.profiles?.email || 'Гость';
             html += `<div class="comment">
                         <div>
-                            <span class="comment-author">💬 ${escapeHtml(c.author)}</span> 
+                            <span class="comment-author">💬 ${escapeHtml(author)}</span> 
                             <span class="comment-date">${new Date(c.created_at).toLocaleString()}</span>
                             <div class="comment-text">${escapeHtml(c.text)}</div>
                         </div>
@@ -464,34 +634,11 @@
         container.innerHTML = html;
     }
 
-    window.deleteComment = async (id) => { 
-        if (confirm('Удалить комментарий?')) { 
-            await supabaseClient.from('comments').delete().eq('id', id); 
-            loadComments(); 
-        } 
-    };
-
-    async function addComment(text) {
-        if (!text.trim()) return alert('Напишите что-нибудь');
-        if (text.length > 250) return alert('Максимум 250 символов');
-        await supabaseClient.from('comments').insert([{ text: text.trim(), author: 'Слушатель' }]);
-        document.getElementById('commentInput').value = '';
-        document.getElementById('charCounter').innerText = '0 / 250';
-        alert('✅ Комментарий добавлен');
-        loadComments();
-    }
-
-    async function addTrack(title, url) {
-        if (!isAdmin) return alert('⛔ Только админ');
-        if (!title.trim() || !url.trim()) return alert('Заполните все поля');
-        const { error } = await supabaseClient.from('tracks').insert([{ title: title.trim(), file_url: url.trim(), likes: 0 }]);
-        if (error) {
-            alert('Ошибка: ' + error.message);
-        } else {
-            alert('✅ Трек добавлен');
-            document.getElementById('trackTitle').value = '';
-            document.getElementById('trackUrl').value = '';
-            loadTracks();
+    async function deleteComment(id) {
+        if (!isAdmin) return;
+        if (confirm('Удалить комментарий?')) {
+            await supabaseClient.from('comments').delete().eq('id', id);
+            loadComments();
         }
     }
 
@@ -565,7 +712,6 @@
 
     document.getElementById('addTrackBtn').onclick = () => addTrack(document.getElementById('trackTitle').value, document.getElementById('trackUrl').value);
     document.getElementById('sendCommentBtn').onclick = () => addComment(document.getElementById('commentInput').value);
-    document.getElementById('commentInput').addEventListener('keydown', (e) => { if (e.ctrlKey && e.key === 'Enter') addComment(e.target.value); });
     document.getElementById('commentInput').addEventListener('input', function() { 
         const len = this.value.length; 
         const counter = document.getElementById('charCounter'); 
@@ -574,8 +720,7 @@
         else counter.classList.remove('warning'); 
     });
 
-    loadTracks();
-    loadComments();
+    checkAuth();
 </script>
 </body>
 </html>
