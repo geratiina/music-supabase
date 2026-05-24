@@ -365,13 +365,13 @@
 <button id="adminLogoutBtn" class="admin-logout-btn">🚪 Выйти</button>
 
 <script>
-    // ========== SUPABASE (объявляем только один раз) ==========
-    const SUPABASE_URL = 'https://efaqqrfkxxgfsxndmyit.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmYXFxcmZreHhnZnN4bmRteWl0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1MTMxMDQsImV4cCI6MjA5NTA4OTEwNH0.72YBkhIuYy_2agG8gbXxOpC4JpG__rWQvbJpK4WMugs';
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    console.log('Supabase подключён');
+    // ========== 1. ПОДКЛЮЧАЕМСЯ К SUPABASE (ОДИН РАЗ) ==========
+    const _SUPABASE_URL = 'https://efaqqrfkxxgfsxndmyit.supabase.co';
+    const _SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmYXFxcmZreHhnZnN4bmRteWl0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1MTMxMDQsImV4cCI6MjA5NTA4OTEwNH0.72YBkhIuYy_2agG8gbXxOpC4JpG__rWQvbJpK4WMugs';
+    const supabaseClient = window.supabase.createClient(_SUPABASE_URL, _SUPABASE_KEY);
+    console.log('✅ Supabase подключён');
 
-    // ========== АДМИН-ПАНЕЛЬ ==========
+    // ========== 2. АДМИН-ПАНЕЛЬ ==========
     let isAdmin = localStorage.getItem('music68_admin') === 'true';
     const adminPanel = document.getElementById('adminPanel');
     const callAdminBtn = document.getElementById('callAdminBtn');
@@ -422,19 +422,38 @@
 
     if (isAdmin) showAdminMode();
 
-    // ========== ОСНОВНЫЕ ФУНКЦИИ ==========
+    // ========== 3. ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ==========
+    function escapeHtml(str) { 
+        if (!str) return ''; 
+        return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])); 
+    }
+
+    function formatTime(sec) { 
+        if (isNaN(sec)) return '00:00'; 
+        const m = Math.floor(sec / 60); 
+        const s = Math.floor(sec % 60); 
+        return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`; 
+    }
+
+    // ========== 4. РАБОТА С ТРЕКАМИ ==========
     async function loadTracks() {
         const container = document.getElementById('trackList');
         container.innerHTML = '<div class="empty-message">⏳ Загрузка...</div>';
-        const { data, error } = await supabase.from('tracks').select('*').order('created_at', { ascending: false });
-        if (error || !data?.length) {
+        const { data, error } = await supabaseClient.from('tracks').select('*').order('created_at', { ascending: false });
+        if (error) {
+            console.error('Ошибка загрузки треков:', error);
+            container.innerHTML = '<div class="empty-message">❌ Ошибка загрузки треков. Проверь таблицу "tracks" в Supabase.</div>';
+            updateStats(); 
+            return;
+        }
+        if (!data || data.length === 0) {
             container.innerHTML = '<div class="empty-message">🎧 Пока нет треков</div>';
             updateStats(); 
             return;
         }
         let html = '';
         for (const track of data) {
-            html += `<div class="player-card">
+            html += `<div class="player-card" data-track-id="${track.id}">
                 <div class="track-title">${escapeHtml(track.title)}</div>
                 <div class="progress-area">
                     <div class="progress-bar-container"><div class="progress-fill"></div></div>
@@ -450,87 +469,17 @@
                         ${isAdmin ? `<button class="delete-track-btn" onclick="deleteTrack(${track.id})">🗑️ Удалить</button>` : ''}
                     </div>
                 </div>
-                <audio style="display:none;"><source src="${track.file_url}" type="audio/mpeg"></audio>
+                <audio style="display:none;" preload="metadata"><source src="${track.file_url}" type="audio/mpeg"></audio>
             </div>`;
         }
         container.innerHTML = html;
+        
+        // Инициализируем плееры и лайки
         document.querySelectorAll('.player-card').forEach(card => initPlayer(card));
-        document.querySelectorAll('.like-btn').forEach(btn => { btn.onclick = () => likeTrack(btn); });
+        document.querySelectorAll('.like-btn').forEach(btn => { 
+            btn.onclick = () => likeTrack(btn); 
+        });
         updateStats();
-    }
-
-    async function likeTrack(btn) {
-        const id = btn.dataset.id;
-        const likes = parseInt(btn.dataset.likes);
-        const isLiked = btn.classList.contains('liked');
-        const newLikes = isLiked ? likes - 1 : likes + 1;
-        await supabase.from('tracks').update({ likes: newLikes }).eq('id', id);
-        loadTracks();
-    }
-
-    async function addTrack(title, url) {
-        if (!isAdmin) return alert('⛔ Только админ');
-        if (!title.trim() || !url.trim()) return alert('Заполните все поля');
-        const { error } = await supabase.from('tracks').insert([{ title: title.trim(), file_url: url.trim(), likes: 0 }]);
-        if (error) {
-            alert('Ошибка: ' + error.message);
-        } else {
-            alert('✅ Трек добавлен');
-            document.getElementById('trackTitle').value = '';
-            document.getElementById('trackUrl').value = '';
-            loadTracks();
-        }
-    }
-
-    window.deleteTrack = async (id) => { 
-        if (confirm('Удалить трек навсегда?')) { 
-            await supabase.from('tracks').delete().eq('id', id); 
-            loadTracks(); 
-        } 
-    };
-
-    async function loadComments() {
-        const container = document.getElementById('commentsList');
-        const { data, error } = await supabase.from('comments').select('*').order('created_at', { ascending: false });
-        if (error || !data?.length) { 
-            container.innerHTML = '<div class="empty-message">💭 Будь первым!</div>'; 
-            return; 
-        }
-        let html = '';
-        for (const c of data) {
-            html += `<div class="comment">
-                        <div>
-                            <span class="comment-author">💬 ${escapeHtml(c.author)}</span> 
-                            <span class="comment-date">${new Date(c.created_at).toLocaleString()}</span>
-                            <div class="comment-text">${escapeHtml(c.text)}</div>
-                        </div>
-                        ${isAdmin ? `<button onclick="deleteComment(${c.id})" style="background:#ef4444; border:none; color:white; border-radius:2rem; padding:0.2rem 0.7rem; cursor:pointer;">🗑️</button>` : ''}
-                    </div>`;
-        }
-        container.innerHTML = html;
-    }
-
-    window.deleteComment = async (id) => { 
-        if (confirm('Удалить комментарий?')) { 
-            await supabase.from('comments').delete().eq('id', id); 
-            loadComments(); 
-        } 
-    };
-
-    async function addComment(text) {
-        if (!text.trim()) return alert('Напишите что-нибудь');
-        if (text.length > 250) return alert('Максимум 250 символов');
-        await supabase.from('comments').insert([{ text: text.trim(), author: 'Слушатель' }]);
-        document.getElementById('commentInput').value = '';
-        document.getElementById('charCounter').innerText = '0 / 250';
-        alert('✅ Комментарий добавлен');
-        loadComments();
-    }
-
-    async function updateStats() {
-        const { count: tracksCount } = await supabase.from('tracks').select('*', { count: 'exact', head: true });
-        const { count: commentsCount } = await supabase.from('comments').select('*', { count: 'exact', head: true });
-        document.getElementById('statsPanel').innerHTML = `📊 ${tracksCount || 0} треков · 💬 ${commentsCount || 0} комментариев`;
     }
 
     function initPlayer(card) {
@@ -542,6 +491,8 @@
         const durationSpan = card.querySelector('.duration');
         const volumeSlider = card.querySelector('.volume-slider');
         let isPlaying = false;
+
+        if (!audio) return;
 
         audio.addEventListener('loadedmetadata', () => {
             durationSpan.textContent = formatTime(audio.duration);
@@ -583,19 +534,93 @@
         audio.volume = 0.7;
     }
 
-    function formatTime(sec) { 
-        if (isNaN(sec)) return '00:00'; 
-        const m = Math.floor(sec / 60); 
-        const s = Math.floor(sec % 60); 
-        return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`; 
+    async function likeTrack(btn) {
+        const id = btn.dataset.id;
+        const likes = parseInt(btn.dataset.likes);
+        const isLiked = btn.classList.contains('liked');
+        const newLikes = isLiked ? likes - 1 : likes + 1;
+        const { error } = await supabaseClient.from('tracks').update({ likes: newLikes }).eq('id', id);
+        if (!error) loadTracks();
     }
 
-    function escapeHtml(str) { 
-        if (!str) return ''; 
-        return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])); 
+    async function addTrack(title, url) {
+        if (!isAdmin) return alert('⛔ Только админ');
+        if (!title.trim() || !url.trim()) return alert('Заполните все поля');
+        const { error } = await supabaseClient.from('tracks').insert([{ title: title.trim(), file_url: url.trim(), likes: 0 }]);
+        if (error) {
+            alert('Ошибка: ' + error.message);
+        } else {
+            alert('✅ Трек добавлен');
+            document.getElementById('trackTitle').value = '';
+            document.getElementById('trackUrl').value = '';
+            loadTracks();
+        }
     }
 
-    // ========== ЗАПУСК ПРИЛОЖЕНИЯ ==========
+    window.deleteTrack = async (id) => { 
+        if (confirm('Удалить трек навсегда?')) { 
+            await supabaseClient.from('tracks').delete().eq('id', id); 
+            loadTracks(); 
+        } 
+    };
+
+    // ========== 5. РАБОТА С КОММЕНТАРИЯМИ ==========
+    async function loadComments() {
+        const container = document.getElementById('commentsList');
+        const { data, error } = await supabaseClient.from('comments').select('*').order('created_at', { ascending: false });
+        if (error) {
+            console.error('Ошибка загрузки комментариев:', error);
+            container.innerHTML = '<div class="empty-message">❌ Ошибка загрузки комментариев. Проверь таблицу "comments" в Supabase.</div>';
+            return;
+        }
+        if (!data || data.length === 0) { 
+            container.innerHTML = '<div class="empty-message">💭 Будь первым!</div>'; 
+            return; 
+        }
+        let html = '';
+        for (const c of data) {
+            html += `<div class="comment" data-id="${c.id}">
+                        <div>
+                            <span class="comment-author">💬 ${escapeHtml(c.author)}</span> 
+                            <span class="comment-date">${new Date(c.created_at).toLocaleString()}</span>
+                            <div class="comment-text">${escapeHtml(c.text)}</div>
+                        </div>
+                        ${isAdmin ? `<button onclick="deleteComment(${c.id})" style="background:#ef4444; border:none; color:white; border-radius:2rem; padding:0.2rem 0.7rem; cursor:pointer;">🗑️</button>` : ''}
+                    </div>`;
+        }
+        container.innerHTML = html;
+    }
+
+    window.deleteComment = async (id) => { 
+        if (confirm('Удалить комментарий?')) { 
+            await supabaseClient.from('comments').delete().eq('id', id); 
+            loadComments(); 
+        } 
+    };
+
+    async function addComment(text) {
+        if (!text.trim()) return alert('Напишите что-нибудь');
+        if (text.length > 250) return alert('Максимум 250 символов');
+        const { error } = await supabaseClient.from('comments').insert([{ text: text.trim(), author: 'Слушатель' }]);
+        if (error) {
+            console.error('Ошибка добавления комментария:', error);
+            alert('Ошибка: ' + error.message);
+        } else {
+            document.getElementById('commentInput').value = '';
+            document.getElementById('charCounter').innerText = '0 / 250';
+            alert('✅ Комментарий добавлен');
+            loadComments();
+        }
+    }
+
+    // ========== 6. СТАТИСТИКА ==========
+    async function updateStats() {
+        const { count: tracksCount } = await supabaseClient.from('tracks').select('*', { count: 'exact', head: true });
+        const { count: commentsCount } = await supabaseClient.from('comments').select('*', { count: 'exact', head: true });
+        document.getElementById('statsPanel').innerHTML = `📊 ${tracksCount || 0} треков · 💬 ${commentsCount || 0} комментариев`;
+    }
+
+    // ========== 7. ЗАПУСК ПРИЛОЖЕНИЯ ==========
     document.getElementById('addTrackBtn').onclick = () => addTrack(document.getElementById('trackTitle').value, document.getElementById('trackUrl').value);
     document.getElementById('sendCommentBtn').onclick = () => addComment(document.getElementById('commentInput').value);
     document.getElementById('commentInput').addEventListener('keydown', (e) => { if (e.ctrlKey && e.key === 'Enter') addComment(e.target.value); });
