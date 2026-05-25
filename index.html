@@ -517,6 +517,7 @@
             height: 100%;
             width: 0%;
             position: relative;
+            transition: width 0.1s linear;
         }
         @media (min-width: 769px) {
             .progress-fill::after {
@@ -1061,12 +1062,28 @@
         }
     }
     
-    // ФУНКЦИЯ СБРОСА ПРОГРЕСС-БАРА У ТРЕКА
+    // ФУНКЦИЯ СБРОСА ПРОГРЕСС-БАРА У ТРЕКА (УЛУЧШЕННАЯ ДЛЯ МОБИЛЬНЫХ)
     function resetProgressBar(trackId) {
+        // Находим элемент прогресс-бара
         const progressFill = document.querySelector(`#progress-${trackId} .progress-fill`);
         const currentSpan = document.getElementById(`current-time-${trackId}`);
-        if (progressFill) progressFill.style.width = '0%';
-        if (currentSpan) currentSpan.textContent = '00:00';
+        
+        if (progressFill) {
+            // Принудительно сбрасываем ширину через style
+            progressFill.style.width = '0%';
+            // Также обновляем атрибут для надёжности
+            progressFill.setAttribute('style', 'width: 0%');
+        }
+        if (currentSpan) {
+            currentSpan.textContent = '00:00';
+        }
+        
+        // Дополнительная проверка для мобильных: обновляем через requestAnimationFrame
+        if (progressFill) {
+            requestAnimationFrame(() => {
+                progressFill.style.width = '0%';
+            });
+        }
     }
     
     // ФУНКЦИЯ ОСТАНОВКИ ТЕКУЩЕГО ТРЕКА
