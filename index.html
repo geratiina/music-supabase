@@ -94,9 +94,10 @@
             gap: 10px;
         }
         .auth-buttons-top .auth-btn {
-            background: #3b82f6;
-            border: none;
-            padding: 8px 16px;
+            background: rgba(59, 130, 246, 0.9);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 8px 20px;
             border-radius: 2rem;
             color: white;
             cursor: pointer;
@@ -107,9 +108,12 @@
         }
         .auth-buttons-top .auth-btn:hover {
             transform: scale(1.02);
-            opacity: 0.9;
+            background: #3b82f6;
         }
         .auth-buttons-top .logout-btn {
+            background: rgba(239, 68, 68, 0.9);
+        }
+        .auth-buttons-top .logout-btn:hover {
             background: #ef4444;
         }
         
@@ -334,6 +338,151 @@
             font-size: 0.7rem;
             color: #3b82f6;
             margin-top: 0.2rem;
+        }
+        
+        /* НОВЫЕ СТИЛИ ДЛЯ МОДАЛЬНЫХ ОКОН ВХОДА/РЕГИСТРАЦИИ */
+        .auth-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        .auth-modal.active {
+            display: flex;
+        }
+        .auth-card {
+            background: linear-gradient(135deg, rgba(20, 20, 40, 0.95), rgba(10, 10, 25, 0.98));
+            backdrop-filter: blur(20px);
+            border-radius: 2rem;
+            width: 90%;
+            max-width: 400px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            animation: fadeInUp 0.3s ease;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .auth-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        .auth-header h2 {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff, #a5f3fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .auth-header p {
+            color: #94a3b8;
+            font-size: 0.85rem;
+            margin-top: 0.3rem;
+        }
+        .input-group {
+            margin-bottom: 1.2rem;
+        }
+        .input-group label {
+            display: block;
+            color: #cbd5e1;
+            font-size: 0.8rem;
+            margin-bottom: 0.3rem;
+            font-weight: 500;
+        }
+        .input-field {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 1rem;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+        .input-field::placeholder {
+            color: #64748b;
+        }
+        .auth-btn-submit {
+            width: 100%;
+            padding: 0.9rem;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            border: none;
+            border-radius: 1rem;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 0.5rem;
+        }
+        .auth-btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.4);
+        }
+        .auth-footer {
+            text-align: center;
+            margin-top: 1.2rem;
+        }
+        .auth-footer button {
+            background: none;
+            border: none;
+            color: #3b82f6;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .auth-footer button:hover {
+            text-decoration: underline;
+        }
+        .close-auth {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .close-auth:hover {
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.05);
+        }
+        .error-message {
+            color: #ef4444;
+            font-size: 0.75rem;
+            margin-top: 0.3rem;
+            display: block;
         }
         
         .modal {
@@ -625,28 +774,6 @@
         
         .empty-message { text-align: center; padding: 2rem; color: white; }
         
-        .password-wrapper { position: relative; width: 100%; margin: 0.5rem 0; }
-        .password-wrapper input {
-            width: 100%;
-            padding: 0.6rem 2.5rem 0.6rem 1rem;
-            margin: 0;
-            border-radius: 1rem;
-            border: none;
-            background: rgba(255,255,255,0.9);
-            box-sizing: border-box;
-        }
-        .password-toggle {
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            font-size: 1.2rem;
-            user-select: none;
-            color: #888;
-        }
-        .password-toggle.active { color: white; text-shadow: 0 0 4px #3b82f6; }
-        
         .user-panel {
             position: fixed;
             bottom: 20px;
@@ -678,7 +805,7 @@
             .burger-menu-fixed .menu-icon { width: 20px; height: 16px; }
             .age-badge-header { font-size: 0.6rem; padding: 0.15rem 0.4rem; }
             .auth-buttons-top { top: 10px; right: 10px; }
-            .auth-buttons-top .auth-btn { padding: 5px 10px; font-size: 0.7rem; }
+            .auth-buttons-top .auth-btn { padding: 5px 12px; font-size: 0.7rem; }
             .site-wrapper { flex-direction: column; gap: 0; }
             .ad-sidebar { display: none; }
             .main-content { max-width: 100%; }
@@ -705,6 +832,7 @@
             .user-panel { bottom: 10px; left: 10px; padding: 0.3rem 0.8rem; font-size: 0.7rem; }
             .author-menu { width: 100%; left: -100%; }
             .singer-photo { width: 150px; height: 150px; }
+            .auth-card { padding: 1.5rem; margin: 1rem; }
         }
     </style>
 </head>
@@ -840,17 +968,56 @@
     </div>
 </div>
 
-<div id="authModal" class="modal">
-    <div class="modal-content">
-        <h2 id="modalTitle">Вход</h2>
-        <input type="email" id="authEmail" placeholder="Email">
-        <div class="password-wrapper">
-            <input type="password" id="authPassword" placeholder="Пароль">
-            <span class="password-toggle" onclick="togglePassword('authPassword', this)">👁️</span>
+<!-- НОВЫЕ МОДАЛЬНЫЕ ОКНА ВХОДА И РЕГИСТРАЦИИ -->
+<div id="loginModal" class="auth-modal">
+    <button class="close-auth" onclick="closeLoginModal()">✕</button>
+    <div class="auth-card">
+        <div class="auth-header">
+            <h2>Добро пожаловать</h2>
+            <p>Войдите в свой аккаунт</p>
         </div>
-        <input type="text" id="authUsername" placeholder="Логин (3-8 латиница)" style="display: none;">
-        <button id="submitAuthBtn">Войти</button>
-        <button class="close-modal" onclick="closeModal()">Закрыть</button>
+        <form id="loginForm" onsubmit="event.preventDefault(); submitLogin();">
+            <div class="input-group">
+                <label>Email</label>
+                <input type="email" id="loginEmail" class="input-field" placeholder="your@email.com" required>
+            </div>
+            <div class="input-group">
+                <label>Пароль</label>
+                <input type="password" id="loginPassword" class="input-field" placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="auth-btn-submit">Войти</button>
+        </form>
+        <div class="auth-footer">
+            <button onclick="switchToRegister()">Нет аккаунта? Зарегистрироваться</button>
+        </div>
+    </div>
+</div>
+
+<div id="registerModal" class="auth-modal">
+    <button class="close-auth" onclick="closeRegisterModal()">✕</button>
+    <div class="auth-card">
+        <div class="auth-header">
+            <h2>Создать аккаунт</h2>
+            <p>Присоединяйтесь к сообществу</p>
+        </div>
+        <form id="registerForm" onsubmit="event.preventDefault(); submitRegister();">
+            <div class="input-group">
+                <label>Логин (3-8 латиница)</label>
+                <input type="text" id="regUsername" class="input-field" placeholder="username" required>
+            </div>
+            <div class="input-group">
+                <label>Email</label>
+                <input type="email" id="regEmail" class="input-field" placeholder="your@email.com" required>
+            </div>
+            <div class="input-group">
+                <label>Пароль</label>
+                <input type="password" id="regPassword" class="input-field" placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="auth-btn-submit">Зарегистрироваться</button>
+        </form>
+        <div class="auth-footer">
+            <button onclick="switchToLogin()">Уже есть аккаунт? Войти</button>
+        </div>
     </div>
 </div>
 
@@ -863,9 +1030,8 @@
     let currentUser = null;
     let isAdmin = false;
     let deviceFingerprint = null;
-    let currentAuthMode = 'login';
     
-    // ГЛОБАЛЬНЫЙ ПЛЕЕР
+    // Глобальный плеер
     let currentAudio = null;
     let currentTrackId = null;
     let currentIndex = -1;
@@ -889,12 +1055,6 @@
     }
 
     function isValidUsername(username) { return /^[a-zA-Z]{3,8}$/.test(username); }
-
-    function togglePassword(inputId, element) {
-        const input = document.getElementById(inputId);
-        if (input.type === 'password') { input.type = 'text'; element.classList.add('active'); }
-        else { input.type = 'password'; element.classList.remove('active'); }
-    }
 
     async function downloadTrack(button) {
         const url = button.dataset.url;
@@ -924,6 +1084,94 @@
         if (adminPanel) adminPanel.style.display = 'none';
     }
 
+    // ФУНКЦИИ ДЛЯ МОДАЛЬНЫХ ОКОН
+    function openLoginModal() {
+        document.getElementById('loginModal').classList.add('active');
+        document.getElementById('registerModal').classList.remove('active');
+    }
+    function closeLoginModal() {
+        document.getElementById('loginModal').classList.remove('active');
+    }
+    function openRegisterModal() {
+        document.getElementById('registerModal').classList.add('active');
+        document.getElementById('loginModal').classList.remove('active');
+    }
+    function closeRegisterModal() {
+        document.getElementById('registerModal').classList.remove('active');
+    }
+    function switchToRegister() {
+        closeLoginModal();
+        openRegisterModal();
+    }
+    function switchToLogin() {
+        closeRegisterModal();
+        openLoginModal();
+    }
+    
+    async function submitLogin() {
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+        if (!email || !password) {
+            alert('Заполните все поля');
+            return;
+        }
+        const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+        if (error) {
+            alert(error.message.includes('Invalid login credentials') ? '❌ Неверный email или пароль' : 'Ошибка: ' + error.message);
+            return;
+        }
+        closeLoginModal();
+        checkAuth();
+    }
+    
+    async function submitRegister() {
+        const username = document.getElementById('regUsername').value.trim();
+        const email = document.getElementById('regEmail').value;
+        const password = document.getElementById('regPassword').value;
+        
+        if (!username || !email || !password) {
+            alert('Заполните все поля');
+            return;
+        }
+        if (!isValidUsername(username)) {
+            alert('❌ Логин: только латиница, 3-8 символов');
+            return;
+        }
+        if (containsBadWords(username)) {
+            alert('❌ Логин содержит недопустимые слова');
+            return;
+        }
+        
+        const { data: existing } = await supabaseClient.from('profiles').select('username').eq('username', username).maybeSingle();
+        if (existing) {
+            alert('❌ Логин уже занят');
+            return;
+        }
+        
+        const { data, error } = await supabaseClient.auth.signUp({ 
+            email, 
+            password, 
+            options: { data: { username } } 
+        });
+        
+        if (error) {
+            alert(error.message.includes('User already registered') ? '❌ Email уже зарегистрирован' : 'Ошибка: ' + error.message);
+            return;
+        }
+        
+        if (data.user) {
+            await new Promise(r => setTimeout(r, 1000));
+            const { error: updateError } = await supabaseClient.from('profiles').update({ username }).eq('id', data.user.id);
+            if (updateError?.message.includes('no rows')) {
+                await supabaseClient.from('profiles').insert({ id: data.user.id, email, username, role: 'user' });
+            }
+        }
+        
+        alert('✅ Регистрация успешна! Теперь войдите.');
+        closeRegisterModal();
+        openLoginModal();
+    }
+
     async function checkAuth() {
         const { data: { user }, error } = await supabaseClient.auth.getUser();
         if (error || !user) {
@@ -940,7 +1188,7 @@
             loadTracks(); loadComments();
             return;
         }
-        currentUser = user;
+        currentUser = { ...user, username: profile.username };
         isAdmin = profile.role === 'admin' || profile.role === 'tech_admin';
         const displayName = profile.username || 'Пользователь';
         document.getElementById('userPanelName').innerText = displayName;
@@ -957,52 +1205,14 @@
         loadTracks(); loadComments();
     }
 
-    async function login(email, password) {
-        const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
-        if (error) { alert(error.message.includes('Invalid login credentials') ? '❌ Такой учётной записи нет' : 'Ошибка: ' + error.message); return; }
-        closeModal(); checkAuth();
+    function logout() { 
+        supabaseClient.auth.signOut(); 
+        checkAuth(); 
     }
 
-    async function register(email, password, username) {
-        if (!username?.trim()) return alert('❌ Логин обязателен');
-        if (!isValidUsername(username)) return alert('❌ Логин: только латиница, 3-8 символов');
-        if (containsBadWords(username)) return alert('❌ Логин содержит недопустимые слова');
-        const { data: existing } = await supabaseClient.from('profiles').select('username').eq('username', username).maybeSingle();
-        if (existing) return alert('❌ Логин уже занят');
-        const { data, error } = await supabaseClient.auth.signUp({ email, password, options: { data: { username } } });
-        if (error) return alert(error.message.includes('User already registered') ? '❌ Email уже зарегистрирован' : 'Ошибка: ' + error.message);
-        if (data.user) {
-            await new Promise(r => setTimeout(r, 1000));
-            const { error: updateError } = await supabaseClient.from('profiles').update({ username }).eq('id', data.user.id);
-            if (updateError?.message.includes('no rows')) { await supabaseClient.from('profiles').insert({ id: data.user.id, email, username, role: 'user' }); }
-        }
-        alert('✅ Регистрация успешна! Теперь войдите.');
-        toggleToLogin();
-    }
-
-    function logout() { supabaseClient.auth.signOut(); checkAuth(); }
-
-    const modal = document.getElementById('authModal');
-    function openModal() { modal.style.display = 'flex'; }
-    function closeModal() { modal.style.display = 'none'; }
-    function toggleToLogin() {
-        currentAuthMode = 'login';
-        document.getElementById('modalTitle').innerText = 'Вход';
-        document.getElementById('submitAuthBtn').innerText = 'Войти';
-        document.getElementById('authUsername').style.display = 'none';
-    }
-
-    document.getElementById('loginBtnTop').onclick = () => { currentAuthMode = 'login'; document.getElementById('modalTitle').innerText = 'Вход'; document.getElementById('submitAuthBtn').innerText = 'Войти'; document.getElementById('authUsername').style.display = 'none'; openModal(); };
-    document.getElementById('registerBtnTop').onclick = () => { currentAuthMode = 'register'; document.getElementById('modalTitle').innerText = 'Регистрация'; document.getElementById('submitAuthBtn').innerText = 'Зарегистрироваться'; document.getElementById('authUsername').style.display = 'block'; document.getElementById('authUsername').placeholder = 'Логин (3-8 латиница)'; openModal(); };
+    document.getElementById('loginBtnTop').onclick = () => openLoginModal();
+    document.getElementById('registerBtnTop').onclick = () => openRegisterModal();
     document.getElementById('logoutBtnTop').onclick = () => logout();
-    document.getElementById('submitAuthBtn').onclick = () => {
-        const email = document.getElementById('authEmail').value;
-        const pass = document.getElementById('authPassword').value;
-        const username = document.getElementById('authUsername').value;
-        if (!email || !pass) return alert('Заполните email и пароль');
-        if (currentAuthMode === 'login') login(email, pass);
-        else register(email, pass, username);
-    };
 
     async function likeTrack(trackId) {
         const fingerprint = await getDeviceFingerprint();
@@ -1062,31 +1272,13 @@
         }
     }
     
-    // ФУНКЦИЯ СБРОСА ПРОГРЕСС-БАРА У ТРЕКА (УЛУЧШЕННАЯ ДЛЯ МОБИЛЬНЫХ)
     function resetProgressBar(trackId) {
-        // Находим элемент прогресс-бара
         const progressFill = document.querySelector(`#progress-${trackId} .progress-fill`);
         const currentSpan = document.getElementById(`current-time-${trackId}`);
-        
-        if (progressFill) {
-            // Принудительно сбрасываем ширину через style
-            progressFill.style.width = '0%';
-            // Также обновляем атрибут для надёжности
-            progressFill.setAttribute('style', 'width: 0%');
-        }
-        if (currentSpan) {
-            currentSpan.textContent = '00:00';
-        }
-        
-        // Дополнительная проверка для мобильных: обновляем через requestAnimationFrame
-        if (progressFill) {
-            requestAnimationFrame(() => {
-                progressFill.style.width = '0%';
-            });
-        }
+        if (progressFill) progressFill.style.width = '0%';
+        if (currentSpan) currentSpan.textContent = '00:00';
     }
     
-    // ФУНКЦИЯ ОСТАНОВКИ ТЕКУЩЕГО ТРЕКА
     function stopCurrentTrack() {
         if (currentAudio) {
             currentAudio.pause();
@@ -1096,25 +1288,19 @@
             }
             currentAudio = null;
         }
-        
-        // Сбрасываем кнопку play и прогресс-бар у предыдущего трека
         if (currentTrackId !== null) {
             const prevPlayBtn = document.querySelector(`.play-overlay[data-track-id="${currentTrackId}"]`);
             if (prevPlayBtn) prevPlayBtn.innerHTML = '<span>▶</span>';
             const prevVolume = document.getElementById(`volume-${currentTrackId}`);
             if (prevVolume) prevVolume.classList.remove('visible');
-            // Сбрасываем прогресс-бар остановленного трека
             resetProgressBar(currentTrackId);
         }
-        
         currentTrackId = null;
         currentIndex = -1;
     }
     
-    // ФУНКЦИЯ ЗАПУСКА ТРЕКА ПО ИНДЕКСУ
     function playTrackByIndex(index) {
         if (index < 0 || index >= tracksData.length) return;
-        
         const track = tracksData[index];
         const audio = document.getElementById(`audio-${track.id}`);
         const playBtn = document.querySelector(`.play-overlay[data-track-id="${track.id}"]`);
@@ -1123,21 +1309,13 @@
         const currentSpan = document.getElementById(`current-time-${track.id}`);
         const durationSpan = document.getElementById(`duration-time-${track.id}`);
         const progressBar = document.querySelector(`#progress-${track.id} .progress-bar-container`);
-        
         if (!audio) return;
-        
-        // Останавливаем текущий трек и сбрасываем его прогресс
         stopCurrentTrack();
-        
-        // Сбрасываем прогресс-бар нового трека на всякий случай
         resetProgressBar(track.id);
-        
-        // Устанавливаем новый текущий трек
         currentAudio = audio;
         currentTrackId = track.id;
         currentIndex = index;
         
-        // Функция обновления прогресса для этого трека
         const updateTimeDisplay = function() {
             if (currentSpan && currentAudio && currentAudio.duration && !isNaN(currentAudio.duration)) {
                 const currentMins = Math.floor(currentAudio.currentTime / 60);
@@ -1147,8 +1325,6 @@
                 if (progressFill) progressFill.style.width = `${percent}%`;
             }
         };
-        
-        // Устанавливаем обработчик метаданных для длительности
         const onLoadedMetadata = function() {
             if (durationSpan && currentAudio && !isNaN(currentAudio.duration)) {
                 const mins = Math.floor(currentAudio.duration / 60);
@@ -1156,17 +1332,12 @@
                 durationSpan.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
             }
         };
-        
-        // Функция для переключения на следующий трек с очисткой прогресса
         const onTrackEnded = function() {
-            // Сначала сбрасываем прогресс-бар у завершившегося трека
             resetProgressBar(track.id);
-            
             const nextIndex = currentIndex + 1;
             if (nextIndex < tracksData.length) {
                 playTrackByIndex(nextIndex);
             } else {
-                // Если треки закончились, просто останавливаем
                 if (playBtn) playBtn.innerHTML = '<span>▶</span>';
                 if (volumeControl) volumeControl.classList.remove('visible');
                 currentAudio = null;
@@ -1174,30 +1345,18 @@
                 currentIndex = -1;
             }
         };
-        
-        // Добавляем обработчики
         audio.addEventListener('loadedmetadata', onLoadedMetadata);
         audio.addEventListener('timeupdate', updateTimeDisplay);
         audio.addEventListener('ended', onTrackEnded);
-        
-        // Сохраняем функцию для возможного удаления
         currentUpdateFunction = updateTimeDisplay;
-        
-        // Если метаданные уже загружены, вызываем сразу
         if (audio.readyState >= 1 && audio.duration) {
             const mins = Math.floor(audio.duration / 60);
             const secs = Math.floor(audio.duration % 60);
             if (durationSpan) durationSpan.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
         }
-        
-        // Запускаем воспроизведение
         audio.play().catch(e => console.log('Play error:', e));
-        
-        // Обновляем кнопку
         if (playBtn) playBtn.innerHTML = '<span>⏸</span>';
         if (volumeControl) volumeControl.classList.add('visible');
-        
-        // Настройка громкости
         const volumeSlider = volumeControl?.querySelector('.volume-slider');
         const volumeIcon = volumeControl?.querySelector('.volume-icon');
         if (volumeSlider) {
@@ -1213,8 +1372,6 @@
             audio.volume = 0.7;
             volumeSlider.value = 70;
         }
-        
-        // Клик по прогресс-бару
         if (progressBar) {
             const seekHandler = (e) => {
                 const rect = progressBar.getBoundingClientRect();
@@ -1234,9 +1391,7 @@
             updateStats();
             return;
         }
-        
         tracksData = data;
-        
         const fingerprint = await getDeviceFingerprint();
         let userLikes = [];
         if (currentUser) {
@@ -1246,7 +1401,6 @@
             const { data: likes } = await supabaseClient.from('likes').select('track_id').eq('device_fingerprint', fingerprint);
             userLikes = likes.map(l => l.track_id);
         }
-        
         let html = '';
         for (let i = 0; i < data.length; i++) {
             const track = data[i];
@@ -1285,14 +1439,11 @@
             `;
         }
         container.innerHTML = html;
-        
         document.querySelectorAll('.play-overlay').forEach(btn => {
             btn.onclick = (e) => {
                 e.stopPropagation();
                 const trackId = parseInt(btn.dataset.trackId);
                 const index = parseInt(btn.dataset.index);
-                const audioElem = document.getElementById(`audio-${trackId}`);
-                
                 if (currentTrackId === trackId && currentAudio && !currentAudio.paused) {
                     currentAudio.pause();
                     btn.innerHTML = '<span>▶</span>';
@@ -1310,7 +1461,6 @@
                 playTrackByIndex(index);
             };
         });
-        
         document.querySelectorAll('.like-btn-card').forEach(btn => btn.onclick = () => likeTrack(parseInt(btn.dataset.id)));
         updateStats();
     }
@@ -1318,9 +1468,7 @@
     async function deleteTrack(id) {
         if (!isAdmin) return;
         if (confirm('Удалить трек?')) {
-            if (currentTrackId === id) {
-                stopCurrentTrack();
-            }
+            if (currentTrackId === id) stopCurrentTrack();
             await supabaseClient.from('tracks').delete().eq('id', id);
             loadTracks();
         }
@@ -1380,7 +1528,6 @@
     const burgerBtn = document.getElementById('burgerMenuFixed');
     const authorMenuElem = document.getElementById('authorMenu');
     const closeMenuBtn = document.getElementById('closeMenu');
-    
     if (burgerBtn) burgerBtn.onclick = () => authorMenuElem.classList.add('open');
     if (closeMenuBtn) closeMenuBtn.onclick = () => authorMenuElem.classList.remove('open');
 
