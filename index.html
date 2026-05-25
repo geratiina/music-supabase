@@ -340,7 +340,6 @@
             margin-top: 0.2rem;
         }
         
-        /* НОВЫЕ СТИЛИ ДЛЯ МОДАЛЬНЫХ ОКОН ВХОДА/РЕГИСТРАЦИИ */
         .auth-modal {
             display: none;
             position: fixed;
@@ -477,12 +476,6 @@
         .close-auth:hover {
             background: rgba(255,255,255,0.2);
             transform: scale(1.05);
-        }
-        .error-message {
-            color: #ef4444;
-            font-size: 0.75rem;
-            margin-top: 0.3rem;
-            display: block;
         }
         
         .modal {
@@ -968,7 +961,6 @@
     </div>
 </div>
 
-<!-- НОВЫЕ МОДАЛЬНЫЕ ОКНА ВХОДА И РЕГИСТРАЦИИ -->
 <div id="loginModal" class="auth-modal">
     <button class="close-auth" onclick="closeLoginModal()">✕</button>
     <div class="auth-card">
@@ -1028,10 +1020,10 @@
     );
     
     let currentUser = null;
+    let currentUsername = null;
     let isAdmin = false;
     let deviceFingerprint = null;
     
-    // Глобальный плеер
     let currentAudio = null;
     let currentTrackId = null;
     let currentIndex = -1;
@@ -1084,7 +1076,155 @@
         if (adminPanel) adminPanel.style.display = 'none';
     }
 
-    // ФУНКЦИИ ДЛЯ МОДАЛЬНЫХ ОКОН
+    // ФУНКЦИЯ ЗАГРУЗКИ ПРОФИЛЯ ПО ID
+    async function loadProfile(userId) {
+        const { data, error } = await supabaseClient.from('profiles').select('username, role').eq('id', userId).maybeSingle();
+        if (error || !data) {
+            return { username: null, role: 'user' };
+        }
+        return { username: data.username, role: data.role };
+    }
+
+    // ОБНОВЛЁННАЯ ПРОВЕРКА АВТОРИЗАЦИИ
+    async function checkAuth() {
+        const { data: { user }, error } = await supabaseClient.auth.getUser();
+        if (error || !user) {
+            currentUser = null;
+            currentUsername = null;
+            isAdmin = false;
+            showLoggedOutUI();
+            loadTracks();
+            loadComments();
+            return;
+        }
+        
+        // Загружаем профиль из таблицы profiles
+        const profile = await loadProfile(user.id);
+        
+        if (!profile.username) {
+            // Если профиля нет — выходим
+            await supabaseClient.auth.signOut();
+            currentUser = null;
+            currentUsername = null;
+            isAdmin = false;
+            showLoggedOutUI();
+            loadTracks();
+            loadComments();
+            return;
+        }
+        
+        currentUser = user;
+        currentUsername = profile.username;
+        isAdmin = profile.role === 'admin' || profile.role === 'tech_admin';
+        
+        document.getElementById('userPanelName').innerText = currentUsername;
+        const panelRole = document.getElementById('userPanelRole');
+        if (panelRole) {
+            if (isAdmin) { panelRole.innerText = 'Админ'; panelRole.classList.add('admin'); }
+            else { panelRole.innerText = 'Пользователь'; panelRole.classList.remove('admin'); }
+        }
+        
+        document.getElementById('loginBtnTop').style.display = 'none';
+        document.getElementById('registerBtnTop').style.display = 'none';
+        document.getElementById('logoutBtnTop').style.display = 'block';
+        
+        const adminPanel = document.getElementById('adminPanel');
+        if (adminPanel) adminPanel.style.display = isAdmin ? 'block' : 'none';
+        
+        loadTracks();
+        loadComments();
+    }
+
+    // ВХОД
+    async function submitLogin() {
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+        if (!email || !password) {
+            alert('Заполните все поля');
+            return;
+        }
+        const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+        if (error) {
+            alert(error.message.includes('Invalid login credentials') ? '❌ Неверный email или пароль' : 'Ошибка: ' + error.message);
+            return;
+        }
+        closeLoginModal();
+        checkAuth();
+    }
+    
+    // РЕГИСТРАЦИЯ С СОЗДАНИЕМ ПРОФИЛЯ
+    async function submitRegister() {
+        const username = document.getElementById('regUsername').value.trim();
+        const email = document.getElementById('regEmail').value;
+        const password = document.getElementById('regPassword').value;
+        
+        if (!username || !email || !password) {
+            alert('Заполните все поля');
+            return;
+        }
+        if (!isValidUsername(username)) {
+            alert('❌ Логин: только латиница, 3-8 символов');
+            return;
+        }
+        if (containsBadWords(username)) {
+            alert('❌ Логин содержит недопустимые слова');
+            return;
+        }
+        
+        // Проверяем, не занят ли логин
+        const { data: existing } = await supabaseClient.from('profiles').select('username').eq('username', username).maybeSingle();
+        if (existing) {
+            alert('❌ Логин уже занят');
+            return;
+        }
+        
+        // Регистрируем пользователя
+        const { data, error } = await supabaseClient.auth.signUp({ 
+            email, 
+            password, 
+            options: { data: { username } } 
+        });
+        
+        if (error) {
+            alert(error.message.includes('User already registered') ? '❌ Email уже зарегистрирован' : 'Ошибка: ' + error.message);
+            return;
+        }
+        
+        if (data.user) {
+            // Ждём немного, чтобы триггер Supabase успел сработать (если он есть)
+            await new Promise(r => setTimeout(r, 1500));
+            
+            // Проверяем, создался ли профиль
+            const { data: profile } = await supabaseClient.from('profiles').select('id').eq('id', data.user.id).maybeSingle();
+            
+            if (!profile) {
+                // Если профиль не создался автоматически — создаём вручную
+                await supabaseClient.from('profiles').insert({ 
+                    id: data.user.id, 
+                    email: email, 
+                    username: username, 
+                    role: 'user' 
+                });
+            } else {
+                // Если профиль есть, но username не заполнен — обновляем
+                const { data: checkUsername } = await supabaseClient.from('profiles').select('username').eq('id', data.user.id).single();
+                if (!checkUsername?.username) {
+                    await supabaseClient.from('profiles').update({ username: username }).eq('id', data.user.id);
+                }
+            }
+        }
+        
+        alert('✅ Регистрация успешна! Теперь войдите.');
+        closeRegisterModal();
+        openLoginModal();
+    }
+
+    function logout() { 
+        supabaseClient.auth.signOut(); 
+        checkAuth(); 
+    }
+
+    // МОДАЛЬНЫЕ ОКНА
     function openLoginModal() {
         document.getElementById('loginModal').classList.add('active');
         document.getElementById('registerModal').classList.remove('active');
@@ -1106,108 +1246,6 @@
     function switchToLogin() {
         closeRegisterModal();
         openLoginModal();
-    }
-    
-    async function submitLogin() {
-        const email = document.getElementById('loginEmail').value;
-        const password = document.getElementById('loginPassword').value;
-        if (!email || !password) {
-            alert('Заполните все поля');
-            return;
-        }
-        const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
-        if (error) {
-            alert(error.message.includes('Invalid login credentials') ? '❌ Неверный email или пароль' : 'Ошибка: ' + error.message);
-            return;
-        }
-        closeLoginModal();
-        checkAuth();
-    }
-    
-    async function submitRegister() {
-        const username = document.getElementById('regUsername').value.trim();
-        const email = document.getElementById('regEmail').value;
-        const password = document.getElementById('regPassword').value;
-        
-        if (!username || !email || !password) {
-            alert('Заполните все поля');
-            return;
-        }
-        if (!isValidUsername(username)) {
-            alert('❌ Логин: только латиница, 3-8 символов');
-            return;
-        }
-        if (containsBadWords(username)) {
-            alert('❌ Логин содержит недопустимые слова');
-            return;
-        }
-        
-        const { data: existing } = await supabaseClient.from('profiles').select('username').eq('username', username).maybeSingle();
-        if (existing) {
-            alert('❌ Логин уже занят');
-            return;
-        }
-        
-        const { data, error } = await supabaseClient.auth.signUp({ 
-            email, 
-            password, 
-            options: { data: { username } } 
-        });
-        
-        if (error) {
-            alert(error.message.includes('User already registered') ? '❌ Email уже зарегистрирован' : 'Ошибка: ' + error.message);
-            return;
-        }
-        
-        if (data.user) {
-            await new Promise(r => setTimeout(r, 1000));
-            const { error: updateError } = await supabaseClient.from('profiles').update({ username }).eq('id', data.user.id);
-            if (updateError?.message.includes('no rows')) {
-                await supabaseClient.from('profiles').insert({ id: data.user.id, email, username, role: 'user' });
-            }
-        }
-        
-        alert('✅ Регистрация успешна! Теперь войдите.');
-        closeRegisterModal();
-        openLoginModal();
-    }
-
-    async function checkAuth() {
-        const { data: { user }, error } = await supabaseClient.auth.getUser();
-        if (error || !user) {
-            currentUser = null; isAdmin = false;
-            showLoggedOutUI();
-            loadTracks(); loadComments();
-            return;
-        }
-        const { data: profile } = await supabaseClient.from('profiles').select('role, username').eq('id', user.id).maybeSingle();
-        if (!profile) {
-            await supabaseClient.auth.signOut();
-            currentUser = null; isAdmin = false;
-            showLoggedOutUI();
-            loadTracks(); loadComments();
-            return;
-        }
-        currentUser = { ...user, username: profile.username };
-        isAdmin = profile.role === 'admin' || profile.role === 'tech_admin';
-        const displayName = profile.username || 'Пользователь';
-        document.getElementById('userPanelName').innerText = displayName;
-        const panelRole = document.getElementById('userPanelRole');
-        if (panelRole) {
-            if (isAdmin) { panelRole.innerText = 'Админ'; panelRole.classList.add('admin'); }
-            else { panelRole.innerText = 'Пользователь'; panelRole.classList.remove('admin'); }
-        }
-        document.getElementById('loginBtnTop').style.display = 'none';
-        document.getElementById('registerBtnTop').style.display = 'none';
-        document.getElementById('logoutBtnTop').style.display = 'block';
-        const adminPanel = document.getElementById('adminPanel');
-        if (adminPanel) adminPanel.style.display = isAdmin ? 'block' : 'none';
-        loadTracks(); loadComments();
-    }
-
-    function logout() { 
-        supabaseClient.auth.signOut(); 
-        checkAuth(); 
     }
 
     document.getElementById('loginBtnTop').onclick = () => openLoginModal();
