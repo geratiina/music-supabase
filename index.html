@@ -10,7 +10,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@4/dist/fp.min.js"></script>
     <style>
-        /* Стили остаются без изменений — они уже полностью адаптированы */
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         .video-background {
@@ -268,7 +267,6 @@
         .footer-gsc a { color: #3b82f6; text-decoration: none; }
         .footer-gsc a:hover { text-decoration: underline; }
         
-        /* ОСНОВНОЕ МЕНЮ (БУРГЕР) — ЗДЕСЬ БУДУТ ВСЕ ИСПОЛНИТЕЛИ */
         .author-menu {
             position: fixed;
             top: 0;
@@ -343,7 +341,6 @@
             margin-top: 0.2rem;
         }
         
-        /* МОДАЛЬНЫЕ ОКНА (вход, регистрация, карточка исполнителя) */
         .auth-modal {
             display: none;
             position: fixed;
@@ -835,13 +832,11 @@
 </head>
 <body>
 
-<!-- Видеофон и оверлей -->
 <video class="video-background" autoplay loop muted playsinline>
     <source src="https://github.com/geratiina/back/raw/main/background.mp4" type="video/mp4">
 </video>
 <div class="overlay"></div>
 
-<!-- Бургер-меню и кнопки авторизации -->
 <div class="burger-menu-fixed" id="burgerMenuFixed">
     <div class="menu-icon"><span></span><span></span><span></span></div>
     <span class="age-badge-header">16+</span>
@@ -859,7 +854,6 @@
     </div>
     
     <div class="main-content">
-        <!-- Шапка сайта -->
         <div class="sticky-header">
             <div class="glass-header">
                 <div class="avatar-center">
@@ -872,7 +866,6 @@
             </div>
         </div>
         
-        <!-- Рекламный блок и соцсети -->
         <div class="mobile-ad ad-block">
             <p>📢 Здесь могла быть ваша реклама</p>
             <a href="https://t.me/Geratiina" target="_blank">@Geratiina</a>
@@ -887,7 +880,6 @@
             </a>
         </div>
         
-        <!-- Админ-панель (видна только админу) -->
         <div id="adminPanel" class="admin-panel" style="display: none;">
             <h2>➕ Добавить трек</h2>
             <input type="text" id="trackTitle" placeholder="Название трека">
@@ -897,10 +889,8 @@
             <div id="uploadStatus" style="color:#a5f3fc; margin-top:0.5rem;"></div>
         </div>
         
-        <!-- Список треков -->
         <div id="trackList" class="track-list"></div>
         
-        <!-- Блок комментариев -->
         <div class="comments-section">
             <h2>💬 Комментарии</h2>
             <div id="commentsList"></div>
@@ -915,42 +905,35 @@
     </div>
 </div>
 
-<!-- Футер -->
 <footer class="site-footer">
     <div class="footer-text">© 2026 <strong>Порошилов Евгений Александрович</strong><br>Все права защищены. Музыкальный проект — 68</div>
     <div class="footer-gsc">📅 Сайт зарегистрирован в <a href="https://search.google.com/search-console?resource_id=https%3A%2F%2Fgeratiina.github.io%2Fmusic-supabase%2F" target="_blank">Google Search Console</a> — 25 мая 2026 года</div>
     <div class="footer-copyright">Сайт является интеллектуальной собственностью владельца. Копирование материалов без разрешения запрещено.</div>
 </footer>
 
-<!-- БОКОВОЕ МЕНЮ (БУРГЕР) — ОБНОВЛЁННЫЙ СПИСОК ИСПОЛНИТЕЛЕЙ -->
 <div id="authorMenu" class="author-menu">
     <div class="close-menu" id="closeMenu">✕</div>
     
     <div class="menu-header"><h3 class="menu-title">🎤 Исполнители</h3></div>
     <div id="artistsList" class="author-list">
-        <!-- Андрей Тришин -->
         <div class="author-item" onclick='showSingerCard("Андрей Тришин", "Андрей Тришин - тексты, мелодии, вокал. Участник проекта \"АБТ\". P.S. Выражаю особую благодарность музыкантам из команды \"Проект GK\" за помощь в создании песен и надеюсь на дальнейшее сотрудничество! 👍 Отдельная благодарность Сергею Черемисину (аранжировка, клавиши) и Александру Антонову 🙏🕯 (гитара) за помощь в создании песни \"Мама\", а также за активное участие в создании песни \"Динь-Дон\"!", "https://github.com/geratiina/singers/raw/main/AndrayT.jpg", "")'>
             <img class="author-avatar" src="https://github.com/geratiina/singers/raw/main/AndrayT.jpg" alt="Андрей Тришин" onerror="this.src='https://placehold.co/60x60/2b2b4f/white?text=АТ'">
             <div class="author-name">Андрей Тришин</div>
         </div>
-        <!-- Алексей Тамарёв -->
         <div class="author-item" onclick='showSingerCard("Алексей Тамарёв", "Алексей Тамарёв - уникальный музыкант, гениальный гитарист, аранжировщик мелодий, композитор. Вокал. Участник проекта \"АБТ\".", "https://github.com/geratiina/singers/raw/main/AlexeyT.jpg", "")'>
             <img class="author-avatar" src="https://github.com/geratiina/singers/raw/main/AlexeyT.jpg" alt="Алексей Тамарёв" onerror="this.src='https://placehold.co/60x60/2b2b4f/white?text=АТ'">
             <div class="author-name">Алексей Тамарёв</div>
         </div>
-        <!-- НОВЫЙ УЧАСТНИК: Константин Толмачёв -->
         <div class="author-item" onclick='showSingerCard("Константин Толмачёв", "Константин Толмачёв - бас-гитара, бэк-вокал, запись, сведение. Дуэт \"Проект GK\".", "https://github.com/geratiina/singers/raw/main/KostT.jpg", "")'>
             <img class="author-avatar" src="https://github.com/geratiina/singers/raw/main/KostT.jpg" alt="Константин Толмачёв" onerror="this.src='https://placehold.co/60x60/2b2b4f/white?text=КТ'">
             <div class="author-name">Константин Толмачёв</div>
         </div>
-        <!-- НОВЫЙ УЧАСТНИК: Геннадий Жиленков -->
         <div class="author-item" onclick='showSingerCard("Геннадий Жиленков", "Геннадий Жиленков - автор песен, гитара, вокал. Дуэт \"Проект GK\".", "https://github.com/geratiina/singers/raw/main/GennJ.jpg", "")'>
             <img class="author-avatar" src="https://github.com/geratiina/singers/raw/main/GennJ.jpg" alt="Геннадий Жиленков" onerror="this.src='https://placehold.co/60x60/2b2b4f/white?text=ГЖ'">
             <div class="author-name">Геннадий Жиленков</div>
         </div>
     </div>
     
-    <!-- Раздел "Креаторы" (без изменений) -->
     <div class="menu-header" style="margin-top: 1.5rem;"><h3 class="menu-title">✨ Креаторы</h3></div>
     <div id="creatorsList" class="author-list">
         <div class="author-item">
@@ -970,7 +953,6 @@
     </div>
 </div>
 
-<!-- Модальное окно для карточки исполнителя -->
 <div id="singerModal" class="modal">
     <div class="modal-content">
         <button class="close-modal" onclick="closeSingerModal()">✕</button>
@@ -981,7 +963,6 @@
     </div>
 </div>
 
-<!-- Панель пользователя -->
 <div class="user-panel" id="userPanel">
     <div class="user-panel-content">
         <span id="userPanelName">Гость</span>
@@ -989,7 +970,6 @@
     </div>
 </div>
 
-<!-- Модальные окна входа и регистрации -->
 <div id="loginModal" class="auth-modal">
     <button class="close-auth" onclick="closeLoginModal()">✕</button>
     <div class="auth-card">
@@ -1043,7 +1023,6 @@
 </div>
 
 <script>
-    // Supabase и глобальные переменные
     const supabaseClient = window.supabase.createClient(
         'https://efaqqrfkxxgfsxndmyit.supabase.co',
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmYXFxcmZreHhnZnN4bmRteWl0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1MTMxMDQsImV4cCI6MjA5NTA4OTEwNH0.72YBkhIuYy_2agG8gbXxOpC4JpG__rWQvbJpK4WMugs'
@@ -1103,7 +1082,6 @@
         }
     }
 
-    // Проверка авторизации
     async function checkAuth() {
         const { data: { user }, error } = await supabaseClient.auth.getUser();
         if (error || !user) {
@@ -1165,7 +1143,6 @@
         loadComments();
     }
     
-    // Вход
     async function submitLogin() {
         const email = document.getElementById('loginEmail').value;
         const password = document.getElementById('loginPassword').value;
@@ -1194,7 +1171,6 @@
         checkAuth();
     }
     
-    // Регистрация
     async function submitRegister() {
         const username = document.getElementById('regUsername').value.trim();
         const email = document.getElementById('regEmail').value;
@@ -1268,7 +1244,6 @@
         if (adminPanel) adminPanel.style.display = 'none';
     }
 
-    // Модальные окна
     function openLoginModal() {
         document.getElementById('loginModal').classList.add('active');
         document.getElementById('registerModal').classList.remove('active');
@@ -1301,7 +1276,6 @@
     document.getElementById('registerBtnTop').onclick = () => openRegisterModal();
     document.getElementById('logoutBtnTop').onclick = () => logout();
 
-    // Лайки, комментарии, плеер (без изменений, всё работает)
     async function likeTrack(trackId) {
         const fingerprint = await getDeviceFingerprint();
         const userId = currentUser?.id || null;
@@ -1365,7 +1339,6 @@
         }
     }
     
-    // Плеер (работает корректно)
     function resetProgressBar(trackId) {
         const progressFill = document.querySelector(`#progress-${trackId} .progress-fill`);
         const currentSpan = document.getElementById(`current-time-${trackId}`);
@@ -1393,6 +1366,7 @@
         currentIndex = -1;
     }
     
+    // ИСПРАВЛЕННАЯ ФУНКЦИЯ ПЛЕЕРА (отображает длительность трека)
     function playTrackByIndex(index) {
         if (index < 0 || index >= tracksData.length) return;
         const track = tracksData[index];
@@ -1404,8 +1378,10 @@
         const durationSpan = document.getElementById(`duration-time-${track.id}`);
         const progressBar = document.querySelector(`#progress-${track.id} .progress-bar-container`);
         if (!audio) return;
+        
         stopCurrentTrack();
         resetProgressBar(track.id);
+        
         currentAudio = audio;
         currentTrackId = track.id;
         currentIndex = index;
@@ -1419,6 +1395,7 @@
                 if (progressFill) progressFill.style.width = `${percent}%`;
             }
         };
+        
         const onLoadedMetadata = function() {
             if (durationSpan && currentAudio && !isNaN(currentAudio.duration)) {
                 const mins = Math.floor(currentAudio.duration / 60);
@@ -1426,6 +1403,7 @@
                 durationSpan.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
             }
         };
+        
         const onTrackEnded = function() {
             resetProgressBar(track.id);
             const nextIndex = currentIndex + 1;
@@ -1439,18 +1417,28 @@
                 currentIndex = -1;
             }
         };
+        
+        audio.removeEventListener('loadedmetadata', onLoadedMetadata);
+        audio.removeEventListener('timeupdate', updateTimeDisplay);
+        audio.removeEventListener('ended', onTrackEnded);
+        
         audio.addEventListener('loadedmetadata', onLoadedMetadata);
         audio.addEventListener('timeupdate', updateTimeDisplay);
         audio.addEventListener('ended', onTrackEnded);
+        
         currentUpdateFunction = updateTimeDisplay;
+        
         if (audio.readyState >= 1 && audio.duration) {
             const mins = Math.floor(audio.duration / 60);
             const secs = Math.floor(audio.duration % 60);
             if (durationSpan) durationSpan.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
         }
+        
         audio.play().catch(e => console.log('Play error:', e));
+        
         if (playBtn) playBtn.innerHTML = '<span>⏸</span>';
         if (volumeControl) volumeControl.classList.add('visible');
+        
         const volumeSlider = volumeControl?.querySelector('.volume-slider');
         const volumeIcon = volumeControl?.querySelector('.volume-icon');
         if (volumeSlider) {
@@ -1462,16 +1450,19 @@
                     else volumeIcon.textContent = '🔊';
                 }
             };
+            volumeSlider.removeEventListener('input', setVolume);
             volumeSlider.addEventListener('input', setVolume);
             audio.volume = 0.7;
             volumeSlider.value = 70;
         }
+        
         if (progressBar) {
             const seekHandler = (e) => {
                 const rect = progressBar.getBoundingClientRect();
                 const percent = (e.clientX - rect.left) / rect.width;
                 if (currentAudio) currentAudio.currentTime = percent * currentAudio.duration;
             };
+            progressBar.removeEventListener('click', seekHandler);
             progressBar.addEventListener('click', seekHandler);
         }
     }
