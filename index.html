@@ -961,7 +961,6 @@
     </div>
 </div>
 
-<!-- МОДАЛЬНЫЕ ОКНА ВХОДА И РЕГИСТРАЦИИ -->
 <div id="loginModal" class="auth-modal">
     <button class="close-auth" onclick="closeLoginModal()">✕</button>
     <div class="auth-card">
@@ -1049,7 +1048,16 @@
 
     function isValidUsername(username) { return /^[a-zA-Z]{3,8}$/.test(username); }
     
-    // ФУНКЦИЯ ДЛЯ ПОЛУЧЕНИЯ IP (через сторонний сервис)
+    // ФУНКЦИЯ ДЛЯ ПРОВЕРКИ СУЩЕСТВОВАНИЯ EMAIL (ЧЕРЕЗ AUTH)
+    async function isEmailRegistered(email) {
+        const { data, error } = await supabaseClient.auth.admin.listUsers();
+        if (error || !data?.users) {
+            // Fallback: пытаемся через signIn (но это не надёжно)
+            return false;
+        }
+        return data.users.some(user => user.email === email);
+    }
+    
     async function getUserIP() {
         try {
             const response = await fetch('https://api.ipify.org?format=json');
@@ -1060,7 +1068,6 @@
         }
     }
     
-    // ЗАГРУЗКА ПРОФИЛЯ ПО ID (С ПРОВЕРКОЙ БАНА)
     async function loadProfile(userId) {
         const { data, error } = await supabaseClient.from('profiles').select('username, role, banned').eq('id', userId).maybeSingle();
         if (error || !data) {
@@ -1069,7 +1076,6 @@
         return { username: data.username, role: data.role, banned: data.banned };
     }
     
-    // ОБНОВЛЕНИЕ IP В БАЗЕ
     async function updateUserIP(userId) {
         const ip = await getUserIP();
         if (ip) {
@@ -1077,7 +1083,7 @@
         }
     }
 
-    // ПРОВЕРКА АВТОРИЗАЦИИ С ПРОВЕРКОЙ БАНА
+    // ОБНОВЛЁННАЯ ПРОВЕРКА АВТОРИЗАЦИИ (С ПРОВЕРКОЙ БАНА)
     async function checkAuth() {
         const { data: { user }, error } = await supabaseClient.auth.getUser();
         if (error || !user) {
@@ -1103,7 +1109,6 @@
             return;
         }
         
-        // ПРОВЕРКА НА БАН
         if (profile.banned === true) {
             await supabaseClient.auth.signOut();
             alert('❌ Ваш аккаунт заблокирован. Обратитесь к администратору.');
@@ -1134,14 +1139,13 @@
         const adminPanel = document.getElementById('adminPanel');
         if (adminPanel) adminPanel.style.display = isAdmin ? 'block' : 'none';
         
-        // Обновляем IP при входе
         updateUserIP(user.id);
         
         loadTracks();
         loadComments();
     }
     
-    // ВХОД С БЕЗОПАСНЫМИ СООБЩЕНИЯМИ
+    // ВХОД С ПРОВЕРКОЙ СУЩЕСТВОВАНИЯ АККАУНТА
     async function submitLogin() {
         const email = document.getElementById('loginEmail').value;
         const password = document.getElementById('loginPassword').value;
@@ -1150,27 +1154,41 @@
             return;
         }
         
-        // Сначала проверяем, существует ли пользователь с таким email и не забанен ли он
-        const { data: existingUser } = await supabaseClient.auth.signInWithPassword({ email, password });
+        // ПЫТАЕМСЯ ВОЙТИ
+        const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
         
-        if (existingUser?.user) {
-            // Пользователь существует — проверяем бан
-            const profile = await loadProfile(existingUser.user.id);
-            if (profile.banned === true) {
-                alert('❌ Неверный email или пароль');
-                return;
+        if (error) {
+            if (error.message.includes('Invalid login credentials')) {
+                // ПРОВЕРЯЕМ, СУЩЕСТВУЕТ ЛИ ТАКОЙ EMAIL ВООБЩЕ
+                const { data: { users } } = await supabaseClient.auth.admin.listUsers();
+                const emailExists = users?.some(u => u.email === email);
+                
+                if (!emailExists) {
+                    alert('❌ Аккаунт не найден. Пожалуйста, зарегистрируйтесь.');
+                } else {
+                    alert('❌ Неверный email или пароль');
+                }
+            } else {
+                alert('Ошибка: ' + error.message);
             }
-            // Вход успешен
-            closeLoginModal();
-            checkAuth();
             return;
         }
         
-        // Единое сообщение об ошибке (без подсказок)
-        alert('❌ Неверный email или пароль');
+        // ПРОВЕРКА БАНА ПОСЛЕ УСПЕШНОГО ВХОДА
+        if (data.user) {
+            const profile = await loadProfile(data.user.id);
+            if (profile.banned === true) {
+                await supabaseClient.auth.signOut();
+                alert('❌ Ваш аккаунт заблокирован. Обратитесь к администратору.');
+                return;
+            }
+        }
+        
+        closeLoginModal();
+        checkAuth();
     }
     
-    // РЕГИСТРАЦИЯ С ПРОВЕРКОЙ УНИКАЛЬНОСТИ ЛОГИНА
+    // РЕГИСТРАЦИЯ С ПРОВЕРКОЙ EMAIL ЧЕРЕЗ SUPABASE AUTH
     async function submitRegister() {
         const username = document.getElementById('regUsername').value.trim();
         const email = document.getElementById('regEmail').value;
@@ -1189,14 +1207,23 @@
             return;
         }
         
-        // Проверяем, не занят ли логин
+        // ПРОВЕРКА УНИКАЛЬНОСТИ ЛОГИНА
         const { data: existingLogin } = await supabaseClient.from('profiles').select('username').eq('username', username).maybeSingle();
         if (existingLogin) {
             alert('❌ Логин уже занят');
             return;
         }
         
-        // Регистрируем пользователя
+        // ПРОВЕРКА СУЩЕСТВОВАНИЯ EMAIL (чтобы не пытаться зарегистрировать существующий)
+        const { data: { users } } = await supabaseClient.auth.admin.listUsers();
+        const emailExists = users?.some(u => u.email === email);
+        
+        if (emailExists) {
+            alert('❌ Этот email уже зарегистрирован');
+            return;
+        }
+        
+        // РЕГИСТРАЦИЯ
         const { data, error } = await supabaseClient.auth.signUp({ 
             email, 
             password, 
@@ -1204,11 +1231,7 @@
         });
         
         if (error) {
-            if (error.message.includes('User already registered')) {
-                alert('❌ Email уже зарегистрирован');
-            } else {
-                alert('Ошибка: ' + error.message);
-            }
+            alert('Ошибка регистрации: ' + error.message);
             return;
         }
         
@@ -1312,7 +1335,6 @@
         let html = '';
         for (const comment of comments) {
             let authorName = 'Гость';
-            let isCommentAuthorBanned = false;
             const profile = profilesMap[comment.user_id];
             if (profile) {
                 if (profile.role === 'admin' || profile.role === 'tech_admin') authorName = '<span style="color:#ef4444;font-weight:bold;">Тех-Админ</span>';
@@ -1326,7 +1348,6 @@
     async function addComment(text) {
         if (!currentUser) return alert('Войдите в аккаунт');
         
-        // Проверка бана перед отправкой комментария
         const profile = await loadProfile(currentUser.id);
         if (profile.banned === true) {
             alert('❌ Ваш аккаунт заблокирован. Вы не можете оставлять комментарии.');
@@ -1354,6 +1375,7 @@
         }
     }
     
+    // ПЛЕЕР (без изменений, работает корректно)
     function resetProgressBar(trackId) {
         const progressFill = document.querySelector(`#progress-${trackId} .progress-fill`);
         const currentSpan = document.getElementById(`current-time-${trackId}`);
