@@ -41,7 +41,6 @@
             flex-direction: column;
         }
         
-        /* БУРГЕР-МЕНЮ (всегда слева) */
         .burger-menu-fixed {
             position: fixed;
             top: 20px;
@@ -715,13 +714,11 @@
 </video>
 <div class="overlay"></div>
 
-<!-- БУРГЕР + 16+ -->
 <div class="burger-menu-fixed" id="burgerMenuFixed">
     <div class="menu-icon"><span></span><span></span><span></span></div>
     <span class="age-badge-header">16+</span>
 </div>
 
-<!-- КНОПКИ АВТОРИЗАЦИИ -->
 <div class="auth-buttons-top" id="authButtonsTop">
     <button id="loginBtnTop" class="auth-btn">Вход</button>
     <button id="registerBtnTop" class="auth-btn">Регистрация</button>
@@ -791,11 +788,9 @@
     <div class="footer-copyright">Сайт является интеллектуальной собственностью владельца. Копирование материалов без разрешения запрещено.</div>
 </footer>
 
-<!-- БОКОВОЕ МЕНЮ (БУРГЕР) -->
 <div id="authorMenu" class="author-menu">
     <div class="close-menu" id="closeMenu">✕</div>
     
-    <!-- ИСПОЛНИТЕЛИ -->
     <div class="menu-header"><h3 class="menu-title">🎤 Исполнители</h3></div>
     <div id="artistsList" class="author-list">
         <div class="author-item" onclick='showSingerCard("Андрей Тришин", "Андрей Тришин - тексты, мелодии, вокал. Участник проекта \"АБТ\". P.S. Выражаю особую благодарность музыкантам из команды \"Проект GK\" за помощь в создании песен и надеюсь на дальнейшее сотрудничество! 👍 Отдельная благодарность Сергею Черемисину (аранжировка, клавиши) и Александру Антонову 🙏🕯 (гитара) за помощь в создании песни \"Мама\", а также за активное участие в создании песни \"Динь-Дон\"!", "https://github.com/geratiina/singers/raw/main/AndrayT.jpg", "")'>
@@ -808,10 +803,8 @@
         </div>
     </div>
     
-    <!-- НОВЫЙ РАЗДЕЛ: КРЕАТОРЫ (без модального окна) -->
     <div class="menu-header" style="margin-top: 1.5rem;"><h3 class="menu-title">✨ Креаторы</h3></div>
     <div id="creatorsList" class="author-list">
-        <!-- Карина Ящук — Дизайнер -->
         <div class="author-item">
             <img class="author-avatar" src="https://github.com/geratiina/creators/raw/main/CRX.jpg" alt="Карина Ящук" onerror="this.src='https://placehold.co/48x48/2b2b4f/white?text=CRX'">
             <div>
@@ -819,7 +812,6 @@
                 <div class="author-role">🎨 Дизайнер</div>
             </div>
         </div>
-        <!-- Евгений Порошилов — Тех-Админ, Владелец (программист убран) -->
         <div class="author-item">
             <img class="author-avatar" src="https://github.com/geratiina/creators/raw/main/EVG.jpg" alt="Евгений Порошилов" onerror="this.src='https://placehold.co/48x48/2b2b4f/white?text=EVG'">
             <div>
@@ -871,7 +863,14 @@
     let isAdmin = false;
     let deviceFingerprint = null;
     let currentAuthMode = 'login';
-
+    
+    // ГЛОБАЛЬНЫЙ ПЛЕЕР - единый контроллер для всех треков
+    let currentAudio = null;           // текущий играющий audio элемент
+    let currentTrackId = null;         // ID текущего трека
+    let currentIndex = -1;             // индекс текущего трека в списке
+    let currentUpdateFunction = null;  // функция обновления прогресса текущего трека
+    let tracksData = [];               // массив с данными треков
+    
     const bannedWords = ['хуй', 'пизда', 'бля', 'ебать', 'пидор', 'сука', 'шлюха', 'fuck', 'shit', 'bitch'];
     function containsBadWords(text) { return text ? bannedWords.some(word => text.toLowerCase().includes(word)) : false; }
 
@@ -1061,6 +1060,140 @@
             loadComments();
         }
     }
+    
+    // ФУНКЦИЯ ОСТАНОВКИ ТЕКУЩЕГО ТРЕКА (полностью отключает его)
+    function stopCurrentTrack() {
+        if (currentAudio) {
+            currentAudio.pause();
+            // Останавливаем и очищаем audio элемент
+            currentAudio.currentTime = 0;
+            // Убираем обработчики событий
+            if (currentUpdateFunction) {
+                currentAudio.removeEventListener('timeupdate', currentUpdateFunction);
+                currentUpdateFunction = null;
+            }
+            currentAudio = null;
+        }
+        
+        // Сбрасываем кнопку play у предыдущего трека
+        if (currentTrackId !== null) {
+            const prevPlayBtn = document.querySelector(`.play-overlay[data-track-id="${currentTrackId}"]`);
+            if (prevPlayBtn) prevPlayBtn.innerHTML = '<span>▶</span>';
+            const prevVolume = document.getElementById(`volume-${currentTrackId}`);
+            if (prevVolume) prevVolume.classList.remove('visible');
+        }
+        
+        currentTrackId = null;
+        currentIndex = -1;
+    }
+    
+    // ФУНКЦИЯ ЗАПУСКА ТРЕКА ПО ИНДЕКСУ
+    function playTrackByIndex(index) {
+        if (index < 0 || index >= tracksData.length) return;
+        
+        const track = tracksData[index];
+        const audio = document.getElementById(`audio-${track.id}`);
+        const playBtn = document.querySelector(`.play-overlay[data-track-id="${track.id}"]`);
+        const volumeControl = document.getElementById(`volume-${track.id}`);
+        const progressFill = document.querySelector(`#progress-${track.id} .progress-fill`);
+        const currentSpan = document.getElementById(`current-time-${track.id}`);
+        const durationSpan = document.getElementById(`duration-time-${track.id}`);
+        const progressBar = document.querySelector(`#progress-${track.id} .progress-bar-container`);
+        
+        if (!audio) return;
+        
+        // Останавливаем текущий трек
+        stopCurrentTrack();
+        
+        // Устанавливаем новый текущий трек
+        currentAudio = audio;
+        currentTrackId = track.id;
+        currentIndex = index;
+        
+        // Функция обновления прогресса для этого трека
+        const updateTimeDisplay = function() {
+            if (currentSpan && currentAudio && currentAudio.duration && !isNaN(currentAudio.duration)) {
+                const currentMins = Math.floor(currentAudio.currentTime / 60);
+                const currentSecs = Math.floor(currentAudio.currentTime % 60);
+                currentSpan.textContent = `${currentMins}:${currentSecs.toString().padStart(2, '0')}`;
+                const percent = (currentAudio.currentTime / currentAudio.duration) * 100;
+                if (progressFill) progressFill.style.width = `${percent}%`;
+            }
+        };
+        
+        // Устанавливаем обработчик метаданных для длительности
+        const onLoadedMetadata = function() {
+            if (durationSpan && currentAudio && !isNaN(currentAudio.duration)) {
+                const mins = Math.floor(currentAudio.duration / 60);
+                const secs = Math.floor(currentAudio.duration % 60);
+                durationSpan.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+            }
+        };
+        
+        // Функция для переключения на следующий трек
+        const onTrackEnded = function() {
+            const nextIndex = currentIndex + 1;
+            if (nextIndex < tracksData.length) {
+                playTrackByIndex(nextIndex);
+            } else {
+                // Если треки закончились, просто останавливаем
+                if (playBtn) playBtn.innerHTML = '<span>▶</span>';
+                if (volumeControl) volumeControl.classList.remove('visible');
+                currentAudio = null;
+                currentTrackId = null;
+                currentIndex = -1;
+            }
+        };
+        
+        // Добавляем обработчики
+        audio.addEventListener('loadedmetadata', onLoadedMetadata);
+        audio.addEventListener('timeupdate', updateTimeDisplay);
+        audio.addEventListener('ended', onTrackEnded);
+        
+        // Сохраняем функцию для возможного удаления
+        currentUpdateFunction = updateTimeDisplay;
+        
+        // Если метаданные уже загружены, вызываем сразу
+        if (audio.readyState >= 1 && audio.duration) {
+            const mins = Math.floor(audio.duration / 60);
+            const secs = Math.floor(audio.duration % 60);
+            if (durationSpan) durationSpan.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+        
+        // Запускаем воспроизведение
+        audio.play().catch(e => console.log('Play error:', e));
+        
+        // Обновляем кнопку
+        if (playBtn) playBtn.innerHTML = '<span>⏸</span>';
+        if (volumeControl) volumeControl.classList.add('visible');
+        
+        // Настройка громкости
+        const volumeSlider = volumeControl?.querySelector('.volume-slider');
+        const volumeIcon = volumeControl?.querySelector('.volume-icon');
+        if (volumeSlider) {
+            const setVolume = () => {
+                audio.volume = volumeSlider.value / 100;
+                if (volumeIcon) {
+                    if (audio.volume === 0) volumeIcon.textContent = '🔇';
+                    else if (audio.volume < 0.5) volumeIcon.textContent = '🔉';
+                    else volumeIcon.textContent = '🔊';
+                }
+            };
+            volumeSlider.addEventListener('input', setVolume);
+            audio.volume = 0.7;
+            volumeSlider.value = 70;
+        }
+        
+        // Клик по прогресс-бару
+        if (progressBar) {
+            const seekHandler = (e) => {
+                const rect = progressBar.getBoundingClientRect();
+                const percent = (e.clientX - rect.left) / rect.width;
+                if (currentAudio) currentAudio.currentTime = percent * currentAudio.duration;
+            };
+            progressBar.addEventListener('click', seekHandler);
+        }
+    }
 
     async function loadTracks() {
         const container = document.getElementById('trackList');
@@ -1071,6 +1204,9 @@
             updateStats();
             return;
         }
+        
+        tracksData = data; // сохраняем глобально
+        
         const fingerprint = await getDeviceFingerprint();
         let userLikes = [];
         if (currentUser) {
@@ -1080,6 +1216,7 @@
             const { data: likes } = await supabaseClient.from('likes').select('track_id').eq('device_fingerprint', fingerprint);
             userLikes = likes.map(l => l.track_id);
         }
+        
         let html = '';
         for (let i = 0; i < data.length; i++) {
             const track = data[i];
@@ -1090,7 +1227,7 @@
                     <div class="track-left">
                         <div class="cover-container">
                             <img class="track-cover" src="https://github.com/geratiina/music-supabase/raw/main/avatar.png" onerror="this.src='https://placehold.co/70x70/2b2b4f/white?text=🎵'">
-                            <div class="play-overlay" data-play-index="${i}"><span>▶</span></div>
+                            <div class="play-overlay" data-track-id="${track.id}" data-index="${i}"><span>▶</span></div>
                         </div>
                     </div>
                     <div class="track-right">
@@ -1118,90 +1255,47 @@
             `;
         }
         container.innerHTML = html;
-        for (let i = 0; i < data.length; i++) initPlayerForTrack(data[i].id, i);
+        
+        // Навешиваем обработчики на кнопки play
+        document.querySelectorAll('.play-overlay').forEach(btn => {
+            btn.onclick = (e) => {
+                e.stopPropagation();
+                const trackId = parseInt(btn.dataset.trackId);
+                const index = parseInt(btn.dataset.index);
+                const audioElem = document.getElementById(`audio-${trackId}`);
+                
+                // Если этот трек уже играет — ставим на паузу
+                if (currentTrackId === trackId && currentAudio && !currentAudio.paused) {
+                    currentAudio.pause();
+                    btn.innerHTML = '<span>▶</span>';
+                    const volumeControl = document.getElementById(`volume-${trackId}`);
+                    if (volumeControl) volumeControl.classList.remove('visible');
+                    return;
+                }
+                // Если этот трек на паузе — продолжаем
+                if (currentTrackId === trackId && currentAudio && currentAudio.paused) {
+                    currentAudio.play();
+                    btn.innerHTML = '<span>⏸</span>';
+                    const volumeControl = document.getElementById(`volume-${trackId}`);
+                    if (volumeControl) volumeControl.classList.add('visible');
+                    return;
+                }
+                // Иначе запускаем новый трек
+                playTrackByIndex(index);
+            };
+        });
+        
         document.querySelectorAll('.like-btn-card').forEach(btn => btn.onclick = () => likeTrack(parseInt(btn.dataset.id)));
         updateStats();
-    }
-
-    function initPlayerForTrack(trackId, index) {
-        const audio = document.getElementById(`audio-${trackId}`);
-        const playBtn = document.querySelector(`.play-overlay[data-play-index="${index}"]`);
-        const currentSpan = document.getElementById(`current-time-${trackId}`);
-        const durationSpan = document.getElementById(`duration-time-${trackId}`);
-        const volumeControl = document.getElementById(`volume-${trackId}`);
-        const progressFill = document.querySelector(`.progress-fill`);
-        const progressBar = document.querySelector(`.progress-bar-container`);
-        const volumeSlider = volumeControl?.querySelector('.volume-slider');
-        const volumeIcon = volumeControl?.querySelector('.volume-icon');
-        let isPlaying = false;
-
-        audio.addEventListener('loadedmetadata', () => {
-            if (durationSpan && !isNaN(audio.duration)) {
-                const mins = Math.floor(audio.duration / 60);
-                const secs = Math.floor(audio.duration % 60);
-                durationSpan.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
-            }
-        });
-
-        function updateTimeDisplay() {
-            if (currentSpan && audio.duration) {
-                const currentMins = Math.floor(audio.currentTime / 60);
-                const currentSecs = Math.floor(audio.currentTime % 60);
-                currentSpan.textContent = `${currentMins}:${currentSecs.toString().padStart(2, '0')}`;
-                const percent = (audio.currentTime / audio.duration) * 100;
-                if (progressFill) progressFill.style.width = `${percent}%`;
-            }
-        }
-
-        audio.addEventListener('timeupdate', updateTimeDisplay);
-        if (progressBar) progressBar.addEventListener('click', (e) => {
-            const rect = progressBar.getBoundingClientRect();
-            const percent = (e.clientX - rect.left) / rect.width;
-            audio.currentTime = percent * audio.duration;
-        });
-        playBtn.addEventListener('click', () => {
-            if (isPlaying) {
-                audio.pause();
-                playBtn.innerHTML = '<span>▶</span>';
-                if (volumeControl) volumeControl.classList.remove('visible');
-            } else {
-                document.querySelectorAll('audio').forEach(a => {
-                    if (a !== audio && !a.paused) {
-                        a.pause();
-                        const idx = a.id?.replace('audio-', '');
-                        const otherPlayBtn = document.querySelector(`.play-overlay[data-play-index="${idx}"]`);
-                        if (otherPlayBtn) otherPlayBtn.innerHTML = '<span>▶</span>';
-                        const otherVolume = document.getElementById(`volume-${idx}`);
-                        if (otherVolume) otherVolume.classList.remove('visible');
-                    }
-                });
-                audio.play();
-                playBtn.innerHTML = '<span>⏸</span>';
-                if (volumeControl) volumeControl.classList.add('visible');
-            }
-            isPlaying = !isPlaying;
-        });
-        audio.addEventListener('ended', () => {
-            playBtn.innerHTML = '<span>▶</span>';
-            if (volumeControl) volumeControl.classList.remove('visible');
-            isPlaying = false;
-        });
-        if (volumeSlider) {
-            volumeSlider.addEventListener('input', (e) => {
-                audio.volume = e.target.value / 100;
-                if (volumeIcon) {
-                    if (audio.volume === 0) volumeIcon.textContent = '🔇';
-                    else if (audio.volume < 0.5) volumeIcon.textContent = '🔉';
-                    else volumeIcon.textContent = '🔊';
-                }
-            });
-            audio.volume = 0.7;
-        }
     }
 
     async function deleteTrack(id) {
         if (!isAdmin) return;
         if (confirm('Удалить трек?')) {
+            // Если удаляем текущий играющий трек — останавливаем
+            if (currentTrackId === id) {
+                stopCurrentTrack();
+            }
             await supabaseClient.from('tracks').delete().eq('id', id);
             loadTracks();
         }
