@@ -1147,7 +1147,6 @@
         const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
         
         if (error) {
-            // Единое сообщение для безопасности
             alert('❌ Неверный email или пароль');
             return;
         }
@@ -1165,7 +1164,7 @@
         checkAuth();
     }
     
-    // РЕГИСТРАЦИЯ (правильная проверка email через ошибку Supabase)
+    // РЕГИСТРАЦИЯ С ПРОВЕРКОЙ EMAIL ЧЕРЕЗ profiles
     async function submitRegister() {
         const username = document.getElementById('regUsername').value.trim();
         const email = document.getElementById('regEmail').value;
@@ -1184,49 +1183,43 @@
             return;
         }
         
-        // Проверка уникальности логина
+        // 1. ПРОВЕРКА ЛОГИНА
         const { data: existingLogin } = await supabaseClient.from('profiles').select('username').eq('username', username).maybeSingle();
         if (existingLogin) {
             alert('❌ Логин уже занят');
             return;
         }
         
-        // ПЫТАЕМСЯ ЗАРЕГИСТРИРОВАТЬСЯ
+        // 2. ПРОВЕРКА EMAIL (через таблицу profiles)
+        const { data: existingEmail } = await supabaseClient.from('profiles').select('email').eq('email', email).maybeSingle();
+        if (existingEmail) {
+            alert('❌ Этот email уже зарегистрирован');
+            return;
+        }
+        
+        // 3. РЕГИСТРАЦИЯ
         const { data, error } = await supabaseClient.auth.signUp({ 
             email, 
             password, 
             options: { data: { username } } 
         });
         
-        // Если email уже существует — Supabase вернёт ошибку
         if (error) {
-            if (error.message.includes('User already registered')) {
-                alert('❌ Этот email уже зарегистрирован');
-            } else {
-                alert('Ошибка: ' + error.message);
-            }
+            alert('Ошибка: ' + error.message);
             return;
         }
         
         if (data.user) {
             await new Promise(r => setTimeout(r, 1500));
             
-            const { data: profile } = await supabaseClient.from('profiles').select('id').eq('id', data.user.id).maybeSingle();
-            
-            if (!profile) {
-                await supabaseClient.from('profiles').insert({ 
-                    id: data.user.id, 
-                    email: email, 
-                    username: username, 
-                    role: 'user',
-                    banned: false
-                });
-            } else {
-                const { data: checkUsername } = await supabaseClient.from('profiles').select('username').eq('id', data.user.id).single();
-                if (!checkUsername?.username) {
-                    await supabaseClient.from('profiles').update({ username: username }).eq('id', data.user.id);
-                }
-            }
+            // Сохраняем профиль с email
+            await supabaseClient.from('profiles').upsert({ 
+                id: data.user.id, 
+                email: email, 
+                username: username, 
+                role: 'user',
+                banned: false
+            });
         }
         
         alert('✅ Регистрация успешна! Теперь войдите.');
