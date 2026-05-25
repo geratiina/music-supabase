@@ -624,7 +624,62 @@
         
         .track-right { flex: 1; min-width: 160px; }
         .track-title { font-size: 1rem; font-weight: 700; color: white; margin-bottom: 0.2rem; }
-        .track-artist { font-size: 0.8rem; color: #a0aec0; margin-bottom: 0.5rem; }
+        
+        /* КЛИКАБЕЛЬНЫЙ ИСПОЛНИТЕЛЬ */
+        .track-artist {
+            font-size: 0.8rem;
+            color: #a0aec0;
+            margin-bottom: 0.5rem;
+        }
+        .artist-link {
+            cursor: pointer;
+            text-decoration: underline;
+            text-decoration-style: dotted;
+            transition: all 0.2s ease;
+            color: #a0aec0;
+        }
+        .artist-link:hover {
+            color: #3b82f6;
+            text-decoration: underline;
+            text-decoration-style: solid;
+        }
+        
+        /* КНОПКА СБРОСА ФИЛЬТРА */
+        .reset-filter-btn {
+            background: rgba(59, 130, 246, 0.8);
+            backdrop-filter: blur(4px);
+            border: none;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 2rem;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            margin-bottom: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .reset-filter-btn:hover {
+            background: #3b82f6;
+            transform: scale(1.02);
+        }
+        .filter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .filter-info {
+            color: white;
+            font-size: 0.85rem;
+            background: rgba(0,0,0,0.5);
+            padding: 0.2rem 0.8rem;
+            border-radius: 2rem;
+        }
         
         .volume-control { display: none; align-items: center; gap: 0.4rem; margin-bottom: 0.5rem; }
         .volume-control.visible { display: flex; }
@@ -827,6 +882,8 @@
             .author-menu { width: 100%; left: -100%; }
             .singer-photo { width: 150px; height: 150px; }
             .auth-card { padding: 1.5rem; margin: 1rem; }
+            .filter-info { font-size: 0.7rem; }
+            .reset-filter-btn { font-size: 0.7rem; padding: 0.2rem 0.6rem; }
         }
     </style>
 </head>
@@ -889,6 +946,11 @@
             <div id="uploadStatus" style="color:#a5f3fc; margin-top:0.5rem;"></div>
         </div>
         
+        <!-- ОБЛАСТЬ ДЛЯ ТРЕКОВ С ФИЛЬТРАЦИЕЙ -->
+        <div class="filter-header" id="filterHeader" style="display: none;">
+            <span class="filter-info" id="filterInfo"></span>
+            <button class="reset-filter-btn" id="resetFilterBtn">🎵 Показать все треки</button>
+        </div>
         <div id="trackList" class="track-list"></div>
         
         <div class="comments-section">
@@ -1038,6 +1100,10 @@
     let currentIndex = -1;
     let currentUpdateFunction = null;
     let tracksData = [];
+    
+    // ПЕРЕМЕННЫЕ ДЛЯ ФИЛЬТРАЦИИ
+    let currentFilterArtist = null;
+    let currentDisplayedTracks = [];
     
     const bannedWords = ['хуй', 'пизда', 'бля', 'ебать', 'пидор', 'сука', 'шлюха', 'fuck', 'shit', 'bitch'];
     function containsBadWords(text) { return text ? bannedWords.some(word => text.toLowerCase().includes(word)) : false; }
@@ -1367,8 +1433,8 @@
     }
     
     function playTrackByIndex(index) {
-        if (index < 0 || index >= tracksData.length) return;
-        const track = tracksData[index];
+        if (index < 0 || index >= currentDisplayedTracks.length) return;
+        const track = currentDisplayedTracks[index];
         const audio = document.getElementById(`audio-${track.id}`);
         const playBtn = document.querySelector(`.play-overlay[data-track-id="${track.id}"]`);
         const volumeControl = document.getElementById(`volume-${track.id}`);
@@ -1406,7 +1472,7 @@
         const onTrackEnded = function() {
             resetProgressBar(track.id);
             const nextIndex = currentIndex + 1;
-            if (nextIndex < tracksData.length) {
+            if (nextIndex < currentDisplayedTracks.length) {
                 playTrackByIndex(nextIndex);
             } else {
                 if (playBtn) playBtn.innerHTML = '<span>▶</span>';
@@ -1465,17 +1531,43 @@
             progressBar.addEventListener('click', seekHandler);
         }
     }
-
-    async function loadTracks() {
+    
+    // ФУНКЦИЯ ФИЛЬТРАЦИИ ПО ИСПОЛНИТЕЛЮ
+    function filterTracksByArtist(artist) {
+        currentFilterArtist = artist;
+        const filtered = tracksData.filter(track => track.artist === artist);
+        currentDisplayedTracks = filtered;
+        renderTrackList(filtered);
+        
+        // Показываем кнопку сброса фильтра
+        const filterHeader = document.getElementById('filterHeader');
+        const filterInfo = document.getElementById('filterInfo');
+        filterHeader.style.display = 'flex';
+        filterInfo.textContent = `🎤 Треки исполнителя: ${artist}`;
+        
+        // Останавливаем текущее воспроизведение, если фильтр изменился
+        stopCurrentTrack();
+    }
+    
+    function resetFilter() {
+        currentFilterArtist = null;
+        currentDisplayedTracks = [...tracksData];
+        renderTrackList(tracksData);
+        
+        const filterHeader = document.getElementById('filterHeader');
+        filterHeader.style.display = 'none';
+        
+        stopCurrentTrack();
+    }
+    
+    // ОТРИСОВКА ТРЕКОВ (основная функция)
+    async function renderTrackList(tracks) {
         const container = document.getElementById('trackList');
-        container.innerHTML = '<div class="empty-message">⏳ Загрузка...</div>';
-        const { data, error } = await supabaseClient.from('tracks').select('*').order('created_at', { ascending: false });
-        if (error || !data?.length) {
-            container.innerHTML = '<div class="empty-message">🎧 Пока нет треков</div>';
-            updateStats();
+        if (!tracks.length) {
+            container.innerHTML = '<div class="empty-message">🎧 Нет треков в этой категории</div>';
             return;
         }
-        tracksData = data;
+        
         const fingerprint = await getDeviceFingerprint();
         let userLikes = [];
         if (currentUser) {
@@ -1485,9 +1577,10 @@
             const { data: likes } = await supabaseClient.from('likes').select('track_id').eq('device_fingerprint', fingerprint);
             userLikes = likes.map(l => l.track_id);
         }
+        
         let html = '';
-        for (let i = 0; i < data.length; i++) {
-            const track = data[i];
+        for (let i = 0; i < tracks.length; i++) {
+            const track = tracks[i];
             const isLiked = userLikes.includes(track.id);
             const { count: likesCount } = await supabaseClient.from('likes').select('*', { count: 'exact', head: true }).eq('track_id', track.id);
             html += `
@@ -1500,7 +1593,7 @@
                     </div>
                     <div class="track-right">
                         <div class="track-title">${escapeHtml(track.title)}</div>
-                        <div class="track-artist">${escapeHtml(track.artist || 'Неизвестный исполнитель')}</div>
+                        <div class="track-artist">🎤 <span class="artist-link" data-artist="${escapeHtml(track.artist)}">${escapeHtml(track.artist || 'Неизвестный исполнитель')}</span></div>
                         <div class="volume-control" id="volume-${track.id}">
                             <span class="volume-icon">🔊</span>
                             <input type="range" class="volume-slider" min="0" max="100" value="70">
@@ -1526,12 +1619,10 @@
         }
         container.innerHTML = html;
         
-        // ЗАГРУЖАЕМ ДЛИТЕЛЬНОСТЬ ДЛЯ КАЖДОГО ТРЕКА СРАЗУ (ДАЖЕ НА ТЕЛЕФОНАХ)
-        for (let i = 0; i < data.length; i++) {
-            const track = data[i];
+        // Загружаем длительность для каждого трека
+        for (const track of tracks) {
             const audio = document.getElementById(`audio-${track.id}`);
             const durationSpan = document.getElementById(`duration-time-${track.id}`);
-            
             if (audio && durationSpan) {
                 if (audio.readyState >= 1 && audio.duration && !isNaN(audio.duration)) {
                     const mins = Math.floor(audio.duration / 60);
@@ -1549,6 +1640,7 @@
             }
         }
         
+        // Навешиваем обработчики на кнопки play
         document.querySelectorAll('.play-overlay').forEach(btn => {
             btn.onclick = (e) => {
                 e.stopPropagation();
@@ -1571,9 +1663,44 @@
                 playTrackByIndex(index);
             };
         });
+        
+        // Навешиваем обработчики на кликабельных исполнителей
+        document.querySelectorAll('.artist-link').forEach(link => {
+            link.onclick = (e) => {
+                e.stopPropagation();
+                const artist = link.dataset.artist;
+                if (artist && artist !== 'Неизвестный исполнитель') {
+                    filterTracksByArtist(artist);
+                }
+            };
+        });
+        
         document.querySelectorAll('.like-btn-card').forEach(btn => btn.onclick = () => likeTrack(parseInt(btn.dataset.id)));
+    }
+    
+    // ОСНОВНАЯ ЗАГРУЗКА ТРЕКОВ
+    async function loadTracks() {
+        const container = document.getElementById('trackList');
+        container.innerHTML = '<div class="empty-message">⏳ Загрузка...</div>';
+        const { data, error } = await supabaseClient.from('tracks').select('*').order('created_at', { ascending: false });
+        if (error || !data?.length) {
+            container.innerHTML = '<div class="empty-message">🎧 Пока нет треков</div>';
+            updateStats();
+            return;
+        }
+        tracksData = data;
+        currentDisplayedTracks = [...data];
+        currentFilterArtist = null;
+        
+        await renderTrackList(data);
+        
+        // Скрываем кнопку сброса фильтра
+        document.getElementById('filterHeader').style.display = 'none';
         updateStats();
     }
+    
+    // КНОПКА СБРОСА ФИЛЬТРА
+    document.getElementById('resetFilterBtn').onclick = () => resetFilter();
 
     async function deleteTrack(id) {
         if (!isAdmin) return;
@@ -1586,7 +1713,7 @@
 
     async function addTrack(title, artist, url) {
         if (!isAdmin) return alert('⛔ Только админ');
-        if (!title.trim() || !artist.trim() || !url.trim()) return alert('Заполните поля');
+        if (!title.trim() || !artist.trim() || !url.trim()) return alert('Заполните все поля');
         const { error } = await supabaseClient.from('tracks').insert([{ title: title.trim(), artist: artist.trim(), file_url: url.trim(), likes: 0 }]);
         if (error) alert('Ошибка: ' + error.message);
         else {
