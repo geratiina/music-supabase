@@ -1,6 +1,8 @@
+<!DOCTYPE html>
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Музыкальный проект — 68</title>
     <link rel="icon" type="image/png" href="https://github.com/geratiina/music-supabase/raw/main/avatar.png">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -28,47 +30,178 @@
             background: rgba(0, 0, 0, 0.5);
             z-index: -1;
         }
+        
         body {
             font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
             min-height: 100vh;
             padding: 20px;
         }
+        
+        /* БУРГЕР-МЕНЮ (всегда слева) */
+        .burger-menu-fixed {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 200;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            border-radius: 2rem;
+            padding: 12px 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .burger-menu-fixed:hover {
+            background: rgba(0, 0, 0, 0.8);
+            transform: scale(1.02);
+        }
+        .burger-menu-fixed .menu-icon {
+            width: 24px;
+            height: 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .burger-menu-fixed .menu-icon span {
+            height: 2px;
+            background: white;
+            border-radius: 2px;
+            transition: 0.2s;
+        }
+        .age-badge-header {
+            background: #ef4444;
+            color: white;
+            font-weight: 800;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.4rem;
+            line-height: 1;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .auth-buttons-top {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 200;
+            display: flex;
+            gap: 10px;
+        }
+        .auth-buttons-top .auth-btn {
+            background: #3b82f6;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 2rem;
+            color: white;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        .auth-buttons-top .auth-btn:hover {
+            transform: scale(1.02);
+            opacity: 0.9;
+        }
+        .auth-buttons-top .logout-btn {
+            background: #ef4444;
+        }
+        
+        .site-wrapper {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .ad-sidebar {
+            width: 160px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 100px;
+            align-self: flex-start;
+        }
+        .ad-block {
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            border-radius: 1rem;
+            padding: 1rem;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.2);
+            margin-bottom: 1rem;
+        }
+        .ad-block p {
+            color: #cbd5e1;
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+        .ad-block a {
+            color: #3b82f6;
+            text-decoration: none;
+            font-size: 0.75rem;
+        }
+        .ad-block a:hover {
+            text-decoration: underline;
+        }
+        
+        .mobile-ad {
+            display: none;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            border-radius: 1rem;
+            padding: 0.8rem;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            max-width: 800px;
+        }
+        
         .sticky-header {
             position: sticky;
             top: 20px;
             z-index: 100;
-            max-width: 1000px;
-            margin: 0 auto 1.5rem auto;
+            margin-bottom: 1.5rem;
+            margin-top: 0;
         }
         .glass-header {
             background: rgba(0, 0, 0, 0.65);
             backdrop-filter: blur(12px);
             border-radius: 2rem;
-            padding: 0.8rem 1.5rem;
+            padding: 1rem 1.5rem;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: space-between;
-            gap: 1rem;
-            flex-wrap: wrap;
+            gap: 0.5rem;
             border: 1px solid rgba(255, 255, 255, 0.3);
         }
-        .header-left {
+        
+        /* Аватарка над названием, по центру */
+        .avatar-center {
             display: flex;
-            align-items: center;
-            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 0.3rem;
         }
-        .avatar {
-            width: 48px;
-            height: 48px;
+        .avatar-center .avatar {
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid rgba(255,255,255,0.5);
         }
-        .title-stats {
-            text-align: left;
+        
+        .title-stats-center {
+            text-align: center;
         }
         h1 {
-            font-size: 1.4rem;
+            font-size: 1.2rem;
             font-weight: 800;
             background: linear-gradient(135deg, #ffffff, #e0e7ff);
             -webkit-background-clip: text;
@@ -83,30 +216,185 @@
             font-size: 0.7rem;
             color: white;
             display: inline-block;
+            margin-top: 0.3rem;
         }
-        .user-info {
-            background: rgba(0,0,0,0.5);
-            padding: 0.4rem 1rem;
-            border-radius: 2rem;
-            font-size: 0.8rem;
+        
+        /* МОБИЛЬНЫЕ СОЦ. КНОПКИ (маленькие кружки) */
+        .mobile-social-bar {
+            display: none;
+            justify-content: center;
+            gap: 1rem;
+            margin: 0 0 1rem 0;
+            padding: 0;
+        }
+        .social-circle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        .social-circle.vk {
+            background: #0077FF;
             color: white;
+        }
+        .social-circle.tg {
+            background: #26A5E4;
+            color: white;
+        }
+        .social-circle:hover {
+            transform: scale(1.05);
+            opacity: 0.95;
+        }
+        .social-circle svg {
+            width: 22px;
+            height: 22px;
+            fill: white;
+        }
+        
+        .author-menu {
+            position: fixed;
+            top: 0;
+            left: -320px;
+            width: 320px;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(12px);
+            z-index: 2001;
+            transition: left 0.3s ease;
+            padding: 1.5rem 1rem;
+            padding-top: 60px;
+            overflow-y: auto;
+        }
+        .author-menu.open {
+            left: 0;
+        }
+        .author-menu .close-menu {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: white;
+            z-index: 10;
+        }
+        
+        .menu-header {
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .menu-title {
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            border-bottom: 2px solid #3b82f6;
+            display: inline-block;
+            padding-bottom: 0.3rem;
+        }
+        
+        .author-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .author-item {
             display: flex;
             align-items: center;
-            gap: 0.8rem;
-        }
-        .user-info button {
-            background: #3b82f6;
-            border: none;
-            padding: 0.3rem 1rem;
-            border-radius: 1.5rem;
-            color: white;
+            gap: 1rem;
+            padding: 0.8rem;
+            border-radius: 1rem;
+            background: rgba(255,255,255,0.05);
             cursor: pointer;
-            font-size: 0.8rem;
+            transition: all 0.2s ease;
         }
-        .main-content {
-            max-width: 1000px;
-            margin: 0 auto;
+        .author-item:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateX(5px);
         }
+        .author-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .author-name {
+            color: white;
+            font-weight: 600;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 2rem;
+            width: 90%;
+            max-width: 500px;
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            position: relative;
+            text-align: center;
+        }
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        .singer-photo {
+            width: 200px;
+            height: 200px;
+            border-radius: 1rem;
+            object-fit: cover;
+            margin: 0 auto 1rem;
+            border: 3px solid #3b82f6;
+        }
+        .singer-name {
+            color: white;
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+        .singer-initials {
+            font-size: 1rem;
+            color: #3b82f6;
+            font-weight: 600;
+            letter-spacing: 2px;
+            margin-top: -0.2rem;
+            margin-bottom: 1rem;
+            padding: 0.2rem 0.8rem;
+            display: inline-block;
+            background: rgba(59, 130, 246, 0.15);
+            border-radius: 2rem;
+        }
+        .singer-description {
+            color: #cbd5e1;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            text-align: left;
+            white-space: pre-wrap;
+        }
+        
         .admin-panel {
             background: rgba(0, 0, 0, 0.75);
             backdrop-filter: blur(8px);
@@ -133,94 +421,234 @@
             font-weight: bold;
             cursor: pointer;
         }
-        .player-card {
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(4px);
-            border-radius: 1.5rem;
-            padding: 1rem 1.2rem;
-            margin-bottom: 1rem;
-            border: 1px solid rgba(255,255,255,0.2);
-            transition: 0.2s;
+        
+        .track-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
         }
-        .player-card:hover { background: rgba(0, 0, 0, 0.8); transform: translateY(-2px); }
-        .track-title {
-            font-size: 1.1rem;
-            font-weight: 600;
+        .track-card {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            border-radius: 1rem;
+            padding: 0.8rem;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            gap: 0.8rem;
+        }
+        
+        .track-left {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
+            width: 70px;
+            flex-shrink: 0;
+        }
+        .cover-container {
+            position: relative;
+            width: 70px;
+            height: 70px;
+        }
+        .track-cover {
+            width: 100%;
+            height: 100%;
+            border-radius: 0.8rem;
+            object-fit: cover;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .play-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(4px);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        .play-overlay:hover {
+            background: #3b82f6;
+            transform: translate(-50%, -50%) scale(1.05);
+        }
+        .play-overlay span {
+            font-size: 1rem;
             color: white;
+        }
+        
+        .track-right {
+            flex: 1;
+            min-width: 160px;
+        }
+        .track-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.2rem;
+        }
+        .track-artist {
+            font-size: 0.8rem;
+            color: #a0aec0;
             margin-bottom: 0.5rem;
         }
-        .progress-area { margin: 0.5rem 0; }
-        .progress-bar-container {
+        
+        .volume-control {
+            display: none;
+            align-items: center;
+            gap: 0.4rem;
+            margin-bottom: 0.5rem;
+        }
+        .volume-control.visible {
+            display: flex;
+        }
+        .volume-icon {
+            font-size: 0.7rem;
+            color: white;
+        }
+        .volume-slider {
+            width: 100px;
+            height: 3px;
+            cursor: pointer;
+            -webkit-appearance: none;
             background: rgba(255,255,255,0.3);
+            border-radius: 2px;
+        }
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+        }
+        
+        .progress-control {
+            margin-bottom: 0.5rem;
+        }
+        .progress-bar-container {
+            background: rgba(255,255,255,0.2);
             border-radius: 1rem;
             height: 6px;
             cursor: pointer;
+            position: relative;
         }
         .progress-fill {
             background: linear-gradient(90deg, #3b82f6, #a855f7);
             border-radius: 1rem;
             height: 100%;
             width: 0%;
+            position: relative;
         }
+        @media (min-width: 769px) {
+            .progress-fill::after {
+                content: '';
+                position: absolute;
+                right: -6px;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 12px;
+                height: 12px;
+                background: white;
+                border-radius: 50%;
+                box-shadow: 0 0 4px rgba(0,0,0,0.3);
+                cursor: pointer;
+            }
+        }
+        
         .time-info {
             display: flex;
             justify-content: space-between;
             font-size: 0.7rem;
             color: #cbd5e1;
-            margin-top: 0.2rem;
+            margin-bottom: 0.5rem;
         }
-        .controls-area {
+        
+        .likes-row {
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: flex-end;
+            gap: 0.5rem;
+            margin-top: 0.3rem;
             flex-wrap: wrap;
-            gap: 0.8rem;
-            margin-top: 0.5rem;
         }
-        .play-controls { display: flex; gap: 0.5rem; align-items: center; }
-        .play-btn {
-            background: linear-gradient(135deg, #3b82f6, #2563eb);
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border: none;
-            color: white;
-            font-size: 1rem;
-            cursor: pointer;
-        }
-        .volume-control {
-            background: rgba(0,0,0,0.5);
-            padding: 0.2rem 0.6rem;
-            border-radius: 2rem;
-            display: flex;
-            gap: 0.3rem;
-            align-items: center;
-        }
-        .volume-slider { width: 60px; cursor: pointer; }
-        .like-btn {
-            background: rgba(0,0,0,0.5);
-            border: 1px solid rgba(239,68,68,0.6);
-            color: white;
+        .download-track-btn {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid rgba(16, 185, 129, 0.5);
+            color: #10b981;
             padding: 0.3rem 0.8rem;
             border-radius: 2rem;
             cursor: pointer;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            text-decoration: none;
         }
-        .like-btn.liked { background: #ef4444; color: white; }
-        .delete-track-btn {
-            background: #ef4444;
-            border: none;
+        .download-track-btn:hover {
+            background: #10b981;
             color: white;
+        }
+        .like-btn-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(4px);
+            border: none;
+            color: #cbd5e1;
+            padding: 0.3rem 0.8rem;
+            border-radius: 2rem;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .like-btn-card:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.02);
+        }
+        .like-btn-card.liked {
+            background: #ef4444;
+            color: white;
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+        }
+        .delete-track-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(4px);
+            border: none;
+            color: #a0aec0;
             padding: 0.3rem 0.7rem;
             border-radius: 2rem;
             cursor: pointer;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
+            transition: all 0.2s ease;
         }
-        .comments-section { margin-top: 2rem; }
-        .comments-section h2 {
-            font-size: 1.3rem;
+        .delete-track-card:hover {
+            background: rgba(239, 68, 68, 0.8);
             color: white;
+        }
+        
+        .comments-section {
+            margin-top: 2rem;
+        }
+        .comments-section h2 {
+            text-align: center;
+            font-size: 1.3rem;
             margin-bottom: 1rem;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }
         .comment {
             background: rgba(0, 0, 0, 0.6);
@@ -231,9 +659,34 @@
             justify-content: space-between;
             align-items: center;
         }
-        .comment-author { font-weight: bold; color: #e0e7ff; font-size: 0.9rem; }
-        .comment-date { font-size: 0.65rem; color: #cbd5e1; margin-left: 0.5rem; }
-        .comment-text { color: white; margin-top: 0.2rem; font-size: 0.9rem; }
+        .comment-content {
+            flex: 1;
+        }
+        .comment-author {
+            font-weight: bold;
+            font-size: 0.9rem;
+            color: #e0e7ff;
+        }
+        .comment-date {
+            font-size: 0.65rem;
+            color: #cbd5e1;
+            margin-left: 0.5rem;
+        }
+        .comment-text {
+            color: white;
+            margin-top: 0.2rem;
+            font-size: 0.9rem;
+        }
+        .delete-comment-btn {
+            background: #ef4444;
+            border: none;
+            color: white;
+            border-radius: 2rem;
+            padding: 0.2rem 0.7rem;
+            cursor: pointer;
+            font-size: 0.7rem;
+        }
+        
         textarea {
             width: 100%;
             border-radius: 1.5rem;
@@ -251,90 +704,176 @@
             padding: 0.4rem 1.2rem;
             border-radius: 2rem;
             cursor: pointer;
+            display: block;
+            margin: 0 auto;
         }
         .char-counter {
             text-align: right;
             font-size: 0.7rem;
             color: #cbd5e1;
+            margin-bottom: 0.5rem;
         }
         .char-counter.warning { color: #ef4444; }
-        .social-buttons {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-            z-index: 1000;
-        }
-        .social-btn {
-            padding: 0.5rem 1.2rem;
-            border-radius: 3rem;
-            text-decoration: none;
-            color: white;
-            text-align: center;
-            font-size: 0.85rem;
-        }
-        .vk-btn { background: rgba(45, 62, 90, 0.9); }
-        .tg-btn { background: rgba(0, 136, 204, 0.9); }
+        
         .empty-message { text-align: center; padding: 2rem; color: white; }
-
-        /* Модальные окна */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
+        
+        .password-wrapper {
+            position: relative;
             width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-        }
-        .modal-content {
-            background: rgba(0,0,0,0.9);
-            backdrop-filter: blur(10px);
-            padding: 2rem;
-            border-radius: 2rem;
-            width: 90%;
-            max-width: 400px;
-            color: white;
-            border: 1px solid rgba(255,255,255,0.3);
-        }
-        .modal-content input {
-            width: 100%;
-            padding: 0.6rem;
             margin: 0.5rem 0;
+        }
+        .password-wrapper input {
+            width: 100%;
+            padding: 0.6rem 2.5rem 0.6rem 1rem;
+            margin: 0;
             border-radius: 1rem;
             border: none;
+            background: rgba(255,255,255,0.9);
+            box-sizing: border-box;
         }
-        .modal-content button {
-            width: 100%;
-            padding: 0.6rem;
-            margin: 0.5rem 0;
-            background: #3b82f6;
-            border: none;
-            border-radius: 2rem;
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 1.2rem;
+            user-select: none;
+            color: #888;
+        }
+        .password-toggle.active {
             color: white;
-            cursor: pointer;
+            text-shadow: 0 0 4px #3b82f6;
         }
-        .modal-content .close {
-            background: #ef4444;
+        
+        .user-panel {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            border-radius: 2rem;
+            padding: 0.5rem 1.2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.85rem;
+            color: white;
+            pointer-events: none;
         }
-        .switch-form {
-            text-align: center;
-            margin-top: 1rem;
-            cursor: pointer;
+        .user-panel-content {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .user-role {
+            font-size: 0.7rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 1rem;
+            background: rgba(59, 130, 246, 0.3);
             color: #3b82f6;
         }
+        .user-role.admin {
+            background: rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+        }
+        
+        /* МОБИЛЬНАЯ АДАПТАЦИЯ */
         @media (max-width: 768px) {
-            .glass-header { flex-direction: column; align-items: stretch; text-align: center; }
-            .header-left { justify-content: center; }
-            h1 { font-size: 1.2rem; text-align: center; }
+            body { padding: 10px; }
+            .sticky-header { margin-top: 65px; }
+            
+            .burger-menu-fixed {
+                top: 10px;
+                left: 10px;
+                padding: 8px 12px;
+                gap: 6px;
+            }
+            .burger-menu-fixed .menu-icon {
+                width: 20px;
+                height: 16px;
+            }
+            .age-badge-header {
+                font-size: 0.6rem;
+                padding: 0.15rem 0.4rem;
+            }
+            
+            .auth-buttons-top { 
+                top: 10px;
+                right: 10px;
+            }
+            .auth-buttons-top .auth-btn { 
+                padding: 5px 10px; 
+                font-size: 0.7rem; 
+            }
+            
+            .site-wrapper { flex-direction: column; gap: 0; }
+            .ad-sidebar { display: none; }
+            .main-content { max-width: 100%; }
+            
+            /* Мобильная шапка — аватарка по центру */
+            .glass-header {
+                padding: 0.8rem 1rem;
+            }
+            .avatar-center .avatar {
+                width: 50px;
+                height: 50px;
+            }
+            h1 {
+                font-size: 0.9rem;
+            }
+            .stats {
+                font-size: 0.55rem;
+            }
+            
+            /* Показываем мобильные соц. кнопки под рекламой */
+            .mobile-social-bar {
+                display: flex;
+                margin-top: 0.5rem;
+            }
+            
+            /* Рекламный блок на мобильных */
+            .mobile-ad {
+                display: block;
+                margin-bottom: 1rem;
+            }
+            
+            .track-left { width: 60px; }
+            .cover-container { width: 60px; height: 60px; }
+            .play-overlay { width: 28px; height: 28px; }
+            .play-overlay span { font-size: 0.8rem; }
+            
+            .track-title { font-size: 0.9rem; }
+            .track-artist { font-size: 0.7rem; }
+            
+            .volume-control { display: none !important; }
+            .progress-bar-container { height: 8px; }
+            
+            .download-track-btn {
+                padding: 0.3rem 0.7rem;
+                font-size: 0.7rem;
+            }
+            
             .admin-panel input { width: 100%; margin: 0.5rem 0; }
             .admin-panel button { width: 100%; }
-            .user-info { justify-content: center; }
+            
+            .comments-section h2 { font-size: 1.1rem; }
+            
+            .user-panel {
+                bottom: 10px;
+                left: 10px;
+                padding: 0.3rem 0.8rem;
+                font-size: 0.7rem;
+            }
+            
+            .author-menu {
+                width: 100%;
+                left: -100%;
+            }
+            
+            .singer-photo {
+                width: 150px;
+                height: 150px;
+            }
         }
     </style>
 </head>
@@ -345,59 +884,141 @@
 </video>
 <div class="overlay"></div>
 
-<div class="sticky-header">
-    <div class="glass-header">
-        <div class="header-left">
-            <img src="https://github.com/geratiina/music-supabase/raw/main/avatar.png" alt="avatar" class="avatar" onerror="this.style.display='none'">
-            <div class="title-stats">
-                <h1>🎵 МУЗЫКАЛЬНЫЙ ПРОЕКТ — 68</h1>
-                <div class="stats" id="statsPanel">📊 загрузка...</div>
+<!-- БУРГЕР-МЕНЮ + возрастное ограничение 16+ (рядом) -->
+<div class="burger-menu-fixed" id="burgerMenuFixed">
+    <div class="menu-icon">
+        <span></span><span></span><span></span>
+    </div>
+    <span class="age-badge-header">16+</span>
+</div>
+
+<div class="auth-buttons-top" id="authButtonsTop">
+    <button id="loginBtnTop" class="auth-btn">Вход</button>
+    <button id="registerBtnTop" class="auth-btn">Регистрация</button>
+    <button id="logoutBtnTop" class="auth-btn logout-btn" style="display: none;">Выйти</button>
+</div>
+
+<div class="site-wrapper">
+    <div class="ad-sidebar">
+        <div class="ad-block">
+            <p>📢 Здесь могла быть ваша реклама</p>
+            <a href="https://t.me/Geratiina" target="_blank">@Geratiina</a>
+        </div>
+    </div>
+    
+    <div class="main-content">
+        <div class="sticky-header">
+            <div class="glass-header">
+                <!-- Аватарка над названием (по центру) -->
+                <div class="avatar-center">
+                    <img src="https://github.com/geratiina/music-supabase/raw/main/avatar.png" alt="avatar" class="avatar" onerror="this.style.display='none'">
+                </div>
+                <div class="title-stats-center">
+                    <h1>🎵 МУЗЫКАЛЬНЫЙ ПРОЕКТ — 68</h1>
+                    <div class="stats" id="statsPanel">📊 загрузка...</div>
+                </div>
             </div>
         </div>
-        <div class="user-info" id="userInfo">
-            <span id="userEmail">Гость</span>
-            <button id="authBtn">Войти</button>
+        
+        <!-- РЕКЛАМНЫЙ БЛОК (сразу под шапкой) -->
+        <div class="mobile-ad ad-block">
+            <p>📢 Здесь могла быть ваша реклама</p>
+            <a href="https://t.me/Geratiina" target="_blank">@Geratiina</a>
+        </div>
+        
+        <!-- МОБИЛЬНЫЕ СОЦИАЛЬНЫЕ КНОПКИ (под рекламой) -->
+        <div class="mobile-social-bar">
+            <a href="https://vk.com/mzproect_68" target="_blank" class="social-circle vk">
+                <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21.5 6.3c.1-.4 0-.8-.3-.9-.3-.1-.8-.1-1.2-.1h-2.8c-.7 0-1.1.2-1.3.8 0 0-1.5 4-3.3 6.3-.5.6-.8.8-1.1.8-.2 0-.4-.2-.4-.7V6.8c0-.6-.2-.9-.6-.9h-4c-.3 0-.5.2-.5.5 0 .5.8.6.9 2v4.1c0 .7-.2 1.1-.8 1.1-.5 0-1.1-.5-1.6-1.4L5 6.8c-.2-.4-.4-.6-.8-.6H1.5c-.5 0-.6.3-.6.7 0 .8.8 4.3 3.5 7.2 1.8 2.1 4.3 3.3 6.6 3.3 1.4 0 1.6-.3 1.6-.8v-2.2c0-.6.4-.7.8-.4 1.3.9 2.3 2.5 2.7 3.5.3.8.6 1.2 1.5 1.2h2.8c.8 0 1.3-.4 1.2-1.1-.1-.5-.9-1.9-2.4-3.5-.3-.3-.6-.8-.6-1s.3-.8.6-1.2c.8-1.1 2.8-3.3 3.1-4.4z"/>
+                </svg>
+            </a>
+            <a href="https://t.me/rn_68a_muz" target="_blank" class="social-circle tg">
+                <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.66-.35-1.02.22-1.61.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.07-.04-.1-.05-.03-.12-.01-.18.02l-3.45 2.18c-.13.08-.26.13-.39.13-.13 0-.26-.05-.36-.12l-1.57-1.05c-.23-.15-.46-.3-.67-.46-.27-.2-.21-.47.05-.68.05-.04.1-.08.16-.11l5.85-2.43c.27-.11.64-.21.91-.21.6 0 .97.39.86 1.04z"/>
+                </svg>
+            </a>
+        </div>
+        
+        <div id="adminPanel" class="admin-panel" style="display: none;">
+            <h2>➕ Добавить трек</h2>
+            <input type="text" id="trackTitle" placeholder="Название трека">
+            <input type="text" id="trackArtist" placeholder="Исполнитель">
+            <input type="text" id="trackUrl" placeholder="https://audio.jukehost.co.uk/...">
+            <button id="addTrackBtn">Добавить</button>
+            <div id="uploadStatus" style="color:#a5f3fc; margin-top:0.5rem;"></div>
+        </div>
+        
+        <div id="trackList" class="track-list"></div>
+        
+        <div class="comments-section">
+            <h2>💬 Комментарии</h2>
+            <div id="commentsList"></div>
+            <textarea id="commentInput" rows="2" placeholder="Напиши свой комментарий... (до 250 символов)"></textarea>
+            <div id="charCounter" class="char-counter">0 / 250</div>
+            <button id="sendCommentBtn" class="send-btn">📝 Отправить</button>
+        </div>
+    </div>
+    
+    <div class="ad-sidebar">
+        <div class="ad-block">
+            <p>📢 Здесь могла быть ваша реклама</p>
+            <a href="https://t.me/Geratiina" target="_blank">@Geratiina</a>
         </div>
     </div>
 </div>
 
-<div class="main-content">
-    <div id="adminPanel" class="admin-panel" style="display: none;">
-        <h2>➕ Добавить трек</h2>
-        <input type="text" id="trackTitle" placeholder="Название трека">
-        <input type="text" id="trackUrl" placeholder="https://audio.jukehost.co.uk/...">
-        <button id="addTrackBtn">Добавить</button>
-        <div id="uploadStatus" style="color:#a5f3fc; margin-top:0.5rem;"></div>
+<div id="authorMenu" class="author-menu">
+    <div class="close-menu" id="closeMenu">✕</div>
+    
+    <div class="menu-header">
+        <h3 class="menu-title">🎤 Исполнители</h3>
     </div>
-    <div id="trackList"></div>
-    <div class="comments-section">
-        <h2>💬 Обсуждение</h2>
-        <div id="commentsList"></div>
-        <textarea id="commentInput" rows="2" placeholder="Напиши свой комментарий... (до 250 символов)"></textarea>
-        <div id="charCounter" class="char-counter">0 / 250</div>
-        <button id="sendCommentBtn" class="send-btn">📝 Отправить</button>
+    
+    <div id="artistsList" class="author-list">
+        <div class="author-item" onclick='showSingerCard("Андрей Тришин", "Андрей Тришин - тексты, мелодии, вокал. Участник проекта \"АБТ\". P.S. Выражаю особую благодарность музыкантам из команды \"Проект GK\" за помощь в создании песен и надеюсь на дальнейшее сотрудничество! 👍 Отдельная благодарность Сергею Черемисину (аранжировка, клавиши) и Александру Антонову 🙏🕯 (гитара) за помощь в создании песни \"Мама\", а также за активное участие в создании песни \"Динь-Дон\"!", "https://github.com/geratiina/singers/raw/main/AndrayT.jpg", "")'>
+            <img class="author-avatar" src="https://github.com/geratiina/singers/raw/main/AndrayT.jpg" alt="Андрей Тришин" onerror="this.src='https://placehold.co/60x60/2b2b4f/white?text=АТ'">
+            <div class="author-name">Андрей Тришин</div>
+        </div>
+        <div class="author-item" onclick='showSingerCard("Алексей Тамарёв", "Алексей Тамарёв - уникальный музыкант, гениальный гитарист, аранжировщик мелодий, композитор. Вокал. Участник проекта \"АБТ\".", "https://github.com/geratiina/singers/raw/main/AlexeyT.jpg", "")'>
+            <img class="author-avatar" src="https://github.com/geratiina/singers/raw/main/AlexeyT.jpg" alt="Алексей Тамарёв" onerror="this.src='https://placehold.co/60x60/2b2b4f/white?text=АТ'">
+            <div class="author-name">Алексей Тамарёв</div>
+        </div>
     </div>
 </div>
 
-<div class="social-buttons">
-    <a href="https://vk.com/mzproect_68" target="_blank" class="social-btn vk-btn">📱 ВКонтакте</a>
-    <a href="https://t.me/rn_68a_muz" target="_blank" class="social-btn tg-btn">✈️ Telegram</a>
+<div id="singerModal" class="modal">
+    <div class="modal-content">
+        <button class="close-modal" onclick="closeSingerModal()">✕</button>
+        <img id="singerPhoto" class="singer-photo" src="" alt="">
+        <h3 id="singerName" class="singer-name"></h3>
+        <div id="singerInitials" class="singer-initials"></div>
+        <p id="singerDescription" class="singer-description"></p>
+    </div>
 </div>
 
-<!-- Модальное окно -->
+<div class="user-panel" id="userPanel">
+    <div class="user-panel-content">
+        <span id="userPanelName">Гость</span>
+        <span id="userPanelRole" class="user-role"></span>
+    </div>
+</div>
+
 <div id="authModal" class="modal">
     <div class="modal-content">
         <h2 id="modalTitle">Вход</h2>
         <input type="email" id="authEmail" placeholder="Email">
-        <input type="password" id="authPassword" placeholder="Пароль">
+        <div class="password-wrapper">
+            <input type="password" id="authPassword" placeholder="Пароль">
+            <span class="password-toggle" onclick="togglePassword('authPassword', this)">👁️</span>
+        </div>
+        <input type="text" id="authUsername" placeholder="Логин (3-8 латиница)" style="display: none;">
         <button id="submitAuthBtn">Войти</button>
-        <button class="close" onclick="closeModal()">Закрыть</button>
-        <div class="switch-form" onclick="toggleAuthForm()">Нет аккаунта? Зарегистрироваться</div>
+        <button class="close-modal" onclick="closeModal()">Закрыть</button>
     </div>
 </div>
 
 <script>
-    // ========== SUPABASE ==========
     const supabaseClient = window.supabase.createClient(
         'https://efaqqrfkxxgfsxndmyit.supabase.co',
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmYXFxcmZreHhnZnN4bmRteWl0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1MTMxMDQsImV4cCI6MjA5NTA4OTEwNH0.72YBkhIuYy_2agG8gbXxOpC4JpG__rWQvbJpK4WMugs'
@@ -408,122 +1029,230 @@
     let deviceFingerprint = null;
     let currentAuthMode = 'login';
 
+    const bannedWords = ['хуй', 'пизда', 'бля', 'ебать', 'пидор', 'сука', 'шлюха', 'fuck', 'shit', 'bitch'];
+    function containsBadWords(text) {
+        if (!text) return false;
+        return bannedWords.some(word => text.toLowerCase().includes(word));
+    }
+
     async function getDeviceFingerprint() {
         if (deviceFingerprint) return deviceFingerprint;
         try {
             const fp = await FingerprintJS.load();
             const result = await fp.get();
             deviceFingerprint = result.visitorId;
-            return deviceFingerprint;
         } catch(e) {
-            let fp = localStorage.getItem('fallback_fp');
-            if (!fp) {
-                fp = Math.random().toString(36).substr(2, 16);
-                localStorage.setItem('fallback_fp', fp);
-            }
-            deviceFingerprint = fp;
-            return deviceFingerprint;
+            deviceFingerprint = localStorage.getItem('fallback_fp') || Math.random().toString(36).substr(2, 16);
+            localStorage.setItem('fallback_fp', deviceFingerprint);
+        }
+        return deviceFingerprint;
+    }
+
+    function isValidUsername(username) {
+        return /^[a-zA-Z]{3,8}$/.test(username);
+    }
+
+    function togglePassword(inputId, element) {
+        const input = document.getElementById(inputId);
+        if (input.type === 'password') {
+            input.type = 'text';
+            element.classList.add('active');
+        } else {
+            input.type = 'password';
+            element.classList.remove('active');
         }
     }
 
-    async function checkAuth() {
-        const { data: { user } } = await supabaseClient.auth.getUser();
-        currentUser = user;
-        if (user) {
-            const { data: profile } = await supabaseClient
-                .from('profiles')
-                .select('role, email')
-                .eq('id', user.id)
-                .single();
-            isAdmin = profile?.role === 'admin';
-            document.getElementById('userEmail').innerText = profile?.email || user.email;
-            document.getElementById('authBtn').innerText = 'Выйти';
-            const adminPanel = document.getElementById('adminPanel');
-            if (adminPanel) adminPanel.style.display = isAdmin ? 'block' : 'none';
-        } else {
-            isAdmin = false;
-            document.getElementById('userEmail').innerText = 'Гость';
-            document.getElementById('authBtn').innerText = 'Войти';
-            const adminPanel = document.getElementById('adminPanel');
-            if (adminPanel) adminPanel.style.display = 'none';
+    async function downloadTrack(button) {
+        const url = button.dataset.url;
+        const fileName = button.dataset.title + '.mp3';
+        try {
+            const response = await fetch(url);
+            const blob = await response.blob();
+            const blobUrl = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = blobUrl;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(blobUrl);
+        } catch (error) {
+            alert('Не удалось скачать файл');
         }
+    }
+
+    function showLoggedOutUI() {
+        document.getElementById('userPanelName').innerText = 'Гость';
+        const panelRole = document.getElementById('userPanelRole');
+        if (panelRole) {
+            panelRole.innerText = '';
+            panelRole.classList.remove('admin');
+        }
+        document.getElementById('loginBtnTop').style.display = 'block';
+        document.getElementById('registerBtnTop').style.display = 'block';
+        document.getElementById('logoutBtnTop').style.display = 'none';
+        const adminPanel = document.getElementById('adminPanel');
+        if (adminPanel) adminPanel.style.display = 'none';
+    }
+
+    async function checkAuth() {
+        const { data: { user }, error } = await supabaseClient.auth.getUser();
+        if (error || !user) {
+            currentUser = null;
+            isAdmin = false;
+            showLoggedOutUI();
+            loadTracks();
+            loadComments();
+            return;
+        }
+        const { data: profile } = await supabaseClient.from('profiles').select('role, username').eq('id', user.id).maybeSingle();
+        if (!profile) {
+            await supabaseClient.auth.signOut();
+            currentUser = null;
+            isAdmin = false;
+            showLoggedOutUI();
+            loadTracks();
+            loadComments();
+            return;
+        }
+        currentUser = user;
+        isAdmin = profile.role === 'admin' || profile.role === 'tech_admin';
+        const displayName = profile.username || 'Пользователь';
+        
+        document.getElementById('userPanelName').innerText = displayName;
+        const panelRole = document.getElementById('userPanelRole');
+        if (panelRole) {
+            if (isAdmin) {
+                panelRole.innerText = 'Админ';
+                panelRole.classList.add('admin');
+            } else {
+                panelRole.innerText = 'Пользователь';
+                panelRole.classList.remove('admin');
+            }
+        }
+        
+        document.getElementById('loginBtnTop').style.display = 'none';
+        document.getElementById('registerBtnTop').style.display = 'none';
+        document.getElementById('logoutBtnTop').style.display = 'block';
+        
+        const adminPanel = document.getElementById('adminPanel');
+        if (adminPanel) adminPanel.style.display = isAdmin ? 'block' : 'none';
+        
         loadTracks();
         loadComments();
     }
 
     async function login(email, password) {
         const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
-        if (error) return alert('Ошибка входа: ' + error.message);
+        if (error) {
+            alert(error.message.includes('Invalid login credentials') ? '❌ Такой учётной записи нет' : 'Ошибка: ' + error.message);
+            return;
+        }
         closeModal();
         checkAuth();
     }
 
-    async function register(email, password) {
-        const { error } = await supabaseClient.auth.signUp({ email, password });
-        if (error) return alert('Ошибка регистрации: ' + error.message);
-        alert('Регистрация успешна! Теперь войдите.');
-        toggleAuthForm();
+    async function register(email, password, username) {
+        if (!username?.trim()) return alert('❌ Логин обязателен');
+        if (!isValidUsername(username)) return alert('❌ Логин: только латиница, 3-8 символов');
+        if (containsBadWords(username)) return alert('❌ Логин содержит недопустимые слова');
+        const { data: existing } = await supabaseClient.from('profiles').select('username').eq('username', username).maybeSingle();
+        if (existing) return alert('❌ Логин уже занят');
+        const { data, error } = await supabaseClient.auth.signUp({ email, password, options: { data: { username } } });
+        if (error) return alert(error.message.includes('User already registered') ? '❌ Email уже зарегистрирован' : 'Ошибка: ' + error.message);
+        if (data.user) {
+            await new Promise(r => setTimeout(r, 1000));
+            const { error: updateError } = await supabaseClient.from('profiles').update({ username }).eq('id', data.user.id);
+            if (updateError?.message.includes('no rows')) {
+                await supabaseClient.from('profiles').insert({ id: data.user.id, email, username, role: 'user' });
+            }
+        }
+        alert('✅ Регистрация успешна! Теперь войдите.');
+        toggleToLogin();
     }
 
-    function logout() {
-        supabaseClient.auth.signOut();
-        checkAuth();
-    }
+    function logout() { supabaseClient.auth.signOut(); checkAuth(); }
 
     const modal = document.getElementById('authModal');
     function openModal() { modal.style.display = 'flex'; }
     function closeModal() { modal.style.display = 'none'; }
-    function toggleAuthForm() {
-        if (currentAuthMode === 'login') {
-            currentAuthMode = 'register';
-            document.getElementById('modalTitle').innerText = 'Регистрация';
-            document.getElementById('submitAuthBtn').innerText = 'Зарегистрироваться';
-            document.querySelector('.switch-form').innerText = 'Уже есть аккаунт? Войти';
-        } else {
-            currentAuthMode = 'login';
-            document.getElementById('modalTitle').innerText = 'Вход';
-            document.getElementById('submitAuthBtn').innerText = 'Войти';
-            document.querySelector('.switch-form').innerText = 'Нет аккаунта? Зарегистрироваться';
-        }
+    function toggleToLogin() {
+        currentAuthMode = 'login';
+        document.getElementById('modalTitle').innerText = 'Вход';
+        document.getElementById('submitAuthBtn').innerText = 'Войти';
+        document.getElementById('authUsername').style.display = 'none';
     }
 
-    document.getElementById('authBtn').onclick = () => {
-        if (currentUser) logout();
-        else openModal();
+    document.getElementById('loginBtnTop').onclick = () => {
+        currentAuthMode = 'login';
+        document.getElementById('modalTitle').innerText = 'Вход';
+        document.getElementById('submitAuthBtn').innerText = 'Войти';
+        document.getElementById('authUsername').style.display = 'none';
+        openModal();
     };
+    document.getElementById('registerBtnTop').onclick = () => {
+        currentAuthMode = 'register';
+        document.getElementById('modalTitle').innerText = 'Регистрация';
+        document.getElementById('submitAuthBtn').innerText = 'Зарегистрироваться';
+        document.getElementById('authUsername').style.display = 'block';
+        document.getElementById('authUsername').placeholder = 'Логин (3-8 латиница)';
+        openModal();
+    };
+    document.getElementById('logoutBtnTop').onclick = () => logout();
     document.getElementById('submitAuthBtn').onclick = () => {
         const email = document.getElementById('authEmail').value;
         const pass = document.getElementById('authPassword').value;
-        if (!email || !pass) return alert('Заполните поля');
+        const username = document.getElementById('authUsername').value;
+        if (!email || !pass) return alert('Заполните email и пароль');
         if (currentAuthMode === 'login') login(email, pass);
-        else register(email, pass);
+        else register(email, pass, username);
     };
 
-    // ========== ЛАЙКИ ==========
     async function likeTrack(trackId) {
         const fingerprint = await getDeviceFingerprint();
         const userId = currentUser?.id || null;
-        const { error } = await supabaseClient.from('likes').insert({
-            track_id: trackId,
-            user_id: userId,
-            device_fingerprint: userId ? null : fingerprint
-        });
-        if (error) {
-            if (error.message.includes('unique')) alert('Вы уже лайкали этот трек');
-            else alert('Ошибка: ' + error.message);
+        let query = supabaseClient.from('likes').select('id').eq('track_id', trackId);
+        if (userId) query = query.eq('user_id', userId);
+        else query = query.eq('device_fingerprint', fingerprint);
+        const { data: existing } = await query.maybeSingle();
+        if (existing) {
+            await supabaseClient.from('likes').delete().eq('id', existing.id);
         } else {
-            loadTracks();
+            await supabaseClient.from('likes').insert({ track_id: trackId, user_id: userId, device_fingerprint: userId ? null : fingerprint });
         }
+        loadTracks();
+    }
+
+    async function loadComments() {
+        const container = document.getElementById('commentsList');
+        const { data: comments, error } = await supabaseClient.from('comments').select('id, text, created_at, user_id').order('created_at', { ascending: false });
+        if (error || !comments?.length) { container.innerHTML = ''; return; }
+        const userIds = [...new Set(comments.map(c => c.user_id).filter(id => id))];
+        let profilesMap = {};
+        if (userIds.length) {
+            const { data: profiles } = await supabaseClient.from('profiles').select('id, username, role').in('id', userIds);
+            if (profiles) profilesMap = Object.fromEntries(profiles.map(p => [p.id, p]));
+        }
+        let html = '';
+        for (const comment of comments) {
+            let authorName = 'Гость';
+            const profile = profilesMap[comment.user_id];
+            if (profile) {
+                if (profile.role === 'admin' || profile.role === 'tech_admin') authorName = '<span style="color:#ef4444;font-weight:bold;">Тех-Админ</span>';
+                else authorName = profile.username || 'Пользователь';
+            }
+            html += `<div class="comment"><div class="comment-content"><div><span class="comment-author">💬 ${authorName}</span> <span class="comment-date">${new Date(comment.created_at).toLocaleString()}</span></div><div class="comment-text">${escapeHtml(comment.text)}</div></div>${isAdmin ? `<button onclick="deleteComment(${comment.id})" class="delete-comment-btn">🗑️</button>` : ''}</div>`;
+        }
+        container.innerHTML = html;
     }
 
     async function addComment(text) {
-        if (!currentUser) return alert('Войдите в аккаунт, чтобы комментировать');
+        if (!currentUser) return alert('Войдите в аккаунт');
         if (!text.trim()) return alert('Напишите что-нибудь');
         if (text.length > 250) return alert('Максимум 250 символов');
-        const { error } = await supabaseClient.from('comments').insert({
-            text: text.trim(),
-            user_id: currentUser.id
-        });
+        if (containsBadWords(text)) return alert('❌ Недопустимые слова');
+        const { error } = await supabaseClient.from('comments').insert({ text: text.trim(), user_id: currentUser.id });
         if (error) alert('Ошибка: ' + error.message);
         else {
             document.getElementById('commentInput').value = '';
@@ -531,96 +1260,6 @@
             alert('✅ Комментарий добавлен');
             loadComments();
         }
-    }
-
-    async function loadTracks() {
-        const container = document.getElementById('trackList');
-        container.innerHTML = '<div class="empty-message">⏳ Загрузка...</div>';
-        const { data, error } = await supabaseClient.from('tracks').select('*').order('created_at', { ascending: false });
-        if (error || !data?.length) {
-            container.innerHTML = '<div class="empty-message">🎧 Пока нет треков</div>';
-            updateStats(); 
-            return;
-        }
-        let html = '';
-        const fingerprint = await getDeviceFingerprint();
-        for (const track of data) {
-            let liked = false;
-            if (currentUser) {
-                const { data: likeData } = await supabaseClient.from('likes').select('id').eq('track_id', track.id).eq('user_id', currentUser.id).maybeSingle();
-                liked = !!likeData;
-            } else {
-                const { data: likeData } = await supabaseClient.from('likes').select('id').eq('track_id', track.id).eq('device_fingerprint', fingerprint).maybeSingle();
-                liked = !!likeData;
-            }
-            html += `<div class="player-card" data-track-id="${track.id}">
-                <div class="track-title">${escapeHtml(track.title)}</div>
-                <div class="progress-area">
-                    <div class="progress-bar-container"><div class="progress-fill"></div></div>
-                    <div class="time-info"><span class="current-time">00:00</span><span class="duration">00:00</span></div>
-                </div>
-                <div class="controls-area">
-                    <div class="play-controls">
-                        <button class="play-btn">▶</button>
-                        <div class="volume-control"><span>🔊</span><input type="range" class="volume-slider" min="0" max="100" value="70"></div>
-                    </div>
-                    <div style="display:flex; gap:0.5rem;">
-                        <button class="like-btn ${liked ? 'liked' : ''}" data-id="${track.id}" data-likes="${track.likes || 0}">👍 ${track.likes || 0}</button>
-                        ${isAdmin ? `<button class="delete-track-btn" onclick="deleteTrack(${track.id})">🗑️ Удалить</button>` : ''}
-                    </div>
-                </div>
-                <audio style="display:none;"><source src="${track.file_url}" type="audio/mpeg"></audio>
-            </div>`;
-        }
-        container.innerHTML = html;
-        document.querySelectorAll('.player-card').forEach(card => initPlayer(card));
-        document.querySelectorAll('.like-btn').forEach(btn => {
-            btn.onclick = () => likeTrack(parseInt(btn.dataset.id));
-        });
-        updateStats();
-    }
-
-    async function deleteTrack(id) {
-        if (!isAdmin) return;
-        if (confirm('Удалить трек?')) {
-            await supabaseClient.from('tracks').delete().eq('id', id);
-            loadTracks();
-        }
-    }
-
-    async function addTrack(title, url) {
-        if (!isAdmin) return alert('⛔ Только админ');
-        if (!title.trim() || !url.trim()) return alert('Заполните все поля');
-        const { error } = await supabaseClient.from('tracks').insert([{ title: title.trim(), file_url: url.trim(), likes: 0 }]);
-        if (error) alert('Ошибка: ' + error.message);
-        else {
-            alert('✅ Трек добавлен');
-            document.getElementById('trackTitle').value = '';
-            document.getElementById('trackUrl').value = '';
-            loadTracks();
-        }
-    }
-
-    async function loadComments() {
-        const container = document.getElementById('commentsList');
-        const { data, error } = await supabaseClient.from('comments').select('*, profiles(email)').order('created_at', { ascending: false });
-        if (error || !data?.length) { 
-            container.innerHTML = '<div class="empty-message">💭 Будь первым!</div>'; 
-            return; 
-        }
-        let html = '';
-        for (const c of data) {
-            const author = c.profiles?.email || 'Гость';
-            html += `<div class="comment">
-                        <div>
-                            <span class="comment-author">💬 ${escapeHtml(author)}</span> 
-                            <span class="comment-date">${new Date(c.created_at).toLocaleString()}</span>
-                            <div class="comment-text">${escapeHtml(c.text)}</div>
-                        </div>
-                        ${isAdmin ? `<button onclick="deleteComment(${c.id})" style="background:#ef4444; border:none; color:white; border-radius:2rem; padding:0.2rem 0.7rem; cursor:pointer;">🗑️</button>` : ''}
-                    </div>`;
-        }
-        container.innerHTML = html;
     }
 
     async function deleteComment(id) {
@@ -631,31 +1270,99 @@
         }
     }
 
-    async function updateStats() {
-        const { count: tracksCount } = await supabaseClient.from('tracks').select('*', { count: 'exact', head: true });
-        const { count: commentsCount } = await supabaseClient.from('comments').select('*', { count: 'exact', head: true });
-        document.getElementById('statsPanel').innerHTML = `📊 ${tracksCount || 0} треков · 💬 ${commentsCount || 0} комментариев`;
+    async function loadTracks() {
+        const container = document.getElementById('trackList');
+        container.innerHTML = '<div class="empty-message">⏳ Загрузка...</div>';
+        const { data, error } = await supabaseClient.from('tracks').select('*').order('created_at', { ascending: false });
+        if (error || !data?.length) {
+            container.innerHTML = '<div class="empty-message">🎧 Пока нет треков</div>';
+            updateStats();
+            return;
+        }
+        const fingerprint = await getDeviceFingerprint();
+        let userLikes = [];
+        if (currentUser) {
+            const { data: likes } = await supabaseClient.from('likes').select('track_id').eq('user_id', currentUser.id);
+            userLikes = likes.map(l => l.track_id);
+        } else {
+            const { data: likes } = await supabaseClient.from('likes').select('track_id').eq('device_fingerprint', fingerprint);
+            userLikes = likes.map(l => l.track_id);
+        }
+        let html = '';
+        for (let i = 0; i < data.length; i++) {
+            const track = data[i];
+            const isLiked = userLikes.includes(track.id);
+            const { count: likesCount } = await supabaseClient.from('likes').select('*', { count: 'exact', head: true }).eq('track_id', track.id);
+            html += `
+                <div class="track-card" data-track-id="${track.id}" data-index="${i}">
+                    <div class="track-left">
+                        <div class="cover-container">
+                            <img class="track-cover" src="https://github.com/geratiina/music-supabase/raw/main/avatar.png" onerror="this.src='https://placehold.co/70x70/2b2b4f/white?text=🎵'">
+                            <div class="play-overlay" data-play-index="${i}"><span>▶</span></div>
+                        </div>
+                    </div>
+                    <div class="track-right">
+                        <div class="track-title">${escapeHtml(track.title)}</div>
+                        <div class="track-artist">${escapeHtml(track.artist || 'Неизвестный исполнитель')}</div>
+                        <div class="volume-control" id="volume-${track.id}">
+                            <span class="volume-icon">🔊</span>
+                            <input type="range" class="volume-slider" min="0" max="100" value="70">
+                        </div>
+                        <div class="progress-control" id="progress-${track.id}">
+                            <div class="progress-bar-container"><div class="progress-fill"></div></div>
+                        </div>
+                        <div class="time-info">
+                            <span class="current-time" id="current-time-${track.id}">00:00</span>
+                            <span class="duration" id="duration-time-${track.id}">00:00</span>
+                        </div>
+                        <div class="likes-row">
+                            <button class="download-track-btn" data-url="${track.file_url}" data-title="${escapeHtml(track.title)}" onclick="downloadTrack(this)">⬇️ Скачать</button>
+                            <button class="like-btn-card ${isLiked ? 'liked' : ''}" data-id="${track.id}">👍 ${likesCount || 0}</button>
+                            ${isAdmin ? `<button class="delete-track-card" onclick="deleteTrack(${track.id})">🗑️</button>` : ''}
+                        </div>
+                    </div>
+                    <audio style="display:none;" id="audio-${track.id}" preload="metadata"><source src="${track.file_url}" type="audio/mpeg"></audio>
+                </div>
+            `;
+        }
+        container.innerHTML = html;
+        for (let i = 0; i < data.length; i++) initPlayerForTrack(data[i].id, i);
+        document.querySelectorAll('.like-btn-card').forEach(btn => btn.onclick = () => likeTrack(parseInt(btn.dataset.id)));
+        updateStats();
     }
 
-    function initPlayer(card) {
-        const audio = card.querySelector('audio');
-        const playBtn = card.querySelector('.play-btn');
-        const progressBar = card.querySelector('.progress-bar-container');
-        const progressFill = card.querySelector('.progress-fill');
-        const currentSpan = card.querySelector('.current-time');
-        const durationSpan = card.querySelector('.duration');
-        const volumeSlider = card.querySelector('.volume-slider');
+    function initPlayerForTrack(trackId, index) {
+        const audio = document.getElementById(`audio-${trackId}`);
+        const playBtn = document.querySelector(`.play-overlay[data-play-index="${index}"]`);
+        const currentSpan = document.getElementById(`current-time-${trackId}`);
+        const durationSpan = document.getElementById(`duration-time-${trackId}`);
+        const volumeControl = document.getElementById(`volume-${trackId}`);
+        const progressFill = document.querySelector(`.progress-fill`);
+        const progressBar = document.querySelector(`.progress-bar-container`);
+        const volumeSlider = volumeControl?.querySelector('.volume-slider');
+        const volumeIcon = volumeControl?.querySelector('.volume-icon');
         let isPlaying = false;
 
         audio.addEventListener('loadedmetadata', () => {
-            durationSpan.textContent = formatTime(audio.duration);
+            if (durationSpan && !isNaN(audio.duration)) {
+                const mins = Math.floor(audio.duration / 60);
+                const secs = Math.floor(audio.duration % 60);
+                durationSpan.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+            }
         });
-        audio.addEventListener('timeupdate', () => {
-            const percent = (audio.currentTime / audio.duration) * 100;
-            progressFill.style.width = `${percent}%`;
-            currentSpan.textContent = formatTime(audio.currentTime);
-        });
-        progressBar.addEventListener('click', (e) => {
+
+        function updateTimeDisplay() {
+            if (currentSpan && audio.duration) {
+                const currentMins = Math.floor(audio.currentTime / 60);
+                const currentSecs = Math.floor(audio.currentTime % 60);
+                currentSpan.textContent = `${currentMins}:${currentSecs.toString().padStart(2, '0')}`;
+                const percent = (audio.currentTime / audio.duration) * 100;
+                if (progressFill) progressFill.style.width = `${percent}%`;
+            }
+        }
+
+        audio.addEventListener('timeupdate', updateTimeDisplay);
+        if (progressBar) progressBar.addEventListener('click', (e) => {
             const rect = progressBar.getBoundingClientRect();
             const percent = (e.clientX - rect.left) / rect.width;
             audio.currentTime = percent * audio.duration;
@@ -663,51 +1370,108 @@
         playBtn.addEventListener('click', () => {
             if (isPlaying) {
                 audio.pause();
-                playBtn.textContent = '▶';
+                playBtn.innerHTML = '<span>▶</span>';
+                if (volumeControl) volumeControl.classList.remove('visible');
             } else {
-                document.querySelectorAll('.player-card audio').forEach(a => {
+                document.querySelectorAll('audio').forEach(a => {
                     if (a !== audio && !a.paused) {
                         a.pause();
-                        const otherCard = a.closest('.player-card');
-                        if (otherCard) otherCard.querySelector('.play-btn').textContent = '▶';
+                        const idx = a.id?.replace('audio-', '');
+                        const otherPlayBtn = document.querySelector(`.play-overlay[data-play-index="${idx}"]`);
+                        if (otherPlayBtn) otherPlayBtn.innerHTML = '<span>▶</span>';
+                        const otherVolume = document.getElementById(`volume-${idx}`);
+                        if (otherVolume) otherVolume.classList.remove('visible');
                     }
                 });
                 audio.play();
-                playBtn.textContent = '⏸';
+                playBtn.innerHTML = '<span>⏸</span>';
+                if (volumeControl) volumeControl.classList.add('visible');
             }
             isPlaying = !isPlaying;
         });
         audio.addEventListener('ended', () => {
-            playBtn.textContent = '▶';
+            playBtn.innerHTML = '<span>▶</span>';
+            if (volumeControl) volumeControl.classList.remove('visible');
             isPlaying = false;
         });
-        volumeSlider.addEventListener('input', (e) => {
-            audio.volume = e.target.value / 100;
-        });
-        audio.volume = 0.7;
+        if (volumeSlider) {
+            volumeSlider.addEventListener('input', (e) => {
+                audio.volume = e.target.value / 100;
+                if (volumeIcon) {
+                    if (audio.volume === 0) volumeIcon.textContent = '🔇';
+                    else if (audio.volume < 0.5) volumeIcon.textContent = '🔉';
+                    else volumeIcon.textContent = '🔊';
+                }
+            });
+            audio.volume = 0.7;
+        }
     }
 
-    function formatTime(sec) { 
-        if (isNaN(sec)) return '00:00'; 
-        const m = Math.floor(sec / 60); 
-        const s = Math.floor(sec % 60); 
-        return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`; 
+    async function deleteTrack(id) {
+        if (!isAdmin) return;
+        if (confirm('Удалить трек?')) {
+            await supabaseClient.from('tracks').delete().eq('id', id);
+            loadTracks();
+        }
     }
 
-    function escapeHtml(str) { 
-        if (!str) return ''; 
-        return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])); 
+    async function addTrack(title, artist, url) {
+        if (!isAdmin) return alert('⛔ Только админ');
+        if (!title.trim() || !artist.trim() || !url.trim()) return alert('Заполните поля');
+        const { error } = await supabaseClient.from('tracks').insert([{ title: title.trim(), artist: artist.trim(), file_url: url.trim(), likes: 0 }]);
+        if (error) alert('Ошибка: ' + error.message);
+        else {
+            alert('✅ Трек добавлен');
+            document.getElementById('trackTitle').value = '';
+            document.getElementById('trackArtist').value = '';
+            document.getElementById('trackUrl').value = '';
+            loadTracks();
+        }
     }
 
-    document.getElementById('addTrackBtn').onclick = () => addTrack(document.getElementById('trackTitle').value, document.getElementById('trackUrl').value);
+    async function updateStats() {
+        const { count: tracksCount } = await supabaseClient.from('tracks').select('*', { count: 'exact', head: true });
+        const { count: commentsCount } = await supabaseClient.from('comments').select('*', { count: 'exact', head: true });
+        document.getElementById('statsPanel').innerHTML = `📊 ${tracksCount || 0} треков · 💬 ${commentsCount || 0} комментариев`;
+    }
+
+    function escapeHtml(str) { return str ? str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])) : ''; }
+
+    function showSingerCard(name, description, imageUrl, initials) {
+        const modal = document.getElementById('singerModal');
+        document.getElementById('singerPhoto').src = imageUrl;
+        document.getElementById('singerName').innerText = name;
+        document.getElementById('singerInitials').innerText = initials || '';
+        document.getElementById('singerDescription').innerText = description;
+        modal.style.display = 'flex';
+        const authorMenu = document.getElementById('authorMenu');
+        if (authorMenu.classList.contains('open')) authorMenu.classList.remove('open');
+    }
+
+    function closeSingerModal() {
+        document.getElementById('singerModal').style.display = 'none';
+    }
+
+    document.getElementById('addTrackBtn').onclick = () => addTrack(
+        document.getElementById('trackTitle').value,
+        document.getElementById('trackArtist').value,
+        document.getElementById('trackUrl').value
+    );
     document.getElementById('sendCommentBtn').onclick = () => addComment(document.getElementById('commentInput').value);
-    document.getElementById('commentInput').addEventListener('input', function() { 
-        const len = this.value.length; 
-        const counter = document.getElementById('charCounter'); 
-        counter.innerText = `${len} / 250`; 
-        if (len > 250) counter.classList.add('warning'); 
-        else counter.classList.remove('warning'); 
+    document.getElementById('commentInput').addEventListener('input', function() {
+        const len = this.value.length;
+        const counter = document.getElementById('charCounter');
+        counter.innerText = `${len} / 250`;
+        if (len > 250) counter.classList.add('warning');
+        else counter.classList.remove('warning');
     });
+
+    const burgerBtn = document.getElementById('burgerMenuFixed');
+    const authorMenuElem = document.getElementById('authorMenu');
+    const closeMenuBtn = document.getElementById('closeMenu');
+    
+    if (burgerBtn) burgerBtn.onclick = () => authorMenuElem.classList.add('open');
+    if (closeMenuBtn) closeMenuBtn.onclick = () => authorMenuElem.classList.remove('open');
 
     checkAuth();
 </script>
