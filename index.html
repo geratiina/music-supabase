@@ -188,7 +188,6 @@
             border: 1px solid rgba(255, 255, 255, 0.3);
         }
         
-        /* Аватарка над названием, по центру */
         .avatar-center {
             display: flex;
             justify-content: center;
@@ -224,7 +223,6 @@
             margin-top: 0.3rem;
         }
         
-        /* МОБИЛЬНЫЕ СОЦ. КНОПКИ (маленькие кружки) */
         .mobile-social-bar {
             display: none;
             justify-content: center;
@@ -241,16 +239,12 @@
             border-radius: 50%;
             text-decoration: none;
             transition: all 0.2s ease;
-            font-weight: 600;
-            font-size: 1rem;
         }
         .social-circle.vk {
             background: #0077FF;
-            color: white;
         }
         .social-circle.tg {
             background: #26A5E4;
-            color: white;
         }
         .social-circle:hover {
             transform: scale(1.05);
@@ -262,7 +256,6 @@
             fill: white;
         }
         
-        /* ФУТЕР (подвал сайта) */
         .site-footer {
             margin-top: 3rem;
             padding: 1.5rem;
@@ -301,6 +294,7 @@
             text-decoration: underline;
         }
         
+        /* БОКОВОЕ МЕНЮ (бургер) */
         .author-menu {
             position: fixed;
             top: 0;
@@ -370,6 +364,11 @@
         .author-name {
             color: white;
             font-weight: 600;
+        }
+        .author-role {
+            font-size: 0.7rem;
+            color: #3b82f6;
+            margin-top: 0.2rem;
         }
         
         .modal {
@@ -821,7 +820,6 @@
             color: #ef4444;
         }
         
-        /* МОБИЛЬНАЯ АДАПТАЦИЯ */
         @media (max-width: 768px) {
             body { padding: 10px; }
             .sticky-header { margin-top: 65px; }
@@ -854,7 +852,6 @@
             .ad-sidebar { display: none; }
             .main-content { max-width: 100%; }
             
-            /* Мобильная шапка — аватарка по центру */
             .glass-header {
                 padding: 0.8rem 1rem;
             }
@@ -869,19 +866,16 @@
                 font-size: 0.55rem;
             }
             
-            /* Показываем мобильные соц. кнопки под рекламой */
             .mobile-social-bar {
                 display: flex;
                 margin-top: 0.5rem;
             }
             
-            /* Рекламный блок на мобильных */
             .mobile-ad {
                 display: block;
                 margin-bottom: 1rem;
             }
             
-            /* Футер на мобильных */
             .site-footer {
                 margin-top: 2rem;
                 padding: 1rem;
@@ -937,7 +931,6 @@
 </video>
 <div class="overlay"></div>
 
-<!-- БУРГЕР-МЕНЮ + возрастное ограничение 16+ (рядом) -->
 <div class="burger-menu-fixed" id="burgerMenuFixed">
     <div class="menu-icon">
         <span></span><span></span><span></span>
@@ -962,7 +955,6 @@
     <div class="main-content">
         <div class="sticky-header">
             <div class="glass-header">
-                <!-- Аватарка над названием (по центру) -->
                 <div class="avatar-center">
                     <img src="https://github.com/geratiina/music-supabase/raw/main/avatar.png" alt="avatar" class="avatar" onerror="this.style.display='none'">
                 </div>
@@ -973,13 +965,11 @@
             </div>
         </div>
         
-        <!-- РЕКЛАМНЫЙ БЛОК (сразу под шапкой) -->
         <div class="mobile-ad ad-block">
             <p>📢 Здесь могла быть ваша реклама</p>
             <a href="https://t.me/Geratiina" target="_blank">@Geratiina</a>
         </div>
         
-        <!-- МОБИЛЬНЫЕ СОЦИАЛЬНЫЕ КНОПКИ (под рекламой) -->
         <div class="mobile-social-bar">
             <a href="https://vk.com/mzproect_68" target="_blank" class="social-circle vk">
                 <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
@@ -1021,7 +1011,6 @@
     </div>
 </div>
 
-<!-- ФУТЕР (подвал сайта) с информацией о владельце -->
 <footer class="site-footer">
     <div class="footer-text">
         © 2026 <strong>Порошилов Евгений Александрович</strong><br>
@@ -1050,6 +1039,28 @@
         <div class="author-item" onclick='showSingerCard("Алексей Тамарёв", "Алексей Тамарёв - уникальный музыкант, гениальный гитарист, аранжировщик мелодий, композитор. Вокал. Участник проекта \"АБТ\".", "https://github.com/geratiina/singers/raw/main/AlexeyT.jpg", "")'>
             <img class="author-avatar" src="https://github.com/geratiina/singers/raw/main/AlexeyT.jpg" alt="Алексей Тамарёв" onerror="this.src='https://placehold.co/60x60/2b2b4f/white?text=АТ'">
             <div class="author-name">Алексей Тамарёв</div>
+        </div>
+    </div>
+    
+    <!-- НОВАЯ ВКЛАДКА: КРЕАТОРЫ -->
+    <div class="menu-header" style="margin-top: 1.5rem;">
+        <h3 class="menu-title">✨ Креаторы</h3>
+    </div>
+    
+    <div id="creatorsList" class="author-list">
+        <div class="author-item">
+            <img class="author-avatar" src="https://github.com/geratiina/creators/raw/main/CRX" alt="Карина Ящук" onerror="this.src='https://placehold.co/48x48/2b2b4f/white?text=CRX'">
+            <div>
+                <div class="author-name">Карина Ящук</div>
+                <div class="author-role">🎨 Дизайнер</div>
+            </div>
+        </div>
+        <div class="author-item">
+            <img class="author-avatar" src="https://github.com/geratiina/creators/raw/main/EVG" alt="Евгений Порошилов" onerror="this.src='https://placehold.co/48x48/2b2b4f/white?text=EVG'">
+            <div>
+                <div class="author-name">Евгений Порошилов</div>
+                <div class="author-role">⚙️ Тех-Админ, программист, Владелец</div>
+            </div>
         </div>
     </div>
 </div>
