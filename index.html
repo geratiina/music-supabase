@@ -1366,7 +1366,6 @@
         currentIndex = -1;
     }
     
-    // ИСПРАВЛЕННАЯ ФУНКЦИЯ ПЛЕЕРА (отображает длительность трека)
     function playTrackByIndex(index) {
         if (index < 0 || index >= tracksData.length) return;
         const track = tracksData[index];
@@ -1519,11 +1518,37 @@
                             ${isAdmin ? `<button class="delete-track-card" onclick="deleteTrack(${track.id})">🗑️</button>` : ''}
                         </div>
                     </div>
-                    <audio style="display:none;" id="audio-${track.id}" preload="metadata"><source src="${track.file_url}" type="audio/mpeg"></audio>
+                    <audio style="display:none;" id="audio-${track.id}" preload="metadata">
+                        <source src="${track.file_url}" type="audio/mpeg">
+                    </audio>
                 </div>
             `;
         }
         container.innerHTML = html;
+        
+        // ЗАГРУЖАЕМ ДЛИТЕЛЬНОСТЬ ДЛЯ КАЖДОГО ТРЕКА СРАЗУ (ДАЖЕ НА ТЕЛЕФОНАХ)
+        for (let i = 0; i < data.length; i++) {
+            const track = data[i];
+            const audio = document.getElementById(`audio-${track.id}`);
+            const durationSpan = document.getElementById(`duration-time-${track.id}`);
+            
+            if (audio && durationSpan) {
+                if (audio.readyState >= 1 && audio.duration && !isNaN(audio.duration)) {
+                    const mins = Math.floor(audio.duration / 60);
+                    const secs = Math.floor(audio.duration % 60);
+                    durationSpan.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+                } else {
+                    audio.addEventListener('loadedmetadata', function() {
+                        if (durationSpan && audio.duration && !isNaN(audio.duration)) {
+                            const mins = Math.floor(audio.duration / 60);
+                            const secs = Math.floor(audio.duration % 60);
+                            durationSpan.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+                        }
+                    });
+                }
+            }
+        }
+        
         document.querySelectorAll('.play-overlay').forEach(btn => {
             btn.onclick = (e) => {
                 e.stopPropagation();
