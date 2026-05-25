@@ -864,12 +864,12 @@
     let deviceFingerprint = null;
     let currentAuthMode = 'login';
     
-    // ГЛОБАЛЬНЫЙ ПЛЕЕР - единый контроллер для всех треков
-    let currentAudio = null;           // текущий играющий audio элемент
-    let currentTrackId = null;         // ID текущего трека
-    let currentIndex = -1;             // индекс текущего трека в списке
-    let currentUpdateFunction = null;  // функция обновления прогресса текущего трека
-    let tracksData = [];               // массив с данными треков
+    // ГЛОБАЛЬНЫЙ ПЛЕЕР
+    let currentAudio = null;
+    let currentTrackId = null;
+    let currentIndex = -1;
+    let currentUpdateFunction = null;
+    let tracksData = [];
     
     const bannedWords = ['хуй', 'пизда', 'бля', 'ебать', 'пидор', 'сука', 'шлюха', 'fuck', 'shit', 'bitch'];
     function containsBadWords(text) { return text ? bannedWords.some(word => text.toLowerCase().includes(word)) : false; }
@@ -1061,13 +1061,18 @@
         }
     }
     
-    // ФУНКЦИЯ ОСТАНОВКИ ТЕКУЩЕГО ТРЕКА (полностью отключает его)
+    // ФУНКЦИЯ СБРОСА ПРОГРЕСС-БАРА У ТРЕКА
+    function resetProgressBar(trackId) {
+        const progressFill = document.querySelector(`#progress-${trackId} .progress-fill`);
+        const currentSpan = document.getElementById(`current-time-${trackId}`);
+        if (progressFill) progressFill.style.width = '0%';
+        if (currentSpan) currentSpan.textContent = '00:00';
+    }
+    
+    // ФУНКЦИЯ ОСТАНОВКИ ТЕКУЩЕГО ТРЕКА
     function stopCurrentTrack() {
         if (currentAudio) {
             currentAudio.pause();
-            // Останавливаем и очищаем audio элемент
-            currentAudio.currentTime = 0;
-            // Убираем обработчики событий
             if (currentUpdateFunction) {
                 currentAudio.removeEventListener('timeupdate', currentUpdateFunction);
                 currentUpdateFunction = null;
@@ -1075,12 +1080,14 @@
             currentAudio = null;
         }
         
-        // Сбрасываем кнопку play у предыдущего трека
+        // Сбрасываем кнопку play и прогресс-бар у предыдущего трека
         if (currentTrackId !== null) {
             const prevPlayBtn = document.querySelector(`.play-overlay[data-track-id="${currentTrackId}"]`);
             if (prevPlayBtn) prevPlayBtn.innerHTML = '<span>▶</span>';
             const prevVolume = document.getElementById(`volume-${currentTrackId}`);
             if (prevVolume) prevVolume.classList.remove('visible');
+            // Сбрасываем прогресс-бар остановленного трека
+            resetProgressBar(currentTrackId);
         }
         
         currentTrackId = null;
@@ -1102,8 +1109,11 @@
         
         if (!audio) return;
         
-        // Останавливаем текущий трек
+        // Останавливаем текущий трек и сбрасываем его прогресс
         stopCurrentTrack();
+        
+        // Сбрасываем прогресс-бар нового трека на всякий случай
+        resetProgressBar(track.id);
         
         // Устанавливаем новый текущий трек
         currentAudio = audio;
@@ -1130,8 +1140,11 @@
             }
         };
         
-        // Функция для переключения на следующий трек
+        // Функция для переключения на следующий трек с очисткой прогресса
         const onTrackEnded = function() {
+            // Сначала сбрасываем прогресс-бар у завершившегося трека
+            resetProgressBar(track.id);
+            
             const nextIndex = currentIndex + 1;
             if (nextIndex < tracksData.length) {
                 playTrackByIndex(nextIndex);
@@ -1205,7 +1218,7 @@
             return;
         }
         
-        tracksData = data; // сохраняем глобально
+        tracksData = data;
         
         const fingerprint = await getDeviceFingerprint();
         let userLikes = [];
@@ -1256,7 +1269,6 @@
         }
         container.innerHTML = html;
         
-        // Навешиваем обработчики на кнопки play
         document.querySelectorAll('.play-overlay').forEach(btn => {
             btn.onclick = (e) => {
                 e.stopPropagation();
@@ -1264,7 +1276,6 @@
                 const index = parseInt(btn.dataset.index);
                 const audioElem = document.getElementById(`audio-${trackId}`);
                 
-                // Если этот трек уже играет — ставим на паузу
                 if (currentTrackId === trackId && currentAudio && !currentAudio.paused) {
                     currentAudio.pause();
                     btn.innerHTML = '<span>▶</span>';
@@ -1272,7 +1283,6 @@
                     if (volumeControl) volumeControl.classList.remove('visible');
                     return;
                 }
-                // Если этот трек на паузе — продолжаем
                 if (currentTrackId === trackId && currentAudio && currentAudio.paused) {
                     currentAudio.play();
                     btn.innerHTML = '<span>⏸</span>';
@@ -1280,7 +1290,6 @@
                     if (volumeControl) volumeControl.classList.add('visible');
                     return;
                 }
-                // Иначе запускаем новый трек
                 playTrackByIndex(index);
             };
         });
@@ -1292,7 +1301,6 @@
     async function deleteTrack(id) {
         if (!isAdmin) return;
         if (confirm('Удалить трек?')) {
-            // Если удаляем текущий играющий трек — останавливаем
             if (currentTrackId === id) {
                 stopCurrentTrack();
             }
