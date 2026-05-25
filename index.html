@@ -240,21 +240,10 @@
             text-decoration: none;
             transition: all 0.2s ease;
         }
-        .social-circle.vk {
-            background: #0077FF;
-        }
-        .social-circle.tg {
-            background: #26A5E4;
-        }
-        .social-circle:hover {
-            transform: scale(1.05);
-            opacity: 0.95;
-        }
-        .social-circle svg {
-            width: 22px;
-            height: 22px;
-            fill: white;
-        }
+        .social-circle.vk { background: #0077FF; }
+        .social-circle.tg { background: #26A5E4; }
+        .social-circle:hover { transform: scale(1.05); opacity: 0.95; }
+        .social-circle svg { width: 22px; height: 22px; fill: white; }
         
         .site-footer {
             margin-top: 3rem;
@@ -268,33 +257,13 @@
             margin-left: auto;
             margin-right: auto;
         }
-        .footer-text {
-            color: #cbd5e1;
-            font-size: 0.8rem;
-            line-height: 1.6;
-        }
-        .footer-text strong {
-            color: white;
-        }
-        .footer-copyright {
-            margin-top: 0.5rem;
-            font-size: 0.7rem;
-            color: #94a3b8;
-        }
-        .footer-gsc {
-            margin-top: 0.5rem;
-            font-size: 0.7rem;
-            color: #3b82f6;
-        }
-        .footer-gsc a {
-            color: #3b82f6;
-            text-decoration: none;
-        }
-        .footer-gsc a:hover {
-            text-decoration: underline;
-        }
+        .footer-text { color: #cbd5e1; font-size: 0.8rem; line-height: 1.6; }
+        .footer-text strong { color: white; }
+        .footer-copyright { margin-top: 0.5rem; font-size: 0.7rem; color: #94a3b8; }
+        .footer-gsc { margin-top: 0.5rem; font-size: 0.7rem; color: #3b82f6; }
+        .footer-gsc a { color: #3b82f6; text-decoration: none; }
+        .footer-gsc a:hover { text-decoration: underline; }
         
-        /* БОКОВОЕ МЕНЮ (бургер) */
         .author-menu {
             position: fixed;
             top: 0;
@@ -309,9 +278,7 @@
             padding-top: 60px;
             overflow-y: auto;
         }
-        .author-menu.open {
-            left: 0;
-        }
+        .author-menu.open { left: 0; }
         .author-menu .close-menu {
             position: absolute;
             top: 1rem;
@@ -348,7 +315,6 @@
             padding: 0.8rem;
             border-radius: 1rem;
             background: rgba(255,255,255,0.05);
-            cursor: pointer;
             transition: all 0.2s ease;
         }
         .author-item:hover {
@@ -413,11 +379,7 @@
             margin: 0 auto 1rem;
             border: 3px solid #3b82f6;
         }
-        .singer-name {
-            color: white;
-            font-size: 1.3rem;
-            margin-bottom: 0.5rem;
-        }
+        .singer-name { color: white; font-size: 1.3rem; margin-bottom: 0.5rem; }
         .singer-initials {
             font-size: 1rem;
             color: #3b82f6;
@@ -465,11 +427,7 @@
             cursor: pointer;
         }
         
-        .track-list {
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-        }
+        .track-list { display: flex; flex-direction: column; gap: 0.8rem; }
         .track-card {
             background: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(8px);
@@ -482,7 +440,6 @@
             align-items: flex-start;
             gap: 0.8rem;
         }
-        
         .track-left {
             display: flex;
             flex-direction: column;
@@ -520,44 +477,16 @@
             transition: all 0.2s;
             border: 1px solid rgba(255,255,255,0.3);
         }
-        .play-overlay:hover {
-            background: #3b82f6;
-            transform: translate(-50%, -50%) scale(1.05);
-        }
-        .play-overlay span {
-            font-size: 1rem;
-            color: white;
-        }
+        .play-overlay:hover { background: #3b82f6; transform: translate(-50%, -50%) scale(1.05); }
+        .play-overlay span { font-size: 1rem; color: white; }
         
-        .track-right {
-            flex: 1;
-            min-width: 160px;
-        }
-        .track-title {
-            font-size: 1rem;
-            font-weight: 700;
-            color: white;
-            margin-bottom: 0.2rem;
-        }
-        .track-artist {
-            font-size: 0.8rem;
-            color: #a0aec0;
-            margin-bottom: 0.5rem;
-        }
+        .track-right { flex: 1; min-width: 160px; }
+        .track-title { font-size: 1rem; font-weight: 700; color: white; margin-bottom: 0.2rem; }
+        .track-artist { font-size: 0.8rem; color: #a0aec0; margin-bottom: 0.5rem; }
         
-        .volume-control {
-            display: none;
-            align-items: center;
-            gap: 0.4rem;
-            margin-bottom: 0.5rem;
-        }
-        .volume-control.visible {
-            display: flex;
-        }
-        .volume-icon {
-            font-size: 0.7rem;
-            color: white;
-        }
+        .volume-control { display: none; align-items: center; gap: 0.4rem; margin-bottom: 0.5rem; }
+        .volume-control.visible { display: flex; }
+        .volume-icon { font-size: 0.7rem; color: white; }
         .volume-slider {
             width: 100px;
             height: 3px;
@@ -575,9 +504,7 @@
             cursor: pointer;
         }
         
-        .progress-control {
-            margin-bottom: 0.5rem;
-        }
+        .progress-control { margin-bottom: 0.5rem; }
         .progress-bar-container {
             background: rgba(255,255,255,0.2);
             border-radius: 1rem;
@@ -608,22 +535,8 @@
             }
         }
         
-        .time-info {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.7rem;
-            color: #cbd5e1;
-            margin-bottom: 0.5rem;
-        }
-        
-        .likes-row {
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            gap: 0.5rem;
-            margin-top: 0.3rem;
-            flex-wrap: wrap;
-        }
+        .time-info { display: flex; justify-content: space-between; font-size: 0.7rem; color: #cbd5e1; margin-bottom: 0.5rem; }
+        .likes-row { display: flex; align-items: center; justify-content: flex-end; gap: 0.5rem; margin-top: 0.3rem; flex-wrap: wrap; }
         .download-track-btn {
             background: rgba(16, 185, 129, 0.2);
             border: 1px solid rgba(16, 185, 129, 0.5);
@@ -639,10 +552,7 @@
             gap: 0.3rem;
             text-decoration: none;
         }
-        .download-track-btn:hover {
-            background: #10b981;
-            color: white;
-        }
+        .download-track-btn:hover { background: #10b981; color: white; }
         .like-btn-card {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(4px);
@@ -658,15 +568,8 @@
             align-items: center;
             gap: 0.3rem;
         }
-        .like-btn-card:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: scale(1.02);
-        }
-        .like-btn-card.liked {
-            background: #ef4444;
-            color: white;
-            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
-        }
+        .like-btn-card:hover { background: rgba(255, 255, 255, 0.2); transform: scale(1.02); }
+        .like-btn-card.liked { background: #ef4444; color: white; box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3); }
         .delete-track-card {
             background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(4px);
@@ -678,21 +581,10 @@
             font-size: 0.7rem;
             transition: all 0.2s ease;
         }
-        .delete-track-card:hover {
-            background: rgba(239, 68, 68, 0.8);
-            color: white;
-        }
+        .delete-track-card:hover { background: rgba(239, 68, 68, 0.8); color: white; }
         
-        .comments-section {
-            margin-top: 2rem;
-        }
-        .comments-section h2 {
-            text-align: center;
-            font-size: 1.3rem;
-            margin-bottom: 1rem;
-            color: white;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-        }
+        .comments-section { margin-top: 2rem; }
+        .comments-section h2 { text-align: center; font-size: 1.3rem; margin-bottom: 1rem; color: white; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
         .comment {
             background: rgba(0, 0, 0, 0.6);
             border-radius: 1.2rem;
@@ -702,33 +594,11 @@
             justify-content: space-between;
             align-items: center;
         }
-        .comment-content {
-            flex: 1;
-        }
-        .comment-author {
-            font-weight: bold;
-            font-size: 0.9rem;
-            color: #e0e7ff;
-        }
-        .comment-date {
-            font-size: 0.65rem;
-            color: #cbd5e1;
-            margin-left: 0.5rem;
-        }
-        .comment-text {
-            color: white;
-            margin-top: 0.2rem;
-            font-size: 0.9rem;
-        }
-        .delete-comment-btn {
-            background: #ef4444;
-            border: none;
-            color: white;
-            border-radius: 2rem;
-            padding: 0.2rem 0.7rem;
-            cursor: pointer;
-            font-size: 0.7rem;
-        }
+        .comment-content { flex: 1; }
+        .comment-author { font-weight: bold; font-size: 0.9rem; color: #e0e7ff; }
+        .comment-date { font-size: 0.65rem; color: #cbd5e1; margin-left: 0.5rem; }
+        .comment-text { color: white; margin-top: 0.2rem; font-size: 0.9rem; }
+        .delete-comment-btn { background: #ef4444; border: none; color: white; border-radius: 2rem; padding: 0.2rem 0.7rem; cursor: pointer; font-size: 0.7rem; }
         
         textarea {
             width: 100%;
@@ -750,21 +620,12 @@
             display: block;
             margin: 0 auto;
         }
-        .char-counter {
-            text-align: right;
-            font-size: 0.7rem;
-            color: #cbd5e1;
-            margin-bottom: 0.5rem;
-        }
+        .char-counter { text-align: right; font-size: 0.7rem; color: #cbd5e1; margin-bottom: 0.5rem; }
         .char-counter.warning { color: #ef4444; }
         
         .empty-message { text-align: center; padding: 2rem; color: white; }
         
-        .password-wrapper {
-            position: relative;
-            width: 100%;
-            margin: 0.5rem 0;
-        }
+        .password-wrapper { position: relative; width: 100%; margin: 0.5rem 0; }
         .password-wrapper input {
             width: 100%;
             padding: 0.6rem 2.5rem 0.6rem 1rem;
@@ -784,10 +645,7 @@
             user-select: none;
             color: #888;
         }
-        .password-toggle.active {
-            color: white;
-            text-shadow: 0 0 4px #3b82f6;
-        }
+        .password-toggle.active { color: white; text-shadow: 0 0 4px #3b82f6; }
         
         .user-panel {
             position: fixed;
@@ -803,11 +661,7 @@
             color: white;
             pointer-events: none;
         }
-        .user-panel-content {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
+        .user-panel-content { display: flex; align-items: center; gap: 0.5rem; }
         .user-role {
             font-size: 0.7rem;
             padding: 0.15rem 0.5rem;
@@ -815,112 +669,42 @@
             background: rgba(59, 130, 246, 0.3);
             color: #3b82f6;
         }
-        .user-role.admin {
-            background: rgba(239, 68, 68, 0.3);
-            color: #ef4444;
-        }
+        .user-role.admin { background: rgba(239, 68, 68, 0.3); color: #ef4444; }
         
         @media (max-width: 768px) {
             body { padding: 10px; }
             .sticky-header { margin-top: 65px; }
-            
-            .burger-menu-fixed {
-                top: 10px;
-                left: 10px;
-                padding: 8px 12px;
-                gap: 6px;
-            }
-            .burger-menu-fixed .menu-icon {
-                width: 20px;
-                height: 16px;
-            }
-            .age-badge-header {
-                font-size: 0.6rem;
-                padding: 0.15rem 0.4rem;
-            }
-            
-            .auth-buttons-top { 
-                top: 10px;
-                right: 10px;
-            }
-            .auth-buttons-top .auth-btn { 
-                padding: 5px 10px; 
-                font-size: 0.7rem; 
-            }
-            
+            .burger-menu-fixed { top: 10px; left: 10px; padding: 8px 12px; gap: 6px; }
+            .burger-menu-fixed .menu-icon { width: 20px; height: 16px; }
+            .age-badge-header { font-size: 0.6rem; padding: 0.15rem 0.4rem; }
+            .auth-buttons-top { top: 10px; right: 10px; }
+            .auth-buttons-top .auth-btn { padding: 5px 10px; font-size: 0.7rem; }
             .site-wrapper { flex-direction: column; gap: 0; }
             .ad-sidebar { display: none; }
             .main-content { max-width: 100%; }
-            
-            .glass-header {
-                padding: 0.8rem 1rem;
-            }
-            .avatar-center .avatar {
-                width: 50px;
-                height: 50px;
-            }
-            h1 {
-                font-size: 0.9rem;
-            }
-            .stats {
-                font-size: 0.55rem;
-            }
-            
-            .mobile-social-bar {
-                display: flex;
-                margin-top: 0.5rem;
-            }
-            
-            .mobile-ad {
-                display: block;
-                margin-bottom: 1rem;
-            }
-            
-            .site-footer {
-                margin-top: 2rem;
-                padding: 1rem;
-            }
-            .footer-text {
-                font-size: 0.7rem;
-            }
-            
+            .glass-header { padding: 0.8rem 1rem; }
+            .avatar-center .avatar { width: 50px; height: 50px; }
+            h1 { font-size: 0.9rem; }
+            .stats { font-size: 0.55rem; }
+            .mobile-social-bar { display: flex; margin-top: 0.5rem; }
+            .mobile-ad { display: block; margin-bottom: 1rem; }
+            .site-footer { margin-top: 2rem; padding: 1rem; }
+            .footer-text { font-size: 0.7rem; }
             .track-left { width: 60px; }
             .cover-container { width: 60px; height: 60px; }
             .play-overlay { width: 28px; height: 28px; }
             .play-overlay span { font-size: 0.8rem; }
-            
             .track-title { font-size: 0.9rem; }
             .track-artist { font-size: 0.7rem; }
-            
             .volume-control { display: none !important; }
             .progress-bar-container { height: 8px; }
-            
-            .download-track-btn {
-                padding: 0.3rem 0.7rem;
-                font-size: 0.7rem;
-            }
-            
+            .download-track-btn { padding: 0.3rem 0.7rem; font-size: 0.7rem; }
             .admin-panel input { width: 100%; margin: 0.5rem 0; }
             .admin-panel button { width: 100%; }
-            
             .comments-section h2 { font-size: 1.1rem; }
-            
-            .user-panel {
-                bottom: 10px;
-                left: 10px;
-                padding: 0.3rem 0.8rem;
-                font-size: 0.7rem;
-            }
-            
-            .author-menu {
-                width: 100%;
-                left: -100%;
-            }
-            
-            .singer-photo {
-                width: 150px;
-                height: 150px;
-            }
+            .user-panel { bottom: 10px; left: 10px; padding: 0.3rem 0.8rem; font-size: 0.7rem; }
+            .author-menu { width: 100%; left: -100%; }
+            .singer-photo { width: 150px; height: 150px; }
         }
     </style>
 </head>
@@ -931,13 +715,13 @@
 </video>
 <div class="overlay"></div>
 
+<!-- БУРГЕР + 16+ -->
 <div class="burger-menu-fixed" id="burgerMenuFixed">
-    <div class="menu-icon">
-        <span></span><span></span><span></span>
-    </div>
+    <div class="menu-icon"><span></span><span></span><span></span></div>
     <span class="age-badge-header">16+</span>
 </div>
 
+<!-- КНОПКИ АВТОРИЗАЦИИ -->
 <div class="auth-buttons-top" id="authButtonsTop">
     <button id="loginBtnTop" class="auth-btn">Вход</button>
     <button id="registerBtnTop" class="auth-btn">Регистрация</button>
@@ -946,10 +730,7 @@
 
 <div class="site-wrapper">
     <div class="ad-sidebar">
-        <div class="ad-block">
-            <p>📢 Здесь могла быть ваша реклама</p>
-            <a href="https://t.me/Geratiina" target="_blank">@Geratiina</a>
-        </div>
+        <div class="ad-block"><p>📢 Здесь могла быть ваша реклама</p><a href="https://t.me/Geratiina" target="_blank">@Geratiina</a></div>
     </div>
     
     <div class="main-content">
@@ -972,14 +753,10 @@
         
         <div class="mobile-social-bar">
             <a href="https://vk.com/mzproect_68" target="_blank" class="social-circle vk">
-                <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M21.5 6.3c.1-.4 0-.8-.3-.9-.3-.1-.8-.1-1.2-.1h-2.8c-.7 0-1.1.2-1.3.8 0 0-1.5 4-3.3 6.3-.5.6-.8.8-1.1.8-.2 0-.4-.2-.4-.7V6.8c0-.6-.2-.9-.6-.9h-4c-.3 0-.5.2-.5.5 0 .5.8.6.9 2v4.1c0 .7-.2 1.1-.8 1.1-.5 0-1.1-.5-1.6-1.4L5 6.8c-.2-.4-.4-.6-.8-.6H1.5c-.5 0-.6.3-.6.7 0 .8.8 4.3 3.5 7.2 1.8 2.1 4.3 3.3 6.6 3.3 1.4 0 1.6-.3 1.6-.8v-2.2c0-.6.4-.7.8-.4 1.3.9 2.3 2.5 2.7 3.5.3.8.6 1.2 1.5 1.2h2.8c.8 0 1.3-.4 1.2-1.1-.1-.5-.9-1.9-2.4-3.5-.3-.3-.6-.8-.6-1s.3-.8.6-1.2c.8-1.1 2.8-3.3 3.1-4.4z"/>
-                </svg>
+                <svg viewBox="0 0 24 24" fill="white"><path d="M21.5 6.3c.1-.4 0-.8-.3-.9-.3-.1-.8-.1-1.2-.1h-2.8c-.7 0-1.1.2-1.3.8 0 0-1.5 4-3.3 6.3-.5.6-.8.8-1.1.8-.2 0-.4-.2-.4-.7V6.8c0-.6-.2-.9-.6-.9h-4c-.3 0-.5.2-.5.5 0 .5.8.6.9 2v4.1c0 .7-.2 1.1-.8 1.1-.5 0-1.1-.5-1.6-1.4L5 6.8c-.2-.4-.4-.6-.8-.6H1.5c-.5 0-.6.3-.6.7 0 .8.8 4.3 3.5 7.2 1.8 2.1 4.3 3.3 6.6 3.3 1.4 0 1.6-.3 1.6-.8v-2.2c0-.6.4-.7.8-.4 1.3.9 2.3 2.5 2.7 3.5.3.8.6 1.2 1.5 1.2h2.8c.8 0 1.3-.4 1.2-1.1-.1-.5-.9-1.9-2.4-3.5-.3-.3-.6-.8-.6-1s.3-.8.6-1.2c.8-1.1 2.8-3.3 3.1-4.4z"/></svg>
             </a>
             <a href="https://t.me/rn_68a_muz" target="_blank" class="social-circle tg">
-                <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.66-.35-1.02.22-1.61.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.07-.04-.1-.05-.03-.12-.01-.18.02l-3.45 2.18c-.13.08-.26.13-.39.13-.13 0-.26-.05-.36-.12l-1.57-1.05c-.23-.15-.46-.3-.67-.46-.27-.2-.21-.47.05-.68.05-.04.1-.08.16-.11l5.85-2.43c.27-.11.64-.21.91-.21.6 0 .97.39.86 1.04z"/>
-                </svg>
+                <svg viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.66-.35-1.02.22-1.61.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.07-.04-.1-.05-.03-.12-.01-.18.02l-3.45 2.18c-.13.08-.26.13-.39.13-.13 0-.26-.05-.36-.12l-1.57-1.05c-.23-.15-.46-.3-.67-.46-.27-.2-.21-.47.05-.68.05-.04.1-.08.16-.11l5.85-2.43c.27-.11.64-.21.91-.21.6 0 .97.39.86 1.04z"/></svg>
             </a>
         </div>
         
@@ -1004,33 +781,22 @@
     </div>
     
     <div class="ad-sidebar">
-        <div class="ad-block">
-            <p>📢 Здесь могла быть ваша реклама</p>
-            <a href="https://t.me/Geratiina" target="_blank">@Geratiina</a>
-        </div>
+        <div class="ad-block"><p>📢 Здесь могла быть ваша реклама</p><a href="https://t.me/Geratiina" target="_blank">@Geratiina</a></div>
     </div>
 </div>
 
 <footer class="site-footer">
-    <div class="footer-text">
-        © 2026 <strong>Порошилов Евгений Александрович</strong><br>
-        Все права защищены. Музыкальный проект — 68
-    </div>
-    <div class="footer-gsc">
-        📅 Сайт зарегистрирован в <a href="https://search.google.com/search-console?resource_id=https%3A%2F%2Fgeratiina.github.io%2Fmusic-supabase%2F" target="_blank">Google Search Console</a> — 25 мая 2026 года
-    </div>
-    <div class="footer-copyright">
-        Сайт является интеллектуальной собственностью владельца. Копирование материалов без разрешения запрещено.
-    </div>
+    <div class="footer-text">© 2026 <strong>Порошилов Евгений Александрович</strong><br>Все права защищены. Музыкальный проект — 68</div>
+    <div class="footer-gsc">📅 Сайт зарегистрирован в <a href="https://search.google.com/search-console?resource_id=https%3A%2F%2Fgeratiina.github.io%2Fmusic-supabase%2F" target="_blank">Google Search Console</a> — 25 мая 2026 года</div>
+    <div class="footer-copyright">Сайт является интеллектуальной собственностью владельца. Копирование материалов без разрешения запрещено.</div>
 </footer>
 
+<!-- БОКОВОЕ МЕНЮ (БУРГЕР) -->
 <div id="authorMenu" class="author-menu">
     <div class="close-menu" id="closeMenu">✕</div>
     
-    <div class="menu-header">
-        <h3 class="menu-title">🎤 Исполнители</h3>
-    </div>
-    
+    <!-- ИСПОЛНИТЕЛИ -->
+    <div class="menu-header"><h3 class="menu-title">🎤 Исполнители</h3></div>
     <div id="artistsList" class="author-list">
         <div class="author-item" onclick='showSingerCard("Андрей Тришин", "Андрей Тришин - тексты, мелодии, вокал. Участник проекта \"АБТ\". P.S. Выражаю особую благодарность музыкантам из команды \"Проект GK\" за помощь в создании песен и надеюсь на дальнейшее сотрудничество! 👍 Отдельная благодарность Сергею Черемисину (аранжировка, клавиши) и Александру Антонову 🙏🕯 (гитара) за помощь в создании песни \"Мама\", а также за активное участие в создании песни \"Динь-Дон\"!", "https://github.com/geratiina/singers/raw/main/AndrayT.jpg", "")'>
             <img class="author-avatar" src="https://github.com/geratiina/singers/raw/main/AndrayT.jpg" alt="Андрей Тришин" onerror="this.src='https://placehold.co/60x60/2b2b4f/white?text=АТ'">
@@ -1042,24 +808,23 @@
         </div>
     </div>
     
-    <!-- НОВАЯ ВКЛАДКА: КРЕАТОРЫ -->
-    <div class="menu-header" style="margin-top: 1.5rem;">
-        <h3 class="menu-title">✨ Креаторы</h3>
-    </div>
-    
+    <!-- НОВЫЙ РАЗДЕЛ: КРЕАТОРЫ (без модального окна) -->
+    <div class="menu-header" style="margin-top: 1.5rem;"><h3 class="menu-title">✨ Креаторы</h3></div>
     <div id="creatorsList" class="author-list">
+        <!-- Карина Ящук — Дизайнер -->
         <div class="author-item">
-            <img class="author-avatar" src="https://github.com/geratiina/creators/raw/main/CRX" alt="Карина Ящук" onerror="this.src='https://placehold.co/48x48/2b2b4f/white?text=CRX'">
+            <img class="author-avatar" src="https://github.com/geratiina/creators/raw/main/CRX.jpg" alt="Карина Ящук" onerror="this.src='https://placehold.co/48x48/2b2b4f/white?text=CRX'">
             <div>
                 <div class="author-name">Карина Ящук</div>
                 <div class="author-role">🎨 Дизайнер</div>
             </div>
         </div>
+        <!-- Евгений Порошилов — Тех-Админ, Владелец (программист убран) -->
         <div class="author-item">
-            <img class="author-avatar" src="https://github.com/geratiina/creators/raw/main/EVG" alt="Евгений Порошилов" onerror="this.src='https://placehold.co/48x48/2b2b4f/white?text=EVG'">
+            <img class="author-avatar" src="https://github.com/geratiina/creators/raw/main/EVG.jpg" alt="Евгений Порошилов" onerror="this.src='https://placehold.co/48x48/2b2b4f/white?text=EVG'">
             <div>
                 <div class="author-name">Евгений Порошилов</div>
-                <div class="author-role">⚙️ Тех-Админ, программист, Владелец</div>
+                <div class="author-role">⚙️ Тех-Админ, Владелец</div>
             </div>
         </div>
     </div>
@@ -1108,10 +873,7 @@
     let currentAuthMode = 'login';
 
     const bannedWords = ['хуй', 'пизда', 'бля', 'ебать', 'пидор', 'сука', 'шлюха', 'fuck', 'shit', 'bitch'];
-    function containsBadWords(text) {
-        if (!text) return false;
-        return bannedWords.some(word => text.toLowerCase().includes(word));
-    }
+    function containsBadWords(text) { return text ? bannedWords.some(word => text.toLowerCase().includes(word)) : false; }
 
     async function getDeviceFingerprint() {
         if (deviceFingerprint) return deviceFingerprint;
@@ -1126,19 +888,12 @@
         return deviceFingerprint;
     }
 
-    function isValidUsername(username) {
-        return /^[a-zA-Z]{3,8}$/.test(username);
-    }
+    function isValidUsername(username) { return /^[a-zA-Z]{3,8}$/.test(username); }
 
     function togglePassword(inputId, element) {
         const input = document.getElementById(inputId);
-        if (input.type === 'password') {
-            input.type = 'text';
-            element.classList.add('active');
-        } else {
-            input.type = 'password';
-            element.classList.remove('active');
-        }
+        if (input.type === 'password') { input.type = 'text'; element.classList.add('active'); }
+        else { input.type = 'password'; element.classList.remove('active'); }
     }
 
     async function downloadTrack(button) {
@@ -1155,18 +910,13 @@
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(blobUrl);
-        } catch (error) {
-            alert('Не удалось скачать файл');
-        }
+        } catch (error) { alert('Не удалось скачать файл'); }
     }
 
     function showLoggedOutUI() {
         document.getElementById('userPanelName').innerText = 'Гость';
         const panelRole = document.getElementById('userPanelRole');
-        if (panelRole) {
-            panelRole.innerText = '';
-            panelRole.classList.remove('admin');
-        }
+        if (panelRole) { panelRole.innerText = ''; panelRole.classList.remove('admin'); }
         document.getElementById('loginBtnTop').style.display = 'block';
         document.getElementById('registerBtnTop').style.display = 'block';
         document.getElementById('logoutBtnTop').style.display = 'none';
@@ -1177,58 +927,40 @@
     async function checkAuth() {
         const { data: { user }, error } = await supabaseClient.auth.getUser();
         if (error || !user) {
-            currentUser = null;
-            isAdmin = false;
+            currentUser = null; isAdmin = false;
             showLoggedOutUI();
-            loadTracks();
-            loadComments();
+            loadTracks(); loadComments();
             return;
         }
         const { data: profile } = await supabaseClient.from('profiles').select('role, username').eq('id', user.id).maybeSingle();
         if (!profile) {
             await supabaseClient.auth.signOut();
-            currentUser = null;
-            isAdmin = false;
+            currentUser = null; isAdmin = false;
             showLoggedOutUI();
-            loadTracks();
-            loadComments();
+            loadTracks(); loadComments();
             return;
         }
         currentUser = user;
         isAdmin = profile.role === 'admin' || profile.role === 'tech_admin';
         const displayName = profile.username || 'Пользователь';
-        
         document.getElementById('userPanelName').innerText = displayName;
         const panelRole = document.getElementById('userPanelRole');
         if (panelRole) {
-            if (isAdmin) {
-                panelRole.innerText = 'Админ';
-                panelRole.classList.add('admin');
-            } else {
-                panelRole.innerText = 'Пользователь';
-                panelRole.classList.remove('admin');
-            }
+            if (isAdmin) { panelRole.innerText = 'Админ'; panelRole.classList.add('admin'); }
+            else { panelRole.innerText = 'Пользователь'; panelRole.classList.remove('admin'); }
         }
-        
         document.getElementById('loginBtnTop').style.display = 'none';
         document.getElementById('registerBtnTop').style.display = 'none';
         document.getElementById('logoutBtnTop').style.display = 'block';
-        
         const adminPanel = document.getElementById('adminPanel');
         if (adminPanel) adminPanel.style.display = isAdmin ? 'block' : 'none';
-        
-        loadTracks();
-        loadComments();
+        loadTracks(); loadComments();
     }
 
     async function login(email, password) {
         const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
-        if (error) {
-            alert(error.message.includes('Invalid login credentials') ? '❌ Такой учётной записи нет' : 'Ошибка: ' + error.message);
-            return;
-        }
-        closeModal();
-        checkAuth();
+        if (error) { alert(error.message.includes('Invalid login credentials') ? '❌ Такой учётной записи нет' : 'Ошибка: ' + error.message); return; }
+        closeModal(); checkAuth();
     }
 
     async function register(email, password, username) {
@@ -1242,9 +974,7 @@
         if (data.user) {
             await new Promise(r => setTimeout(r, 1000));
             const { error: updateError } = await supabaseClient.from('profiles').update({ username }).eq('id', data.user.id);
-            if (updateError?.message.includes('no rows')) {
-                await supabaseClient.from('profiles').insert({ id: data.user.id, email, username, role: 'user' });
-            }
+            if (updateError?.message.includes('no rows')) { await supabaseClient.from('profiles').insert({ id: data.user.id, email, username, role: 'user' }); }
         }
         alert('✅ Регистрация успешна! Теперь войдите.');
         toggleToLogin();
@@ -1262,21 +992,8 @@
         document.getElementById('authUsername').style.display = 'none';
     }
 
-    document.getElementById('loginBtnTop').onclick = () => {
-        currentAuthMode = 'login';
-        document.getElementById('modalTitle').innerText = 'Вход';
-        document.getElementById('submitAuthBtn').innerText = 'Войти';
-        document.getElementById('authUsername').style.display = 'none';
-        openModal();
-    };
-    document.getElementById('registerBtnTop').onclick = () => {
-        currentAuthMode = 'register';
-        document.getElementById('modalTitle').innerText = 'Регистрация';
-        document.getElementById('submitAuthBtn').innerText = 'Зарегистрироваться';
-        document.getElementById('authUsername').style.display = 'block';
-        document.getElementById('authUsername').placeholder = 'Логин (3-8 латиница)';
-        openModal();
-    };
+    document.getElementById('loginBtnTop').onclick = () => { currentAuthMode = 'login'; document.getElementById('modalTitle').innerText = 'Вход'; document.getElementById('submitAuthBtn').innerText = 'Войти'; document.getElementById('authUsername').style.display = 'none'; openModal(); };
+    document.getElementById('registerBtnTop').onclick = () => { currentAuthMode = 'register'; document.getElementById('modalTitle').innerText = 'Регистрация'; document.getElementById('submitAuthBtn').innerText = 'Зарегистрироваться'; document.getElementById('authUsername').style.display = 'block'; document.getElementById('authUsername').placeholder = 'Логин (3-8 латиница)'; openModal(); };
     document.getElementById('logoutBtnTop').onclick = () => logout();
     document.getElementById('submitAuthBtn').onclick = () => {
         const email = document.getElementById('authEmail').value;
@@ -1294,11 +1011,8 @@
         if (userId) query = query.eq('user_id', userId);
         else query = query.eq('device_fingerprint', fingerprint);
         const { data: existing } = await query.maybeSingle();
-        if (existing) {
-            await supabaseClient.from('likes').delete().eq('id', existing.id);
-        } else {
-            await supabaseClient.from('likes').insert({ track_id: trackId, user_id: userId, device_fingerprint: userId ? null : fingerprint });
-        }
+        if (existing) { await supabaseClient.from('likes').delete().eq('id', existing.id); }
+        else { await supabaseClient.from('likes').insert({ track_id: trackId, user_id: userId, device_fingerprint: userId ? null : fingerprint }); }
         loadTracks();
     }
 
