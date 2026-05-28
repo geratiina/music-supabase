@@ -624,8 +624,6 @@
         
         .track-right { flex: 1; min-width: 160px; }
         .track-title { font-size: 1rem; font-weight: 700; color: white; margin-bottom: 0.2rem; }
-        
-        /* КЛИКАБЕЛЬНЫЙ ИСПОЛНИТЕЛЬ */
         .track-artist {
             font-size: 0.8rem;
             color: #a0aec0;
@@ -644,7 +642,6 @@
             text-decoration-style: solid;
         }
         
-        /* КНОПКА СБРОСА ФИЛЬТРА */
         .reset-filter-btn {
             background: rgba(59, 130, 246, 0.8);
             backdrop-filter: blur(4px);
@@ -946,7 +943,6 @@
             <div id="uploadStatus" style="color:#a5f3fc; margin-top:0.5rem;"></div>
         </div>
         
-        <!-- ОБЛАСТЬ ДЛЯ ТРЕКОВ С ФИЛЬТРАЦИЕЙ -->
         <div class="filter-header" id="filterHeader" style="display: none;">
             <span class="filter-info" id="filterInfo"></span>
             <button class="reset-filter-btn" id="resetFilterBtn">🎵 Показать все треки</button>
@@ -978,18 +974,22 @@
     
     <div class="menu-header"><h3 class="menu-title">🎤 Исполнители</h3></div>
     <div id="artistsList" class="author-list">
+        <!-- Андрей Тришин -->
         <div class="author-item" onclick='showSingerCard("Андрей Тришин", "Андрей Тришин - тексты, мелодии, вокал. Участник проекта \"АБТ\". P.S. Выражаю особую благодарность музыкантам из команды \"Проект GK\" за помощь в создании песен и надеюсь на дальнейшее сотрудничество! 👍 Отдельная благодарность Сергею Черемисину (аранжировка, клавиши) и Александру Антонову 🙏🕯 (гитара) за помощь в создании песни \"Мама\", а также за активное участие в создании песни \"Динь-Дон\"!", "https://github.com/geratiina/singers/raw/main/AndrayT.jpg", "")'>
             <img class="author-avatar" src="https://github.com/geratiina/singers/raw/main/AndrayT.jpg" alt="Андрей Тришин" onerror="this.src='https://placehold.co/60x60/2b2b4f/white?text=АТ'">
             <div class="author-name">Андрей Тришин</div>
         </div>
-        <div class="author-item" onclick='showSingerCard("Алексей Тамарёв", "Алексей Тамарёв - уникальный музыкант, гениальный гитарист, аранжировщик мелодий, композитор. Вокал. Участник проекта \"АБТ\".", "https://github.com/geratiina/singers/raw/main/AlexeyT.jpg", "")'>
+        <!-- Алексей Тамарёв (Golovastik) - с добавленной подписью -->
+        <div class="author-item" onclick='showSingerCard("Алексей Тамарёв (Golovastik)", "Алексей Тамарёв (Golovastik) - уникальный музыкант, гениальный гитарист, аранжировщик мелодий, композитор. Вокал. Участник проекта \"АБТ\".", "https://github.com/geratiina/singers/raw/main/AlexeyT.jpg", "")'>
             <img class="author-avatar" src="https://github.com/geratiina/singers/raw/main/AlexeyT.jpg" alt="Алексей Тамарёв" onerror="this.src='https://placehold.co/60x60/2b2b4f/white?text=АТ'">
-            <div class="author-name">Алексей Тамарёв</div>
+            <div class="author-name">Алексей Тамарёв (Golovastik)</div>
         </div>
+        <!-- Константин Толмачёв -->
         <div class="author-item" onclick='showSingerCard("Константин Толмачёв", "Константин Толмачёв - бас-гитара, бэк-вокал, запись, сведение. Дуэт \"Проект GK\".", "https://github.com/geratiina/singers/raw/main/KostT.jpg", "")'>
             <img class="author-avatar" src="https://github.com/geratiina/singers/raw/main/KostT.jpg" alt="Константин Толмачёв" onerror="this.src='https://placehold.co/60x60/2b2b4f/white?text=КТ'">
             <div class="author-name">Константин Толмачёв</div>
         </div>
+        <!-- Геннадий Жиленков -->
         <div class="author-item" onclick='showSingerCard("Геннадий Жиленков", "Геннадий Жиленков - автор песен, гитара, вокал. Дуэт \"Проект GK\".", "https://github.com/geratiina/singers/raw/main/GennJ.jpg", "")'>
             <img class="author-avatar" src="https://github.com/geratiina/singers/raw/main/GennJ.jpg" alt="Геннадий Жиленков" onerror="this.src='https://placehold.co/60x60/2b2b4f/white?text=ГЖ'">
             <div class="author-name">Геннадий Жиленков</div>
@@ -1100,8 +1100,6 @@
     let currentIndex = -1;
     let currentUpdateFunction = null;
     let tracksData = [];
-    
-    // ПЕРЕМЕННЫЕ ДЛЯ ФИЛЬТРАЦИИ
     let currentFilterArtist = null;
     let currentDisplayedTracks = [];
     
@@ -1532,20 +1530,17 @@
         }
     }
     
-    // ФУНКЦИЯ ФИЛЬТРАЦИИ ПО ИСПОЛНИТЕЛЮ
     function filterTracksByArtist(artist) {
         currentFilterArtist = artist;
         const filtered = tracksData.filter(track => track.artist === artist);
         currentDisplayedTracks = filtered;
         renderTrackList(filtered);
         
-        // Показываем кнопку сброса фильтра
         const filterHeader = document.getElementById('filterHeader');
         const filterInfo = document.getElementById('filterInfo');
         filterHeader.style.display = 'flex';
         filterInfo.textContent = `🎤 Треки исполнителя: ${artist}`;
         
-        // Останавливаем текущее воспроизведение, если фильтр изменился
         stopCurrentTrack();
     }
     
@@ -1560,7 +1555,6 @@
         stopCurrentTrack();
     }
     
-    // ОТРИСОВКА ТРЕКОВ (основная функция)
     async function renderTrackList(tracks) {
         const container = document.getElementById('trackList');
         if (!tracks.length) {
@@ -1619,7 +1613,6 @@
         }
         container.innerHTML = html;
         
-        // Загружаем длительность для каждого трека
         for (const track of tracks) {
             const audio = document.getElementById(`audio-${track.id}`);
             const durationSpan = document.getElementById(`duration-time-${track.id}`);
@@ -1640,7 +1633,6 @@
             }
         }
         
-        // Навешиваем обработчики на кнопки play
         document.querySelectorAll('.play-overlay').forEach(btn => {
             btn.onclick = (e) => {
                 e.stopPropagation();
@@ -1664,7 +1656,6 @@
             };
         });
         
-        // Навешиваем обработчики на кликабельных исполнителей
         document.querySelectorAll('.artist-link').forEach(link => {
             link.onclick = (e) => {
                 e.stopPropagation();
@@ -1678,7 +1669,6 @@
         document.querySelectorAll('.like-btn-card').forEach(btn => btn.onclick = () => likeTrack(parseInt(btn.dataset.id)));
     }
     
-    // ОСНОВНАЯ ЗАГРУЗКА ТРЕКОВ
     async function loadTracks() {
         const container = document.getElementById('trackList');
         container.innerHTML = '<div class="empty-message">⏳ Загрузка...</div>';
@@ -1694,12 +1684,10 @@
         
         await renderTrackList(data);
         
-        // Скрываем кнопку сброса фильтра
         document.getElementById('filterHeader').style.display = 'none';
         updateStats();
     }
     
-    // КНОПКА СБРОСА ФИЛЬТРА
     document.getElementById('resetFilterBtn').onclick = () => resetFilter();
 
     async function deleteTrack(id) {
