@@ -10,9 +10,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@4/dist/fp.min.js"></script>
     <style>
-        /* ... (CSS полностью сохранён из предыдущего рабочего кода, без изменений) ... */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
         .video-background {
             position: fixed;
             top: 0;
@@ -33,7 +31,6 @@
             background: rgba(0, 0, 0, 0.5);
             z-index: -1;
         }
-        
         body {
             font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
             min-height: 100vh;
@@ -41,7 +38,6 @@
             display: flex;
             flex-direction: column;
         }
-        
         .burger-menu-fixed {
             position: fixed;
             top: 20px;
@@ -85,7 +81,6 @@
             line-height: 1;
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
-        
         .auth-buttons-top {
             position: fixed;
             top: 20px;
@@ -117,7 +112,6 @@
         .auth-buttons-top .logout-btn:hover {
             background: #ef4444;
         }
-        
         .site-wrapper {
             display: flex;
             justify-content: center;
@@ -126,7 +120,6 @@
             margin: 0 auto;
             flex: 1;
         }
-        
         .ad-sidebar {
             width: 160px;
             flex-shrink: 0;
@@ -156,7 +149,6 @@
         .ad-block a:hover {
             text-decoration: underline;
         }
-        
         .mobile-ad {
             display: none;
             background: rgba(0, 0, 0, 0.5);
@@ -166,13 +158,11 @@
             text-align: center;
             margin-bottom: 1rem;
         }
-        
         .main-content {
             flex: 1;
             min-width: 0;
             max-width: 800px;
         }
-        
         .sticky-header {
             position: sticky;
             top: 20px;
@@ -191,7 +181,6 @@
             gap: 0.5rem;
             border: 1px solid rgba(255, 255, 255, 0.3);
         }
-        
         .avatar-center {
             display: flex;
             justify-content: center;
@@ -204,7 +193,6 @@
             object-fit: cover;
             border: 2px solid rgba(255,255,255,0.5);
         }
-        
         .title-stats-center {
             text-align: center;
         }
@@ -226,7 +214,6 @@
             display: inline-block;
             margin-top: 0.3rem;
         }
-        
         .mobile-social-bar {
             display: none;
             justify-content: center;
@@ -248,7 +235,6 @@
         .social-circle.tg { background: #26A5E4; }
         .social-circle:hover { transform: scale(1.05); opacity: 0.95; }
         .social-circle svg { width: 22px; height: 22px; fill: white; }
-        
         .site-footer {
             margin-top: 3rem;
             padding: 1.5rem;
@@ -267,7 +253,6 @@
         .footer-gsc { margin-top: 0.5rem; font-size: 0.7rem; color: #3b82f6; }
         .footer-gsc a { color: #3b82f6; text-decoration: none; }
         .footer-gsc a:hover { text-decoration: underline; }
-        
         .author-menu {
             position: fixed;
             top: 0;
@@ -292,7 +277,6 @@
             color: white;
             z-index: 10;
         }
-        
         .menu-header {
             margin-bottom: 1.5rem;
             text-align: center;
@@ -306,7 +290,6 @@
             display: inline-block;
             padding-bottom: 0.3rem;
         }
-        
         .author-list {
             display: flex;
             flex-direction: column;
@@ -341,7 +324,6 @@
             color: #3b82f6;
             margin-top: 0.2rem;
         }
-        
         .auth-modal {
             display: none;
             position: fixed;
@@ -479,7 +461,6 @@
             background: rgba(255,255,255,0.2);
             transform: scale(1.05);
         }
-        
         .modal {
             display: none;
             position: fixed;
@@ -542,7 +523,6 @@
             text-align: left;
             white-space: pre-wrap;
         }
-        
         .admin-panel {
             background: rgba(0, 0, 0, 0.75);
             backdrop-filter: blur(8px);
@@ -569,7 +549,6 @@
             font-weight: bold;
             cursor: pointer;
         }
-        
         .track-list { display: flex; flex-direction: column; gap: 0.8rem; }
         .track-card {
             background: rgba(0, 0, 0, 0.6);
@@ -622,7 +601,6 @@
         }
         .play-overlay:hover { background: #3b82f6; transform: translate(-50%, -50%) scale(1.05); }
         .play-overlay span { font-size: 1rem; color: white; }
-        
         .track-right { flex: 1; min-width: 160px; }
         .track-title { font-size: 1rem; font-weight: 700; color: white; margin-bottom: 0.2rem; }
         .track-artist {
@@ -642,7 +620,6 @@
             text-decoration: underline;
             text-decoration-style: solid;
         }
-        
         .reset-filter-btn {
             background: rgba(59, 130, 246, 0.8);
             backdrop-filter: blur(4px);
@@ -678,7 +655,6 @@
             padding: 0.2rem 0.8rem;
             border-radius: 2rem;
         }
-        
         .volume-control { display: none; align-items: center; gap: 0.4rem; margin-bottom: 0.5rem; }
         .volume-control.visible { display: flex; }
         .volume-icon { font-size: 0.7rem; color: white; }
@@ -698,7 +674,6 @@
             background: #3b82f6;
             cursor: pointer;
         }
-        
         .progress-control { margin-bottom: 0.5rem; }
         .progress-bar-container {
             background: rgba(255,255,255,0.2);
@@ -730,7 +705,6 @@
                 cursor: pointer;
             }
         }
-        
         .time-info { display: flex; justify-content: space-between; font-size: 0.7rem; color: #cbd5e1; margin-bottom: 0.5rem; }
         .likes-row { display: flex; align-items: center; justify-content: flex-end; gap: 0.5rem; margin-top: 0.3rem; flex-wrap: wrap; }
         .download-track-btn {
@@ -778,7 +752,6 @@
             transition: all 0.2s ease;
         }
         .delete-track-card:hover { background: rgba(239, 68, 68, 0.8); color: white; }
-        
         .comments-section { margin-top: 2rem; }
         .comments-section h2 { text-align: center; font-size: 1.3rem; margin-bottom: 1rem; color: white; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
         .comment {
@@ -795,7 +768,6 @@
         .comment-date { font-size: 0.65rem; color: #cbd5e1; margin-left: 0.5rem; }
         .comment-text { color: white; margin-top: 0.2rem; font-size: 0.9rem; }
         .delete-comment-btn { background: #ef4444; border: none; color: white; border-radius: 2rem; padding: 0.2rem 0.7rem; cursor: pointer; font-size: 0.7rem; }
-        
         textarea {
             width: 100%;
             border-radius: 1.5rem;
@@ -818,9 +790,7 @@
         }
         .char-counter { text-align: right; font-size: 0.7rem; color: #cbd5e1; margin-bottom: 0.5rem; }
         .char-counter.warning { color: #ef4444; }
-        
         .empty-message { text-align: center; padding: 2rem; color: white; }
-        
         .user-panel {
             position: fixed;
             bottom: 20px;
@@ -844,7 +814,6 @@
             color: #3b82f6;
         }
         .user-role.admin { background: rgba(239, 68, 68, 0.3); color: #ef4444; }
-        
         @media (max-width: 768px) {
             body { padding: 10px; }
             .sticky-header { margin-top: 65px; }
@@ -972,31 +941,25 @@
 
 <div id="authorMenu" class="author-menu">
     <div class="close-menu" id="closeMenu">✕</div>
-    
     <div class="menu-header"><h3 class="menu-title">🎤 Исполнители</h3></div>
     <div id="artistsList" class="author-list">
-        <!-- Андрей Тришин -->
         <div class="author-item" onclick='showSingerCard("Андрей Тришин", "Андрей Тришин - тексты, мелодии, вокал. Участник проекта \"АБТ\". P.S. Выражаю особую благодарность музыкантам из команды \"Проект GK\" за помощь в создании песен и надеюсь на дальнейшее сотрудничество! 👍 Отдельная благодарность Сергею Черемисину (аранжировка, клавиши) и Александру Антонову 🙏🕯 (гитара) за помощь в создании песни \"Мама\", а также за активное участие в создании песни \"Динь-Дон\"!", "https://github.com/geratiina/singers/raw/main/AndrayT.jpg", "")'>
             <img class="author-avatar" src="https://github.com/geratiina/singers/raw/main/AndrayT.jpg" alt="Андрей Тришин" onerror="this.src='https://placehold.co/60x60/2b2b4f/white?text=АТ'">
             <div class="author-name">Андрей Тришин</div>
         </div>
-        <!-- Алексей Тамарёв (без подписи) -->
         <div class="author-item" onclick='showSingerCard("Алексей Тамарёв", "Алексей Тамарёв - уникальный музыкант, гениальный гитарист, аранжировщик мелодий, композитор. Вокал. Участник проекта \"АБТ\".", "https://github.com/geratiina/singers/raw/main/AlexeyT.jpg", "")'>
             <img class="author-avatar" src="https://github.com/geratiina/singers/raw/main/AlexeyT.jpg" alt="Алексей Тамарёв" onerror="this.src='https://placehold.co/60x60/2b2b4f/white?text=АТ'">
             <div class="author-name">Алексей Тамарёв</div>
         </div>
-        <!-- Константин Толмачёв (с подписью Golovastik) -->
-        <div class="author-item" onclick='showSingerCard("Константин Толмачёв (Golovastik)", "Константин Толмачёв (Golovastik) - бас-гитара, бэк-вокал, запись, сведение. Дуэт \"Проект GK\".", "https://github.com/geratiina/singers/raw/main/KostT.jpg", "")'>
+        <div class="author-item" onclick='showSingerCard("Константин Golovastik Толмачёв", "Константин Golovastik Толмачёв - бас-гитара, бэк-вокал, запись, сведение. Дуэт \"Проект GK\".", "https://github.com/geratiina/singers/raw/main/KostT.jpg", "")'>
             <img class="author-avatar" src="https://github.com/geratiina/singers/raw/main/KostT.jpg" alt="Константин Толмачёв" onerror="this.src='https://placehold.co/60x60/2b2b4f/white?text=КТ'">
             <div class="author-name">Константин Толмачёв (Golovastik)</div>
         </div>
-        <!-- Геннадий Жиленков -->
         <div class="author-item" onclick='showSingerCard("Геннадий Жиленков", "Геннадий Жиленков - автор песен, гитара, вокал. Дуэт \"Проект GK\".", "https://github.com/geratiina/singers/raw/main/GennJ.jpg", "")'>
             <img class="author-avatar" src="https://github.com/geratiina/singers/raw/main/GennJ.jpg" alt="Геннадий Жиленков" onerror="this.src='https://placehold.co/60x60/2b2b4f/white?text=ГЖ'">
             <div class="author-name">Геннадий Жиленков</div>
         </div>
     </div>
-    
     <div class="menu-header" style="margin-top: 1.5rem;"><h3 class="menu-title">✨ Креаторы</h3></div>
     <div id="creatorsList" class="author-list">
         <div class="author-item">
@@ -1237,84 +1200,93 @@
     }
     
     async function submitRegister() {
-    const username = document.getElementById('regUsername').value.trim();
-    const email = document.getElementById('regEmail').value;
-    const password = document.getElementById('regPassword').value;
-    
-    if (!username || !email || !password) {
-        alert('Заполните все поля');
-        return;
-    }
-    if (!isValidUsername(username)) {
-        alert('❌ Логин: только латиница, 3-8 символов');
-        return;
-    }
-    if (containsBadWords(username)) {
-        alert('❌ Логин содержит недопустимые слова');
-        return;
-    }
-    
-    // Проверяем, не занят ли логин в таблице profiles
-    const { data: existingLogin } = await supabaseClient
-        .from('profiles')
-        .select('username')
-        .eq('username', username)
-        .maybeSingle();
-    
-    if (existingLogin) {
-        alert('❌ Логин уже занят');
-        return;
-    }
-    
-    // Проверяем, не занят ли email
-    const { data: existingEmail } = await supabaseClient
-        .from('profiles')
-        .select('email')
-        .eq('email', email)
-        .maybeSingle();
-    
-    if (existingEmail) {
-        alert('❌ Этот email уже зарегистрирован');
-        return;
-    }
-    
-    // Регистрируем пользователя в Supabase Auth
-    const { data, error } = await supabaseClient.auth.signUp({ 
-        email, 
-        password, 
-        options: { 
-            data: { username: username }  // передаём username в метаданные
-        } 
-    });
-    
-    if (error) {
-        alert('Ошибка: ' + error.message);
-        return;
-    }
-    
-    if (data.user) {
-        // ✅ ГЛАВНОЕ: сами создаём запись в таблице profiles
-        const { error: profileError } = await supabaseClient
-            .from('profiles')
-            .insert({
-                id: data.user.id,
-                email: email,
-                username: username,
-                role: 'user',
-                banned: false
-            });
+        const username = document.getElementById('regUsername').value.trim();
+        const email = document.getElementById('regEmail').value;
+        const password = document.getElementById('regPassword').value;
         
-        if (profileError) {
-            console.error('Ошибка создания профиля:', profileError);
-            alert('Регистрация прошла, но ошибка создания профиля. Попробуйте войти.');
-        } else {
+        if (!username || !email || !password) {
+            alert('Заполните все поля');
+            return;
+        }
+        if (!isValidUsername(username)) {
+            alert('❌ Логин: только латиница, 3-8 символов');
+            return;
+        }
+        if (containsBadWords(username)) {
+            alert('❌ Логин содержит недопустимые слова');
+            return;
+        }
+        
+        // Проверяем, не занят ли логин в таблице profiles
+        const { data: existingLogin } = await supabaseClient
+            .from('profiles')
+            .select('username')
+            .eq('username', username)
+            .maybeSingle();
+        
+        if (existingLogin) {
+            alert('❌ Логин уже занят');
+            return;
+        }
+        
+        // Проверяем, не занят ли email
+        const { data: existingEmail } = await supabaseClient
+            .from('profiles')
+            .select('email')
+            .eq('email', email)
+            .maybeSingle();
+        
+        if (existingEmail) {
+            alert('❌ Этот email уже зарегистрирован');
+            return;
+        }
+        
+        // Регистрируем пользователя в Supabase Auth
+        const { data, error } = await supabaseClient.auth.signUp({ 
+            email, 
+            password, 
+            options: { 
+                data: { username: username }
+            } 
+        });
+        
+        if (error) {
+            alert('❌ Ошибка регистрации: ' + error.message);
+            return;
+        }
+        
+        if (data.user) {
+            // Ждём 1.5 секунды
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            
+            // Создаём профиль в таблице profiles
+            const { error: profileError } = await supabaseClient
+                .from('profiles')
+                .insert({
+                    id: data.user.id,
+                    email: email,
+                    username: username,
+                    role: 'user',
+                    banned: false
+                });
+            
+            if (profileError) {
+                console.error('Ошибка создания профиля:', profileError);
+                alert('❌ Регистрация прошла, но не удалось создать профиль. Ошибка: ' + profileError.message);
+                return;
+            }
+            
             alert('✅ Регистрация успешна! Теперь войдите.');
         }
+        
+        closeRegisterModal();
+        openLoginModal();
+        
+        // Очищаем поля
+        document.getElementById('regUsername').value = '';
+        document.getElementById('regEmail').value = '';
+        document.getElementById('regPassword').value = '';
     }
-    
-    closeRegisterModal();
-    openLoginModal();
-}
 
     function logout() { 
         supabaseClient.auth.signOut(); 
