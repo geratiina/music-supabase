@@ -1237,61 +1237,84 @@
     }
     
     async function submitRegister() {
-        const username = document.getElementById('regUsername').value.trim();
-        const email = document.getElementById('regEmail').value;
-        const password = document.getElementById('regPassword').value;
-        
-        if (!username || !email || !password) {
-            alert('Заполните все поля');
-            return;
-        }
-        if (!isValidUsername(username)) {
-            alert('❌ Логин: только латиница, 3-8 символов');
-            return;
-        }
-        if (containsBadWords(username)) {
-            alert('❌ Логин содержит недопустимые слова');
-            return;
-        }
-        
-        const { data: existingLogin } = await supabaseClient.from('profiles').select('username').eq('username', username).maybeSingle();
-        if (existingLogin) {
-            alert('❌ Логин уже занят');
-            return;
-        }
-        
-        const { data: existingEmail } = await supabaseClient.from('profiles').select('email').eq('email', email).maybeSingle();
-        if (existingEmail) {
-            alert('❌ Этот email уже зарегистрирован');
-            return;
-        }
-        
-        const { data, error } = await supabaseClient.auth.signUp({ 
-            email, 
-            password, 
-            options: { data: { username } } 
-        });
-        
-        if (error) {
-            alert('Ошибка: ' + error.message);
-            return;
-        }
-        
-        if (data.user) {
-            await new Promise(r => setTimeout(r, 1500));
-            await supabaseClient.from('profiles').upsert({ 
-                id: data.user.id, 
-                email: email, 
-                username: username, 
+    const username = document.getElementById('regUsername').value.trim();
+    const email = document.getElementById('regEmail').value;
+    const password = document.getElementById('regPassword').value;
+    
+    if (!username || !email || !password) {
+        alert('Заполните все поля');
+        return;
+    }
+    if (!isValidUsername(username)) {
+        alert('❌ Логин: только латиница, 3-8 символов');
+        return;
+    }
+    if (containsBadWords(username)) {
+        alert('❌ Логин содержит недопустимые слова');
+        return;
+    }
+    
+    // Проверяем, не занят ли логин в таблице profiles
+    const { data: existingLogin } = await supabaseClient
+        .from('profiles')
+        .select('username')
+        .eq('username', username)
+        .maybeSingle();
+    
+    if (existingLogin) {
+        alert('❌ Логин уже занят');
+        return;
+    }
+    
+    // Проверяем, не занят ли email
+    const { data: existingEmail } = await supabaseClient
+        .from('profiles')
+        .select('email')
+        .eq('email', email)
+        .maybeSingle();
+    
+    if (existingEmail) {
+        alert('❌ Этот email уже зарегистрирован');
+        return;
+    }
+    
+    // Регистрируем пользователя в Supabase Auth
+    const { data, error } = await supabaseClient.auth.signUp({ 
+        email, 
+        password, 
+        options: { 
+            data: { username: username }  // передаём username в метаданные
+        } 
+    });
+    
+    if (error) {
+        alert('Ошибка: ' + error.message);
+        return;
+    }
+    
+    if (data.user) {
+        // ✅ ГЛАВНОЕ: сами создаём запись в таблице profiles
+        const { error: profileError } = await supabaseClient
+            .from('profiles')
+            .insert({
+                id: data.user.id,
+                email: email,
+                username: username,
                 role: 'user',
                 banned: false
             });
-        }
         
-        alert('✅ Регистрация успешна! Теперь войдите.');
-        closeRegisterModal();
-        openLoginModal();
+        if (profileError) {
+            console.error('Ошибка создания профиля:', profileError);
+            alert('Регистрация прошла, но ошибка создания профиля. Попробуйте войти.');
+        } else {
+            alert('✅ Регистрация успешна! Теперь войдите.');
+        }
     }
+    
+    closeRegisterModal();
+    openLoginModal();
+}
 
     function logout() { 
         supabaseClient.auth.signOut(); 
