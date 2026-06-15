@@ -1200,93 +1200,63 @@
     }
     
     async function submitRegister() {
-        const username = document.getElementById('regUsername').value.trim();
-        const email = document.getElementById('regEmail').value;
-        const password = document.getElementById('regPassword').value;
+    const username = document.getElementById('regUsername').value.trim();
+    const email = document.getElementById('regEmail').value;
+    const password = document.getElementById('regPassword').value;
+    
+    if (!username || !email || !password) {
+        alert('Заполните все поля');
+        return;
+    }
+    if (!isValidUsername(username)) {
+        alert('❌ Логин: только латиница, 3-8 символов');
+        return;
+    }
+    if (containsBadWords(username)) {
+        alert('❌ Логин содержит недопустимые слова');
+        return;
+    }
+    
+    // Регистрация — профиль создаст триггер в Supabase
+    const { data, error } = await supabaseClient.auth.signUp({ 
+        email, 
+        password, 
+        options: { 
+            data: { username: username }  // передаём username в метаданные
+        } 
+    });
+    
+    if (error) {
+        alert('❌ Ошибка: ' + error.message);
+        return;
+    }
+    
+    if (data.user) {
+        // Даём время триггеру сработать
+        await new Promise(resolve => setTimeout(resolve, 2000));
         
-        if (!username || !email || !password) {
-            alert('Заполните все поля');
-            return;
-        }
-        if (!isValidUsername(username)) {
-            alert('❌ Логин: только латиница, 3-8 символов');
-            return;
-        }
-        if (containsBadWords(username)) {
-            alert('❌ Логин содержит недопустимые слова');
-            return;
-        }
-        
-        // Проверяем, не занят ли логин в таблице profiles
-        const { data: existingLogin } = await supabaseClient
+        // Проверяем, создался ли профиль
+        const { data: profile } = await supabaseClient
             .from('profiles')
             .select('username')
-            .eq('username', username)
+            .eq('id', data.user.id)
             .maybeSingle();
         
-        if (existingLogin) {
-            alert('❌ Логин уже занят');
-            return;
-        }
-        
-        // Проверяем, не занят ли email
-        const { data: existingEmail } = await supabaseClient
-            .from('profiles')
-            .select('email')
-            .eq('email', email)
-            .maybeSingle();
-        
-        if (existingEmail) {
-            alert('❌ Этот email уже зарегистрирован');
-            return;
-        }
-        
-        // Регистрируем пользователя в Supabase Auth
-        const { data, error } = await supabaseClient.auth.signUp({ 
-            email, 
-            password, 
-            options: { 
-                data: { username: username }
-            } 
-        });
-        
-        if (error) {
-            alert('❌ Ошибка регистрации: ' + error.message);
-            return;
-        }
-        
-        if (data.user) {
-            // Ждём 1.5 секунды
-            await new Promise(resolve => setTimeout(resolve, 1500));
-            
-            // Создаём профиль в таблице profiles
-            const { error: profileError } = await supabaseClient
-                .from('profiles')
-                .insert({
-                    id: data.user.id,
-                    email: email,
-                    username: username,
-                    role: 'user',
-                    banned: false
-                });
-            
-            if (profileError) {
-                console.error('Ошибка создания профиля:', profileError);
-                alert('❌ Регистрация прошла, но не удалось создать профиль. Ошибка: ' + profileError.message);
-                return;
-            }
-            
+        if (profile) {
             alert('✅ Регистрация успешна! Теперь войдите.');
+        } else {
+            alert('⚠️ Регистрация прошла, но профиль создаётся. Подождите 1 минуту и попробуйте войти.');
         }
-        
-        closeRegisterModal();
-        openLoginModal();
-        
-        // Очищаем поля
-        document.getElementById('regUsername').value = '';
-        document.getElementById('regEmail').value = '';
-        document.getElementById('regPassword').value = '';
     }
+    
+    closeRegisterModal();
+    openLoginModal();
+    
+    // Очищаем поля
+    document.getElementById('regUsername').value = '';
+    document.getElementById('regEmail').value = '';
+    document.getElementById('regPassword').value = '';
+}
 
     function logout() { 
         supabaseClient.auth.signOut(); 
