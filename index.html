@@ -16,7 +16,7 @@
             background-color: #1a1a1a;
             font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
             min-height: 100vh;
-            padding: 20px;
+            padding: 20px 20px 100px 20px; /* отступ для мини-плеера */
             display: flex;
             flex-direction: column;
         }
@@ -629,8 +629,141 @@
         }
         .user-role.admin { background: rgba(239, 68, 68, 0.3); color: #ef4444; }
         
+        /* ===== МИНИ-ПЛЕЕР ===== */
+        .mini-player {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 1500;
+            background: rgba(20, 20, 30, 0.98);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 10px 16px;
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateY(120%);
+            box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .mini-player.visible {
+            transform: translateY(0);
+        }
+        .mini-player .mp-cover {
+            width: 52px;
+            height: 52px;
+            border-radius: 10px;
+            object-fit: cover;
+            flex-shrink: 0;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: #2a2a3a;
+        }
+        .mini-player .mp-info {
+            flex: 1;
+            min-width: 120px;
+            overflow: hidden;
+        }
+        .mini-player .mp-title {
+            color: white;
+            font-weight: 600;
+            font-size: 0.95rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .mini-player .mp-artist {
+            color: #94a3b8;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .mini-player .mp-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+        .mini-player .mp-btn {
+            background: none;
+            border: none;
+            color: #cbd5e1;
+            font-size: 1.4rem;
+            cursor: pointer;
+            padding: 4px 6px;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+        }
+        .mini-player .mp-btn:hover {
+            background: rgba(255,255,255,0.08);
+            color: white;
+        }
+        .mini-player .mp-btn.mp-play {
+            background: linear-gradient(135deg, #3b82f6, #7c3aed);
+            color: white;
+            width: 44px;
+            height: 44px;
+            font-size: 1.2rem;
+        }
+        .mini-player .mp-btn.mp-play:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+        }
+        .mini-player .mp-progress {
+            flex: 1;
+            min-width: 100px;
+            max-width: 300px;
+        }
+        .mini-player .mp-progress-bar {
+            background: rgba(255,255,255,0.12);
+            border-radius: 4px;
+            height: 5px;
+            cursor: pointer;
+            position: relative;
+            transition: height 0.2s;
+        }
+        .mini-player .mp-progress-bar:hover {
+            height: 8px;
+        }
+        .mini-player .mp-progress-fill {
+            background: linear-gradient(90deg, #3b82f6, #a855f7);
+            border-radius: 4px;
+            height: 100%;
+            width: 0%;
+            transition: width 0.05s linear;
+        }
+        .mini-player .mp-time {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.65rem;
+            color: #94a3b8;
+            margin-top: 2px;
+        }
+        .mini-player .mp-close {
+            background: none;
+            border: none;
+            color: #64748b;
+            font-size: 1.3rem;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+        .mini-player .mp-close:hover {
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
+        
         @media (max-width: 768px) {
-            body { padding: 10px; }
+            body { padding: 10px 10px 80px 10px; }
             .sticky-header { margin-top: 65px; }
             .burger-menu-fixed { top: 10px; left: 10px; padding: 8px 12px; }
             .auth-buttons-top { top: 10px; right: 10px; }
@@ -645,6 +778,56 @@
             .admin-panel input { width: 100%; margin: 0.5rem 0; }
             .admin-panel button { width: 100%; }
             .author-menu { width: 100%; left: -100%; }
+            
+            .mini-player {
+                padding: 8px 12px;
+                gap: 8px;
+            }
+            .mini-player .mp-cover {
+                width: 40px;
+                height: 40px;
+                border-radius: 8px;
+            }
+            .mini-player .mp-title {
+                font-size: 0.85rem;
+            }
+            .mini-player .mp-artist {
+                font-size: 0.7rem;
+            }
+            .mini-player .mp-btn {
+                font-size: 1.1rem;
+                width: 30px;
+                height: 30px;
+            }
+            .mini-player .mp-btn.mp-play {
+                width: 38px;
+                height: 38px;
+                font-size: 1rem;
+            }
+            .mini-player .mp-progress {
+                min-width: 60px;
+                max-width: 120px;
+            }
+        }
+        @media (max-width: 480px) {
+            .mini-player .mp-info {
+                min-width: 80px;
+            }
+            .mini-player .mp-progress {
+                min-width: 40px;
+                max-width: 80px;
+            }
+            .mini-player .mp-btn {
+                font-size: 0.95rem;
+                width: 26px;
+                height: 26px;
+                padding: 2px;
+            }
+            .mini-player .mp-btn.mp-play {
+                width: 32px;
+                height: 32px;
+                font-size: 0.85rem;
+            }
         }
     </style>
 </head>
@@ -812,6 +995,30 @@
     </div>
 </div>
 
+<!-- ===== МИНИ-ПЛЕЕР ===== -->
+<div class="mini-player" id="miniPlayer">
+    <img class="mp-cover" id="mpCover" src="https://github.com/geratiina/music-supabase/raw/main/avatar.png" alt="cover" onerror="this.src='https://placehold.co/52x52/2b2b4f/white?text=🎵'">
+    <div class="mp-info">
+        <div class="mp-title" id="mpTitle">Нет трека</div>
+        <div class="mp-artist" id="mpArtist">—</div>
+    </div>
+    <div class="mp-progress">
+        <div class="mp-progress-bar" id="mpProgressBar">
+            <div class="mp-progress-fill" id="mpProgressFill"></div>
+        </div>
+        <div class="mp-time">
+            <span id="mpCurrentTime">00:00</span>
+            <span id="mpDuration">00:00</span>
+        </div>
+    </div>
+    <div class="mp-controls">
+        <button class="mp-btn" id="mpPrevBtn" title="Предыдущий">⏮</button>
+        <button class="mp-btn mp-play" id="mpPlayBtn" title="Воспроизвести/Пауза">▶</button>
+        <button class="mp-btn" id="mpNextBtn" title="Следующий">⏭</button>
+    </div>
+    <button class="mp-close" id="mpCloseBtn" title="Скрыть плеер">✕</button>
+</div>
+
 <script>
     const supabaseClient = window.supabase.createClient(
         'https://efaqqrfkxxgfsxndmyit.supabase.co',
@@ -829,6 +1036,23 @@
     let currentUpdateFunction = null;
     let tracksData = [];
     let currentDisplayedTracks = [];
+    
+    // Элементы мини-плеера
+    const miniPlayer = document.getElementById('miniPlayer');
+    const mpCover = document.getElementById('mpCover');
+    const mpTitle = document.getElementById('mpTitle');
+    const mpArtist = document.getElementById('mpArtist');
+    const mpProgressFill = document.getElementById('mpProgressFill');
+    const mpProgressBar = document.getElementById('mpProgressBar');
+    const mpCurrentTime = document.getElementById('mpCurrentTime');
+    const mpDuration = document.getElementById('mpDuration');
+    const mpPlayBtn = document.getElementById('mpPlayBtn');
+    const mpPrevBtn = document.getElementById('mpPrevBtn');
+    const mpNextBtn = document.getElementById('mpNextBtn');
+    const mpCloseBtn = document.getElementById('mpCloseBtn');
+    
+    let isMiniPlayerVisible = false;
+    let mpUpdateInterval = null;
     
     const bannedWords = ['хуй', 'пизда', 'бля', 'ебать', 'пидор', 'сука', 'шлюха', 'fuck', 'shit', 'bitch'];
     function containsBadWords(text) { return text ? bannedWords.some(word => text.toLowerCase().includes(word)) : false; }
@@ -1039,6 +1263,76 @@
         }
     }
     
+    // ===== ФУНКЦИИ ПЛЕЕРА С ПОДДЕРЖКОЙ МИНИ-ПЛЕЕРА =====
+    
+    function showMiniPlayer() {
+        if (!isMiniPlayerVisible) {
+            miniPlayer.classList.add('visible');
+            isMiniPlayerVisible = true;
+        }
+    }
+    
+    function hideMiniPlayer() {
+        if (isMiniPlayerVisible) {
+            miniPlayer.classList.remove('visible');
+            isMiniPlayerVisible = false;
+        }
+    }
+    
+    function updateMiniPlayerInfo(track) {
+        if (!track) {
+            mpTitle.textContent = 'Нет трека';
+            mpArtist.textContent = '—';
+            mpCover.src = 'https://github.com/geratiina/music-supabase/raw/main/avatar.png';
+            mpPlayBtn.textContent = '▶';
+            return;
+        }
+        mpTitle.textContent = track.title || 'Без названия';
+        mpArtist.textContent = track.artist || 'Неизвестный исполнитель';
+        mpCover.src = 'https://github.com/geratiina/music-supabase/raw/main/avatar.png';
+        mpCover.onerror = function() { this.src = 'https://placehold.co/52x52/2b2b4f/white?text=🎵'; };
+    }
+    
+    function updateMiniPlayerProgress(current, duration) {
+        if (duration && !isNaN(duration)) {
+            const percent = (current / duration) * 100;
+            mpProgressFill.style.width = `${percent}%`;
+            const mins = Math.floor(current / 60);
+            const secs = Math.floor(current % 60);
+            mpCurrentTime.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+            const durMins = Math.floor(duration / 60);
+            const durSecs = Math.floor(duration % 60);
+            mpDuration.textContent = `${durMins}:${durSecs.toString().padStart(2, '0')}`;
+        }
+    }
+    
+    function resetMiniPlayerProgress() {
+        mpProgressFill.style.width = '0%';
+        mpCurrentTime.textContent = '00:00';
+        mpDuration.textContent = '00:00';
+    }
+    
+    function syncMiniPlayerWithAudio(audio, track) {
+        if (!audio || !track) {
+            mpPlayBtn.textContent = '▶';
+            return;
+        }
+        
+        // Обновляем информацию о треке
+        updateMiniPlayerInfo(track);
+        showMiniPlayer();
+        
+        // Обновляем кнопку воспроизведения
+        mpPlayBtn.textContent = audio.paused ? '▶' : '⏸';
+        
+        // Обновляем прогресс
+        if (audio.duration && !isNaN(audio.duration)) {
+            updateMiniPlayerProgress(audio.currentTime, audio.duration);
+        } else {
+            resetMiniPlayerProgress();
+        }
+    }
+    
     // ОСТАНОВКА ТЕКУЩЕГО ТРЕКА
     function stopCurrentTrack() {
         if (currentAudio) {
@@ -1052,7 +1346,6 @@
         if (currentTrackId !== null) {
             const prevPlayBtn = document.querySelector(`.play-overlay[data-track-id="${currentTrackId}"]`);
             if (prevPlayBtn) prevPlayBtn.innerHTML = '<span>▶</span>';
-            // Сбрасываем прогресс-бар
             const prevProgressFill = document.querySelector(`#progress-${currentTrackId} .progress-fill`);
             const prevCurrentTime = document.getElementById(`current-time-${currentTrackId}`);
             if (prevProgressFill) prevProgressFill.style.width = '0%';
@@ -1060,6 +1353,12 @@
             currentTrackId = null;
         }
         currentIndex = -1;
+        
+        // Обновляем мини-плеер
+        resetMiniPlayerProgress();
+        mpPlayBtn.textContent = '▶';
+        updateMiniPlayerInfo(null);
+        hideMiniPlayer();
     }
     
     // ВОСПРОИЗВЕДЕНИЕ ТРЕКА ПО ИНДЕКСУ
@@ -1086,6 +1385,9 @@
         currentTrackId = track.id;
         currentIndex = index;
         
+        // Обновляем мини-плеер
+        syncMiniPlayerWithAudio(audio, track);
+        
         // Функция обновления времени и прогресса
         const updateTimeDisplay = function() {
             if (currentTimeSpan && currentAudio && currentAudio.duration && !isNaN(currentAudio.duration)) {
@@ -1094,6 +1396,8 @@
                 currentTimeSpan.textContent = `${currentMins}:${currentSecs.toString().padStart(2, '0')}`;
                 const percent = (currentAudio.currentTime / currentAudio.duration) * 100;
                 if (progressFill) progressFill.style.width = `${percent}%`;
+                // Обновляем мини-плеер
+                updateMiniPlayerProgress(currentAudio.currentTime, currentAudio.duration);
             }
         };
         
@@ -1103,6 +1407,8 @@
                 const mins = Math.floor(currentAudio.duration / 60);
                 const secs = Math.floor(currentAudio.duration % 60);
                 durationSpan.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+                // Обновляем мини-плеер
+                updateMiniPlayerProgress(0, currentAudio.duration);
             }
         };
         
@@ -1119,6 +1425,9 @@
                 currentAudio = null;
                 currentTrackId = null;
                 currentIndex = -1;
+                resetMiniPlayerProgress();
+                mpPlayBtn.textContent = '▶';
+                hideMiniPlayer();
             }
         };
         
@@ -1139,11 +1448,13 @@
             const mins = Math.floor(audio.duration / 60);
             const secs = Math.floor(audio.duration % 60);
             if (durationSpan) durationSpan.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+            updateMiniPlayerProgress(0, audio.duration);
         }
         
         // Запускаем воспроизведение
         audio.play().catch(e => console.log('Play error:', e));
         if (playBtn) playBtn.innerHTML = '<span>⏸</span>';
+        mpPlayBtn.textContent = '⏸';
         
         // Клик по прогресс-бару для перемотки
         if (progressBar) {
@@ -1158,6 +1469,62 @@
             progressBar.addEventListener('click', seekHandler);
         }
     }
+    
+    // ===== ОБРАБОТЧИКИ МИНИ-ПЛЕЕРА =====
+    
+    // Воспроизведение/пауза
+    mpPlayBtn.addEventListener('click', function() {
+        if (!currentAudio) {
+            // Если нет активного трека, запускаем первый в списке
+            if (currentDisplayedTracks.length > 0) {
+                playTrackByIndex(0);
+            }
+            return;
+        }
+        if (currentAudio.paused) {
+            currentAudio.play().catch(e => console.log('Play error:', e));
+            mpPlayBtn.textContent = '⏸';
+            const playBtn = document.querySelector(`.play-overlay[data-track-id="${currentTrackId}"]`);
+            if (playBtn) playBtn.innerHTML = '<span>⏸</span>';
+        } else {
+            currentAudio.pause();
+            mpPlayBtn.textContent = '▶';
+            const playBtn = document.querySelector(`.play-overlay[data-track-id="${currentTrackId}"]`);
+            if (playBtn) playBtn.innerHTML = '<span>▶</span>';
+        }
+    });
+    
+    // Предыдущий трек
+    mpPrevBtn.addEventListener('click', function() {
+        if (currentDisplayedTracks.length === 0) return;
+        let prevIndex = currentIndex - 1;
+        if (prevIndex < 0) prevIndex = currentDisplayedTracks.length - 1;
+        playTrackByIndex(prevIndex);
+    });
+    
+    // Следующий трек
+    mpNextBtn.addEventListener('click', function() {
+        if (currentDisplayedTracks.length === 0) return;
+        let nextIndex = currentIndex + 1;
+        if (nextIndex >= currentDisplayedTracks.length) nextIndex = 0;
+        playTrackByIndex(nextIndex);
+    });
+    
+    // Клик по прогресс-бару мини-плеера для перемотки
+    mpProgressBar.addEventListener('click', function(e) {
+        if (!currentAudio || !currentAudio.duration) return;
+        const rect = this.getBoundingClientRect();
+        const percent = (e.clientX - rect.left) / rect.width;
+        currentAudio.currentTime = percent * currentAudio.duration;
+        updateMiniPlayerProgress(currentAudio.currentTime, currentAudio.duration);
+    });
+    
+    // Скрыть мини-плеер (музыка продолжает играть)
+    mpCloseBtn.addEventListener('click', function() {
+        hideMiniPlayer();
+    });
+    
+    // ===== ОСТАЛЬНЫЕ ФУНКЦИИ =====
     
     function filterTracksByArtist(artist) {
         const filtered = tracksData.filter(track => track.artist === artist);
@@ -1210,7 +1577,6 @@
                     <div class="track-right">
                         <div class="track-title">${escapeHtml(track.title)}</div>
                         <div class="track-artist">🎤 <span class="artist-link" data-artist="${escapeHtml(track.artist)}">${escapeHtml(track.artist || 'Неизвестный исполнитель')}</span></div>
-                        <!-- ПРОГРЕСС-БАР И ВРЕМЯ -->
                         <div class="progress-wrapper">
                             <div class="progress-bar-container" id="progress-${track.id}">
                                 <div class="progress-fill"></div>
@@ -1234,7 +1600,6 @@
         }
         container.innerHTML = html;
         
-        // Обработчики для кнопок лайка
         document.querySelectorAll('.like-btn-card').forEach(btn => {
             const trackId = parseInt(btn.dataset.id);
             btn.onclick = (e) => {
@@ -1243,7 +1608,6 @@
             };
         });
         
-        // Обработчики для плей
         document.querySelectorAll('.play-overlay').forEach(btn => {
             btn.onclick = (e) => {
                 e.stopPropagation();
@@ -1252,18 +1616,19 @@
                 if (currentTrackId === trackId && currentAudio && !currentAudio.paused) {
                     currentAudio.pause();
                     btn.innerHTML = '<span>▶</span>';
+                    mpPlayBtn.textContent = '▶';
                     return;
                 }
                 if (currentTrackId === trackId && currentAudio && currentAudio.paused) {
                     currentAudio.play();
                     btn.innerHTML = '<span>⏸</span>';
+                    mpPlayBtn.textContent = '⏸';
                     return;
                 }
                 playTrackByIndex(index);
             };
         });
         
-        // Обработчики для фильтра по исполнителю
         document.querySelectorAll('.artist-link').forEach(link => {
             link.onclick = (e) => {
                 e.stopPropagation();
@@ -1272,7 +1637,6 @@
             };
         });
         
-        // Загружаем длительность для каждого трека
         for (const track of tracks) {
             const audio = document.getElementById(`audio-${track.id}`);
             const durationSpan = document.getElementById(`duration-time-${track.id}`);
