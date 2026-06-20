@@ -12,7 +12,6 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
-        /* Строгий серый фон */
         body {
             background-color: #1a1a1a;
             font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
@@ -22,10 +21,7 @@
             flex-direction: column;
         }
         
-        /* Убираем видео и оверлей */
-        .video-background, .overlay {
-            display: none;
-        }
+        .video-background, .overlay { display: none; }
         
         .burger-menu-fixed {
             position: fixed;
@@ -43,10 +39,7 @@
             align-items: center;
             gap: 10px;
         }
-        .burger-menu-fixed:hover {
-            background: rgba(40, 40, 50, 0.95);
-            transform: scale(1.02);
-        }
+        .burger-menu-fixed:hover { background: rgba(40, 40, 50, 0.95); transform: scale(1.02); }
         .burger-menu-fixed .menu-icon {
             width: 24px;
             height: 18px;
@@ -88,16 +81,9 @@
             font-weight: 600;
             transition: all 0.2s ease;
         }
-        .auth-buttons-top .auth-btn:hover {
-            transform: scale(1.02);
-            background: #3b82f6;
-        }
-        .auth-buttons-top .logout-btn {
-            background: rgba(239, 68, 68, 0.9);
-        }
-        .auth-buttons-top .logout-btn:hover {
-            background: #ef4444;
-        }
+        .auth-buttons-top .auth-btn:hover { transform: scale(1.02); background: #3b82f6; }
+        .auth-buttons-top .logout-btn { background: rgba(239, 68, 68, 0.9); }
+        .auth-buttons-top .logout-btn:hover { background: #ef4444; }
         
         .site-wrapper {
             display: flex;
@@ -124,16 +110,8 @@
             border: 1px solid rgba(255,255,255,0.1);
             margin-bottom: 1rem;
         }
-        .ad-block p {
-            color: #cbd5e1;
-            font-size: 0.8rem;
-            margin-bottom: 0.5rem;
-        }
-        .ad-block a {
-            color: #3b82f6;
-            text-decoration: none;
-            font-size: 0.75rem;
-        }
+        .ad-block p { color: #cbd5e1; font-size: 0.8rem; margin-bottom: 0.5rem; }
+        .ad-block a { color: #3b82f6; text-decoration: none; font-size: 0.75rem; }
         
         .mobile-ad {
             display: none;
@@ -145,11 +123,7 @@
             margin-bottom: 1rem;
         }
         
-        .main-content {
-            flex: 1;
-            min-width: 0;
-            max-width: 800px;
-        }
+        .main-content { flex: 1; min-width: 0; max-width: 800px; }
         
         .sticky-header {
             position: sticky;
@@ -169,11 +143,7 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
-        .avatar-center {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 0.3rem;
-        }
+        .avatar-center { display: flex; justify-content: center; margin-bottom: 0.3rem; }
         .avatar-center .avatar {
             width: 60px;
             height: 60px;
@@ -182,9 +152,7 @@
             border: 2px solid rgba(255,255,255,0.3);
         }
         
-        .title-stats-center {
-            text-align: center;
-        }
+        .title-stats-center { text-align: center; }
         h1 {
             font-size: 1.2rem;
             font-weight: 800;
@@ -267,10 +235,7 @@
             color: white;
         }
         
-        .menu-header {
-            margin-bottom: 1.5rem;
-            text-align: center;
-        }
+        .menu-header { margin-bottom: 1.5rem; text-align: center; }
         .menu-title {
             color: white;
             font-size: 1.2rem;
@@ -281,11 +246,7 @@
             padding-bottom: 0.3rem;
         }
         
-        .author-list {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
+        .author-list { display: flex; flex-direction: column; gap: 0.5rem; }
         .author-item {
             display: flex;
             align-items: center;
@@ -296,25 +257,10 @@
             transition: all 0.2s ease;
             cursor: pointer;
         }
-        .author-item:hover {
-            background: rgba(255,255,255,0.1);
-            transform: translateX(5px);
-        }
-        .author-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-        .author-name {
-            color: white;
-            font-weight: 600;
-        }
-        .author-role {
-            font-size: 0.7rem;
-            color: #3b82f6;
-            margin-top: 0.2rem;
-        }
+        .author-item:hover { background: rgba(255,255,255,0.1); transform: translateX(5px); }
+        .author-avatar { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; }
+        .author-name { color: white; font-weight: 600; }
+        .author-role { font-size: 0.7rem; color: #3b82f6; margin-top: 0.2rem; }
         
         /* Анимация лайка */
         .like-btn-card {
@@ -334,16 +280,8 @@
             gap: 0.3rem;
             overflow: visible;
         }
-        .like-btn-card:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: scale(1.02);
-        }
-        .like-btn-card.liked {
-            background: #ef4444;
-            color: white;
-            box-shadow: 0 0 12px rgba(239, 68, 68, 0.5);
-        }
-        /* Анимация звёздочек */
+        .like-btn-card:hover { background: rgba(255, 255, 255, 0.2); transform: scale(1.02); }
+        .like-btn-card.liked { background: #ef4444; color: white; box-shadow: 0 0 12px rgba(239, 68, 68, 0.5); }
         .star-animation {
             position: fixed;
             pointer-events: none;
@@ -352,14 +290,8 @@
             animation: floatStar 0.6s ease-out forwards;
         }
         @keyframes floatStar {
-            0% {
-                opacity: 1;
-                transform: translate(0, 0) scale(0.5);
-            }
-            100% {
-                opacity: 0;
-                transform: translate(var(--tx, -20px), var(--ty, -50px)) scale(1.2);
-            }
+            0% { opacity: 1; transform: translate(0, 0) scale(0.5); }
+            100% { opacity: 0; transform: translate(var(--tx, -20px), var(--ty, -50px)) scale(1.2); }
         }
         
         .auth-modal {
@@ -385,10 +317,7 @@
             padding: 2rem;
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
-        .auth-header {
-            text-align: center;
-            margin-bottom: 1.5rem;
-        }
+        .auth-header { text-align: center; margin-bottom: 1.5rem; }
         .auth-header h2 {
             color: white;
             font-size: 1.8rem;
@@ -398,15 +327,8 @@
             background-clip: text;
             color: transparent;
         }
-        .input-group {
-            margin-bottom: 1.2rem;
-        }
-        .input-group label {
-            display: block;
-            color: #cbd5e1;
-            font-size: 0.8rem;
-            margin-bottom: 0.3rem;
-        }
+        .input-group { margin-bottom: 1.2rem; }
+        .input-group label { display: block; color: #cbd5e1; font-size: 0.8rem; margin-bottom: 0.3rem; }
         .input-field {
             width: 100%;
             padding: 0.9rem 1rem;
@@ -416,10 +338,7 @@
             color: white;
             font-size: 1rem;
         }
-        .input-field:focus {
-            outline: none;
-            border-color: #3b82f6;
-        }
+        .input-field:focus { outline: none; border-color: #3b82f6; }
         .auth-btn-submit {
             width: 100%;
             padding: 0.9rem;
@@ -431,16 +350,8 @@
             font-weight: 600;
             cursor: pointer;
         }
-        .auth-footer {
-            text-align: center;
-            margin-top: 1.2rem;
-        }
-        .auth-footer button {
-            background: none;
-            border: none;
-            color: #3b82f6;
-            cursor: pointer;
-        }
+        .auth-footer { text-align: center; margin-top: 1.2rem; }
+        .auth-footer button { background: none; border: none; color: #3b82f6; cursor: pointer; }
         .close-auth {
             position: absolute;
             top: 20px;
@@ -595,25 +506,46 @@
         }
         .artist-link:hover { color: #3b82f6; }
         
-        .volume-control { display: none; align-items: center; gap: 0.4rem; margin-bottom: 0.5rem; }
-        .volume-control.visible { display: flex; }
-        .volume-slider { width: 100px; height: 3px; cursor: pointer; }
-        .progress-control { margin-bottom: 0.5rem; }
+        /* ПРОГРЕСС-БАР И ВРЕМЯ */
+        .progress-wrapper {
+            margin-bottom: 0.3rem;
+        }
         .progress-bar-container {
-            background: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.15);
             border-radius: 1rem;
             height: 6px;
             cursor: pointer;
             position: relative;
+            transition: height 0.2s;
+        }
+        .progress-bar-container:hover {
+            height: 10px;
         }
         .progress-fill {
             background: linear-gradient(90deg, #3b82f6, #a855f7);
             border-radius: 1rem;
             height: 100%;
             width: 0%;
+            transition: width 0.05s linear;
         }
-        .time-info { display: flex; justify-content: space-between; font-size: 0.7rem; color: #cbd5e1; margin-bottom: 0.5rem; }
-        .likes-row { display: flex; align-items: center; justify-content: flex-end; gap: 0.5rem; margin-top: 0.3rem; flex-wrap: wrap; }
+        .time-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-top: 0.2rem;
+        }
+        .current-time { color: #cbd5e1; }
+        .duration { color: #64748b; }
+        
+        .likes-row {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 0.5rem;
+            margin-top: 0.3rem;
+            flex-wrap: wrap;
+        }
         .download-track-btn {
             background: rgba(16, 185, 129, 0.2);
             border: 1px solid rgba(16, 185, 129, 0.5);
@@ -710,7 +642,6 @@
             .mobile-ad { display: block; margin-bottom: 1rem; }
             .track-left { width: 60px; }
             .cover-container { width: 60px; height: 60px; }
-            .volume-control { display: none !important; }
             .admin-panel input { width: 100%; margin: 0.5rem 0; }
             .admin-panel button { width: 100%; }
             .author-menu { width: 100%; left: -100%; }
@@ -895,13 +826,14 @@
     let currentAudio = null;
     let currentTrackId = null;
     let currentIndex = -1;
+    let currentUpdateFunction = null;
     let tracksData = [];
     let currentDisplayedTracks = [];
     
     const bannedWords = ['хуй', 'пизда', 'бля', 'ебать', 'пидор', 'сука', 'шлюха', 'fuck', 'shit', 'bitch'];
     function containsBadWords(text) { return text ? bannedWords.some(word => text.toLowerCase().includes(word)) : false; }
     
-    // Функция анимации звёздочек
+    // Анимация звёздочек
     function createStarAnimation(x, y) {
         for (let i = 0; i < 8; i++) {
             const star = document.createElement('div');
@@ -1044,27 +976,20 @@
         else query = query.eq('device_fingerprint', fingerprint);
         const { data: existing } = await query.maybeSingle();
         
-        // Получаем текущий счётчик
         const countQuery = await supabaseClient.from('likes').select('*', { count: 'exact', head: true }).eq('track_id', trackId);
         let currentCount = countQuery.count || 0;
         
         if (existing) {
-            // Убираем лайк
             await supabaseClient.from('likes').delete().eq('id', existing.id);
             currentCount--;
             buttonElement.classList.remove('liked');
         } else {
-            // Ставим лайк с анимацией
             await supabaseClient.from('likes').insert({ track_id: trackId, user_id: userId, device_fingerprint: userId ? null : fingerprint });
             currentCount++;
             buttonElement.classList.add('liked');
-            
-            // Анимация звёздочек
             const rect = buttonElement.getBoundingClientRect();
             createStarAnimation(rect.left + rect.width/2, rect.top + rect.height/2);
         }
-        
-        // Обновляем счётчик на кнопке
         buttonElement.innerHTML = `👍 ${currentCount}`;
     }
 
@@ -1114,40 +1039,124 @@
         }
     }
     
+    // ОСТАНОВКА ТЕКУЩЕГО ТРЕКА
     function stopCurrentTrack() {
         if (currentAudio) {
             currentAudio.pause();
+            if (currentUpdateFunction) {
+                currentAudio.removeEventListener('timeupdate', currentUpdateFunction);
+                currentUpdateFunction = null;
+            }
             currentAudio = null;
         }
         if (currentTrackId !== null) {
             const prevPlayBtn = document.querySelector(`.play-overlay[data-track-id="${currentTrackId}"]`);
             if (prevPlayBtn) prevPlayBtn.innerHTML = '<span>▶</span>';
+            // Сбрасываем прогресс-бар
+            const prevProgressFill = document.querySelector(`#progress-${currentTrackId} .progress-fill`);
+            const prevCurrentTime = document.getElementById(`current-time-${currentTrackId}`);
+            if (prevProgressFill) prevProgressFill.style.width = '0%';
+            if (prevCurrentTime) prevCurrentTime.textContent = '00:00';
             currentTrackId = null;
         }
         currentIndex = -1;
     }
     
+    // ВОСПРОИЗВЕДЕНИЕ ТРЕКА ПО ИНДЕКСУ
     function playTrackByIndex(index) {
         if (index < 0 || index >= currentDisplayedTracks.length) return;
         const track = currentDisplayedTracks[index];
         const audio = document.getElementById(`audio-${track.id}`);
         const playBtn = document.querySelector(`.play-overlay[data-track-id="${track.id}"]`);
+        const progressFill = document.querySelector(`#progress-${track.id} .progress-fill`);
+        const currentTimeSpan = document.getElementById(`current-time-${track.id}`);
+        const durationSpan = document.getElementById(`duration-time-${track.id}`);
+        const progressBar = document.querySelector(`#progress-${track.id} .progress-bar-container`);
+        
         if (!audio) return;
         
+        // Останавливаем текущий трек
         stopCurrentTrack();
+        
+        // Сбрасываем прогресс нового трека
+        if (progressFill) progressFill.style.width = '0%';
+        if (currentTimeSpan) currentTimeSpan.textContent = '00:00';
+        
         currentAudio = audio;
         currentTrackId = track.id;
         currentIndex = index;
         
-        const onTrackEnded = () => {
-            playBtn.innerHTML = '<span>▶</span>';
-            if (currentIndex + 1 < currentDisplayedTracks.length) playTrackByIndex(currentIndex + 1);
-            else { currentAudio = null; currentTrackId = null; currentIndex = -1; }
+        // Функция обновления времени и прогресса
+        const updateTimeDisplay = function() {
+            if (currentTimeSpan && currentAudio && currentAudio.duration && !isNaN(currentAudio.duration)) {
+                const currentMins = Math.floor(currentAudio.currentTime / 60);
+                const currentSecs = Math.floor(currentAudio.currentTime % 60);
+                currentTimeSpan.textContent = `${currentMins}:${currentSecs.toString().padStart(2, '0')}`;
+                const percent = (currentAudio.currentTime / currentAudio.duration) * 100;
+                if (progressFill) progressFill.style.width = `${percent}%`;
+            }
         };
+        
+        // Загрузка длительности
+        const onLoadedMetadata = function() {
+            if (durationSpan && currentAudio && !isNaN(currentAudio.duration)) {
+                const mins = Math.floor(currentAudio.duration / 60);
+                const secs = Math.floor(currentAudio.duration % 60);
+                durationSpan.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+            }
+        };
+        
+        // Переключение на следующий трек
+        const onTrackEnded = function() {
+            if (progressFill) progressFill.style.width = '0%';
+            if (currentTimeSpan) currentTimeSpan.textContent = '00:00';
+            if (playBtn) playBtn.innerHTML = '<span>▶</span>';
+            
+            const nextIndex = currentIndex + 1;
+            if (nextIndex < currentDisplayedTracks.length) {
+                playTrackByIndex(nextIndex);
+            } else {
+                currentAudio = null;
+                currentTrackId = null;
+                currentIndex = -1;
+            }
+        };
+        
+        // Удаляем старые обработчики
+        audio.removeEventListener('loadedmetadata', onLoadedMetadata);
+        audio.removeEventListener('timeupdate', updateTimeDisplay);
         audio.removeEventListener('ended', onTrackEnded);
+        
+        // Добавляем новые
+        audio.addEventListener('loadedmetadata', onLoadedMetadata);
+        audio.addEventListener('timeupdate', updateTimeDisplay);
         audio.addEventListener('ended', onTrackEnded);
+        
+        currentUpdateFunction = updateTimeDisplay;
+        
+        // Если метаданные уже загружены
+        if (audio.readyState >= 1 && audio.duration) {
+            const mins = Math.floor(audio.duration / 60);
+            const secs = Math.floor(audio.duration % 60);
+            if (durationSpan) durationSpan.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+        
+        // Запускаем воспроизведение
         audio.play().catch(e => console.log('Play error:', e));
         if (playBtn) playBtn.innerHTML = '<span>⏸</span>';
+        
+        // Клик по прогресс-бару для перемотки
+        if (progressBar) {
+            const seekHandler = (e) => {
+                const rect = progressBar.getBoundingClientRect();
+                const percent = (e.clientX - rect.left) / rect.width;
+                if (currentAudio && currentAudio.duration) {
+                    currentAudio.currentTime = percent * currentAudio.duration;
+                }
+            };
+            progressBar.removeEventListener('click', seekHandler);
+            progressBar.addEventListener('click', seekHandler);
+        }
     }
     
     function filterTracksByArtist(artist) {
@@ -1201,7 +1210,16 @@
                     <div class="track-right">
                         <div class="track-title">${escapeHtml(track.title)}</div>
                         <div class="track-artist">🎤 <span class="artist-link" data-artist="${escapeHtml(track.artist)}">${escapeHtml(track.artist || 'Неизвестный исполнитель')}</span></div>
-                        <div class="time-info"><span class="current-time" id="current-time-${track.id}">00:00</span><span class="duration" id="duration-time-${track.id}">00:00</span></div>
+                        <!-- ПРОГРЕСС-БАР И ВРЕМЯ -->
+                        <div class="progress-wrapper">
+                            <div class="progress-bar-container" id="progress-${track.id}">
+                                <div class="progress-fill"></div>
+                            </div>
+                            <div class="time-info">
+                                <span class="current-time" id="current-time-${track.id}">00:00</span>
+                                <span class="duration" id="duration-time-${track.id}">00:00</span>
+                            </div>
+                        </div>
                         <div class="likes-row">
                             <button class="download-track-btn" data-url="${track.file_url}" data-title="${escapeHtml(track.title)}" onclick="downloadTrack(this)">⬇️ Скачать</button>
                             <button class="like-btn-card ${isLiked ? 'liked' : ''}" data-id="${track.id}" data-likes="${likesCount || 0}">👍 ${likesCount || 0}</button>
@@ -1254,7 +1272,7 @@
             };
         });
         
-        // Обновляем длительность треков
+        // Загружаем длительность для каждого трека
         for (const track of tracks) {
             const audio = document.getElementById(`audio-${track.id}`);
             const durationSpan = document.getElementById(`duration-time-${track.id}`);
