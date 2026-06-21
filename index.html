@@ -16,7 +16,7 @@
             background-color: #1a1a1a;
             font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
             min-height: 100vh;
-            padding: 20px 20px 100px 20px; /* отступ для мини-плеера */
+            padding: 20px 20px 100px 20px;
             display: flex;
             flex-direction: column;
         }
@@ -258,7 +258,14 @@
             cursor: pointer;
         }
         .author-item:hover { background: rgba(255,255,255,0.1); transform: translateX(5px); }
-        .author-avatar { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; }
+        /* Аватарки в бургер-меню — квадратные */
+        .author-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
         .author-name { color: white; font-weight: 600; }
         .author-role { font-size: 0.7rem; color: #3b82f6; margin-top: 0.2rem; }
         
@@ -400,13 +407,17 @@
             font-size: 1.5rem;
             cursor: pointer;
         }
+        /* Фото в карточке исполнителя — прямоугольное */
         .singer-photo {
-            width: 200px;
-            height: 200px;
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            aspect-ratio: 16 / 9;
             border-radius: 1rem;
             object-fit: cover;
             margin: 0 auto 1rem;
             border: 3px solid #3b82f6;
+            display: block;
         }
         .singer-name { color: white; font-size: 1.3rem; margin-bottom: 0.5rem; }
         .singer-description { color: #cbd5e1; font-size: 0.9rem; line-height: 1.5; }
@@ -506,7 +517,6 @@
         }
         .artist-link:hover { color: #3b82f6; }
         
-        /* ПРОГРЕСС-БАР И ВРЕМЯ */
         .progress-wrapper {
             margin-bottom: 0.3rem;
         }
@@ -916,6 +926,7 @@
     <div class="close-menu" id="closeMenu">✕</div>
     <div class="menu-header"><h3 class="menu-title">🎤 Исполнители</h3></div>
     <div id="artistsList" class="author-list">
+        <!-- Обновлённая ссылка на AndrayT.jpg (16:9) и прямоугольное фото в модалке -->
         <div class="author-item" onclick='showSingerCard("Андрей Тришин", "Андрей Тришин - тексты, мелодии, вокал. Участник проекта \"АБТ\". P.S. Выражаю особую благодарность музыкантам из команды \"Проект GK\" за помощь в создании песен и надеюсь на дальнейшее сотрудничество! 👍 Отдельная благодарность Сергею Черемисину (аранжировка, клавиши) и Александру Антонову 🙏🕯 (гитара) за помощь в создании песни \"Мама\", а также за активное участие в создании песни \"Динь-Дон\"!", "https://github.com/geratiina/singers/raw/main/AndrayT.jpg")'>
             <img class="author-avatar" src="https://github.com/geratiina/singers/raw/main/AndrayT.jpg" alt="Андрей Тришин" onerror="this.src='https://placehold.co/60x60/2b2b4f/white?text=АТ'">
             <div class="author-name">Андрей Тришин</div>
@@ -955,6 +966,7 @@
 <div id="singerModal" class="modal">
     <div class="modal-content">
         <button class="close-modal" onclick="closeSingerModal()">✕</button>
+        <!-- Фото теперь прямоугольное (стиль .singer-photo) -->
         <img id="singerPhoto" class="singer-photo" src="" alt="">
         <h3 id="singerName" class="singer-name"></h3>
         <p id="singerDescription" class="singer-description"></p>
@@ -1318,14 +1330,11 @@
             return;
         }
         
-        // Обновляем информацию о треке
         updateMiniPlayerInfo(track);
         showMiniPlayer();
         
-        // Обновляем кнопку воспроизведения
         mpPlayBtn.textContent = audio.paused ? '▶' : '⏸';
         
-        // Обновляем прогресс
         if (audio.duration && !isNaN(audio.duration)) {
             updateMiniPlayerProgress(audio.currentTime, audio.duration);
         } else {
@@ -1354,7 +1363,6 @@
         }
         currentIndex = -1;
         
-        // Обновляем мини-плеер
         resetMiniPlayerProgress();
         mpPlayBtn.textContent = '▶';
         updateMiniPlayerInfo(null);
@@ -1374,10 +1382,8 @@
         
         if (!audio) return;
         
-        // Останавливаем текущий трек
         stopCurrentTrack();
         
-        // Сбрасываем прогресс нового трека
         if (progressFill) progressFill.style.width = '0%';
         if (currentTimeSpan) currentTimeSpan.textContent = '00:00';
         
@@ -1385,10 +1391,8 @@
         currentTrackId = track.id;
         currentIndex = index;
         
-        // Обновляем мини-плеер
         syncMiniPlayerWithAudio(audio, track);
         
-        // Функция обновления времени и прогресса
         const updateTimeDisplay = function() {
             if (currentTimeSpan && currentAudio && currentAudio.duration && !isNaN(currentAudio.duration)) {
                 const currentMins = Math.floor(currentAudio.currentTime / 60);
@@ -1396,23 +1400,19 @@
                 currentTimeSpan.textContent = `${currentMins}:${currentSecs.toString().padStart(2, '0')}`;
                 const percent = (currentAudio.currentTime / currentAudio.duration) * 100;
                 if (progressFill) progressFill.style.width = `${percent}%`;
-                // Обновляем мини-плеер
                 updateMiniPlayerProgress(currentAudio.currentTime, currentAudio.duration);
             }
         };
         
-        // Загрузка длительности
         const onLoadedMetadata = function() {
             if (durationSpan && currentAudio && !isNaN(currentAudio.duration)) {
                 const mins = Math.floor(currentAudio.duration / 60);
                 const secs = Math.floor(currentAudio.duration % 60);
                 durationSpan.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
-                // Обновляем мини-плеер
                 updateMiniPlayerProgress(0, currentAudio.duration);
             }
         };
         
-        // Переключение на следующий трек
         const onTrackEnded = function() {
             if (progressFill) progressFill.style.width = '0%';
             if (currentTimeSpan) currentTimeSpan.textContent = '00:00';
@@ -1431,19 +1431,16 @@
             }
         };
         
-        // Удаляем старые обработчики
         audio.removeEventListener('loadedmetadata', onLoadedMetadata);
         audio.removeEventListener('timeupdate', updateTimeDisplay);
         audio.removeEventListener('ended', onTrackEnded);
         
-        // Добавляем новые
         audio.addEventListener('loadedmetadata', onLoadedMetadata);
         audio.addEventListener('timeupdate', updateTimeDisplay);
         audio.addEventListener('ended', onTrackEnded);
         
         currentUpdateFunction = updateTimeDisplay;
         
-        // Если метаданные уже загружены
         if (audio.readyState >= 1 && audio.duration) {
             const mins = Math.floor(audio.duration / 60);
             const secs = Math.floor(audio.duration % 60);
@@ -1451,12 +1448,10 @@
             updateMiniPlayerProgress(0, audio.duration);
         }
         
-        // Запускаем воспроизведение
         audio.play().catch(e => console.log('Play error:', e));
         if (playBtn) playBtn.innerHTML = '<span>⏸</span>';
         mpPlayBtn.textContent = '⏸';
         
-        // Клик по прогресс-бару для перемотки
         if (progressBar) {
             const seekHandler = (e) => {
                 const rect = progressBar.getBoundingClientRect();
@@ -1472,10 +1467,8 @@
     
     // ===== ОБРАБОТЧИКИ МИНИ-ПЛЕЕРА =====
     
-    // Воспроизведение/пауза
     mpPlayBtn.addEventListener('click', function() {
         if (!currentAudio) {
-            // Если нет активного трека, запускаем первый в списке
             if (currentDisplayedTracks.length > 0) {
                 playTrackByIndex(0);
             }
@@ -1494,7 +1487,6 @@
         }
     });
     
-    // Предыдущий трек
     mpPrevBtn.addEventListener('click', function() {
         if (currentDisplayedTracks.length === 0) return;
         let prevIndex = currentIndex - 1;
@@ -1502,7 +1494,6 @@
         playTrackByIndex(prevIndex);
     });
     
-    // Следующий трек
     mpNextBtn.addEventListener('click', function() {
         if (currentDisplayedTracks.length === 0) return;
         let nextIndex = currentIndex + 1;
@@ -1510,7 +1501,6 @@
         playTrackByIndex(nextIndex);
     });
     
-    // Клик по прогресс-бару мини-плеера для перемотки
     mpProgressBar.addEventListener('click', function(e) {
         if (!currentAudio || !currentAudio.duration) return;
         const rect = this.getBoundingClientRect();
@@ -1519,7 +1509,6 @@
         updateMiniPlayerProgress(currentAudio.currentTime, currentAudio.duration);
     });
     
-    // Скрыть мини-плеер (музыка продолжает играть)
     mpCloseBtn.addEventListener('click', function() {
         hideMiniPlayer();
     });
