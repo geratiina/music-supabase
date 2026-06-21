@@ -406,17 +406,18 @@
             font-size: 1.5rem;
             cursor: pointer;
         }
-        /* Фото в карточке исполнителя — прямоугольное вертикальное (9:16) */
+        /* Фото в карточке исполнителя — сохраняет пропорции и влезает целиком */
         .singer-photo {
             width: 100%;
-            max-width: 350px;
+            max-width: 400px;
+            max-height: 70vh;
             height: auto;
-            aspect-ratio: 9 / 16;
             border-radius: 1rem;
-            object-fit: cover;
+            object-fit: contain;
             margin: 0 auto 1rem;
             border: 3px solid #3b82f6;
             display: block;
+            background: #1a1a2e;
         }
         .singer-name { color: white; font-size: 1.3rem; margin-bottom: 0.5rem; }
         .singer-description { color: #cbd5e1; font-size: 0.9rem; line-height: 1.5; }
@@ -964,7 +965,7 @@
 <div id="singerModal" class="modal">
     <div class="modal-content">
         <button class="close-modal" onclick="closeSingerModal()">✕</button>
-        <!-- Фото теперь вертикальное (9:16) -->
+        <!-- Фото автоматически подстраивается под любые пропорции -->
         <img id="singerPhoto" class="singer-photo" src="" alt="">
         <h3 id="singerName" class="singer-name"></h3>
         <p id="singerDescription" class="singer-description"></p>
